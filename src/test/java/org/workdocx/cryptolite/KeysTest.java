@@ -14,6 +14,8 @@ import javax.crypto.SecretKey;
 import org.junit.Test;
 
 /**
+ * Test for {@link Keys}.
+ * 
  * @author David Carboni
  * 
  */

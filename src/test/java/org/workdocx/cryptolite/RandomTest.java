@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Test for {@link Random}.
+ * 
  * @author david
  * 
  */

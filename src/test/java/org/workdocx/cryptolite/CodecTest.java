@@ -12,6 +12,8 @@ import java.util.Arrays;
 import org.junit.Test;
 
 /**
+ * Test for {@link Codec}.
+ * 
  * @author david
  * 
  */

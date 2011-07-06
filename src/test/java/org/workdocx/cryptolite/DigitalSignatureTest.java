@@ -16,11 +16,12 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Test for {@link DigitalSignature}.
+ * 
  * @author david
  * 
  */
@@ -35,12 +36,6 @@ public class DigitalSignatureTest {
 	public void setUp() {
 		keyPair = Keys.newKeyPair();
 		digitalSignature = new DigitalSignature();
-	}
-
-	/**
-	 */
-	@After
-	public void tearDown() {
 	}
 
 	/**
