@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.jirasystems</groupId>
+	<groupId>org.workdocx</groupId>
 	<artifactId>cryptolite</artifactId>
 	<version>0.1.0</version>
 	<name>Good, clean cryptography</name>
@@ -33,18 +33,16 @@
 		</repository>
 	</repositories>
 
+	<!-- All dependencies are specified using a lower-bounded range in order to be flexible. -->
+
 	<dependencies>
 	
-		<!-- This way of declaring the dependency is the most permissive as it doesn't actually include the BouncyCastle library: -->
+	<!-- BouncyCastle is the main dependency: -->
+	
 		<dependency>
-			<!-- This dependency is marked as provided as the BouncyCastle provider 
-				comes in JDK 1.4/5/6 flavours, so this allows you to select the most appropriate 
-				one. It does mean you need to specify this dependency explicitly in a dependant 
-				project. -->
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
 			<version>[136,]</version>
-			<scope>provided</scope>
 		</dependency>
 		
 		
@@ -68,12 +66,17 @@
 		</dependency>
 		-->
 		
+		<!--  For Java 1.4 -->
+		<!-- 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk14</artifactId>
+			<version>[140,]</version>
+			<scope>provided</scope>
 		</dependency>
+		-->
+		
+		<!-- Compile dependencies -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -84,6 +87,21 @@
 			<artifactId>commons-lang</artifactId>
 			<version>[2.5,]</version>
 		</dependency>
+		
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>[1.4,]</version>
+			<scope>test</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -93,6 +111,7 @@
 				<!-- This configures the build to use JVM 1.5 compliance: -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
