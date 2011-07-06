@@ -10,6 +10,9 @@ import java.util.Arrays;
  * password hash, prepended with a random salt value. In order to verify a password, the plaintext
  * password should be passed to {@link #verify(String, String)} along with the stored value
  * originally produced by {@link #hash(String)}.
+ * <p>
+ * This password hashing and verification is done in the same way as Jasypt, but uses
+ * {@value #ALGORITHM}, rather than MD5.
  * 
  * @author David Carboni
  * 
