@@ -18,8 +18,8 @@ import javax.crypto.spec.SecretKeySpec;
  * This class provides for key exchange, using public-private key encryption (also known as
  * asymmetric encryption).
  * <p>
- * The algorithm used is {@value #CIPHER_ALGORITHM}, with a key size of {@value #KEY_SIZE} and
- * padding {@link #CIPHER_PADDING}, giving a {@link Cipher} name of {@link #CIPHER_NAME}.
+ * The algorithm used is {@value #CIPHER_ALGORITHM}, with padding {@link #CIPHER_PADDING}, giving a
+ * {@link Cipher} name of {@link #CIPHER_NAME}.
  * <p>
  * This class allows you to encrypt a {@link SecretKey} so that it can be securely sent to another
  * user. This is done using the destination user's {@link PublicKey} so that the recipient can
@@ -48,9 +48,6 @@ import javax.crypto.spec.SecretKeySpec;
  * 
  */
 public class KeyExchange {
-
-	/** The key size for asymmetric cryptographic operations. */
-	public static final int KEY_SIZE = 1024;
 
 	/** The name of the cipher algorithm to use for asymmetric cryptographic operations. */
 	public static final String CIPHER_ALGORITHM = "RSA";
@@ -198,9 +195,8 @@ public class KeyExchange {
 
 			try {
 
-				// Get and initialise a Cipher instance:
+				// Get a Cipher instance:
 				cipher = Cipher.getInstance(CIPHER_NAME, SecurityProvider.getProviderName());
-				cipher.init(mode, key, Random.getInstance());
 
 			} catch (NoSuchAlgorithmException e) {
 				throw new RuntimeException("Unable to locate algorithm for " + CIPHER_NAME, e);
@@ -208,9 +204,14 @@ public class KeyExchange {
 				throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
 			} catch (NoSuchPaddingException e) {
 				throw new RuntimeException("Unable to locate padding method " + CIPHER_PADDING, e);
-			} catch (InvalidKeyException e) {
-				throw new RuntimeException("Invalid key used to initialise cipher.", e);
 			}
+		}
+
+		// Initialise the Cipher
+		try {
+			cipher.init(mode, key, Random.getInstance());
+		} catch (InvalidKeyException e) {
+			throw new RuntimeException("Invalid key used to initialise cipher.", e);
 		}
 
 		return cipher;

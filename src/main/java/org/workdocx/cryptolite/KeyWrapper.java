@@ -257,7 +257,7 @@ public class KeyWrapper {
 		PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), saltBytes, PBKD_ITERATIONS, WRAP_KEY_SIZE);
 		SecretKeyFactory factory;
 		try {
-			// TODO: BouncyCastle only provides this PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
+			// TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
 			factory = SecretKeyFactory.getInstance(PBKD_ALGORITHM, SecurityProvider.getProviderName());
 		} catch (NoSuchAlgorithmException e) {
 			try {

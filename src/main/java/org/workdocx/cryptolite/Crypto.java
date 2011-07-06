@@ -309,17 +309,6 @@ public class Crypto {
 		return cipherInputStream;
 	}
 
-	public static void main(String[] args) {
-		String plaintext = "plaintext";
-		System.out.println("plaintext: " + plaintext);
-		Crypto crypto = new Crypto();
-		SecretKey key = Keys.newSecretKey();
-		String ciphertext = crypto.encrypt(plaintext, key);
-		System.out.println("ciphertext: " + ciphertext);
-		plaintext = crypto.decrypt(ciphertext, key);
-		System.out.println("plaintext: " + plaintext);
-	}
-
 	/**
 	 * This method generates a random initialisation vector. The length of the IV is determined by
 	 * calling {@link Cipher#getBlockSize()} on the given cipher.

@@ -9,10 +9,22 @@
  */
 package org.workdocx.cryptolite;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.crypto.SecretKey;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -148,22 +160,59 @@ public class CryptoTest {
 		Assert.assertNull(recovered);
 	}
 
-//	/**
-//	 * Test method for
-//	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}.
-//	 */
-//	@Test
-//	public void testEncryptOutputStreamSecretKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	/**
-//	 * Test method for
-//	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)}.
-//	 */
-//	@Test
-//	public void testDecryptInputStreamSecretKey() {
-//		fail("Not yet implemented");
-//	}
+	/**
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}.
+	 * 
+	 * @throws IOException .
+	 */
+	@Test
+	public void testEncryptOutputStreamSecretKey() throws IOException {
+
+		// Given 
+		String content = Random.generateId();
+		SecretKey key = Keys.newSecretKey();
+		File file = File.createTempFile(this.getClass().getSimpleName(), "testEncryptOutputStreamSecretKey");
+		OutputStream destination = new BufferedOutputStream(new FileOutputStream(file));
+
+		// When
+		OutputStream outputStream = crypto.encrypt(destination, key);
+		IOUtils.write(content, outputStream);
+		IOUtils.closeQuietly(outputStream);
+
+		// Then
+		InputStream source = new BufferedInputStream(new FileInputStream(file));
+		InputStream inputStream = crypto.decrypt(source, key);
+		String recovered = IOUtils.readLines(inputStream).get(0);
+		assertEquals(content, recovered);
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)}.
+	 * This test is in fact the same as {@link #testEncryptOutputStreamSecretKey()}.
+	 * 
+	 * @throws IOException .
+	 */
+	@Test
+	public void testDecryptInputStreamSecretKey() throws IOException {
+
+		// Given 
+		String content = Random.generateId();
+		SecretKey key = Keys.newSecretKey();
+		File file = File.createTempFile(this.getClass().getSimpleName(), "testDecryptInputStreamSecretKey");
+		OutputStream destination = new BufferedOutputStream(new FileOutputStream(file));
+		OutputStream outputStream = crypto.encrypt(destination, key);
+		IOUtils.write(content, outputStream);
+		IOUtils.closeQuietly(outputStream);
+
+		// When
+		InputStream source = new BufferedInputStream(new FileInputStream(file));
+		InputStream inputStream = crypto.decrypt(source, key);
+
+		// Then
+		String recovered = IOUtils.readLines(inputStream).get(0);
+		assertEquals(content, recovered);
+	}
 
 }

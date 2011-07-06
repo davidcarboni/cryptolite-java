@@ -70,6 +70,9 @@ public class Keys {
 	 * This method generates a new public-private (or asymmetric) key pair, using the
 	 * {@value #ASYMMETRIC_ALGORITHM} algorithm and a key size of {@value #ASYMMETRIC_KEY_SIZE}
 	 * bits.
+	 * <p>
+	 * BouncyCastle will automatically generate a "Chinese Remainder Theorem" or CRT key, which
+	 * makes using a symmetric encryption significantly faster.
 	 * 
 	 * @return A new, randomly generated asymmetric {@link KeyPair}.
 	 */

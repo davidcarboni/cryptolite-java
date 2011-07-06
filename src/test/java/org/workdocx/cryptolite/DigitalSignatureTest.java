@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
@@ -31,6 +29,7 @@ public class DigitalSignatureTest {
 	private KeyPair keyPair;
 
 	/**
+	 * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
 	 */
 	@Before
 	public void setUp() {
@@ -91,7 +90,7 @@ public class DigitalSignatureTest {
 	public void testSignInputStreamPrivateKey() throws IOException {
 
 		// Given
-		File file = newFile();
+		File file = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 
@@ -118,7 +117,7 @@ public class DigitalSignatureTest {
 	public void testSignInputStreamPrivateKeyException() throws IOException {
 
 		// Given
-		File file = newFile();
+		File file = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 
@@ -142,8 +141,8 @@ public class DigitalSignatureTest {
 	public void testSignInputStreamPrivateKeyFail() throws IOException {
 
 		// Given
-		File file = newFile();
-		File fileChanged = newFile();
+		File file = FileUtils.newFile();
+		File fileChanged = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 
@@ -213,7 +212,7 @@ public class DigitalSignatureTest {
 	public void testVerifyInputStreamPublicKeyString() throws IOException {
 
 		// Given
-		File file = newFile();
+		File file = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 		String signature = digitalSignature.sign(content, privateKey);
@@ -241,7 +240,7 @@ public class DigitalSignatureTest {
 	public void testVerifyInputStreamPublicKeyStringException() throws IOException {
 
 		// Given
-		File file = newFile();
+		File file = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 		String signature = digitalSignature.sign(content, privateKey);
@@ -268,8 +267,8 @@ public class DigitalSignatureTest {
 	public void testVerifyInputStreamPublicKeyStringFail() throws IOException {
 
 		// Given
-		File file = newFile();
-		File fileChanged = newFile();
+		File file = FileUtils.newFile();
+		File fileChanged = FileUtils.newFile();
 		InputStream content = new FileInputStream(file);
 		PrivateKey privateKey = keyPair.getPrivate();
 		String signature = digitalSignature.sign(content, privateKey);
@@ -283,53 +282,6 @@ public class DigitalSignatureTest {
 		// Then
 		System.out.println("Signature: " + signature + " (" + signature.length() + ")");
 		assertFalse(result);
-	}
-
-	// This guarantees that every file generated will be different:
-	private static byte sequence;
-
-	/**
-	 * Generates a new file, containing random content. The file is a temp file, which will be
-	 * deleted on exit.
-	 * 
-	 * @return The created file.
-	 */
-	private File newFile() {
-
-		final int filesize = 256;
-
-		// Create a temp file:
-		File file;
-		try {
-			file = File.createTempFile(this.getClass().getSimpleName(), "testFile");
-		} catch (IOException e) {
-			throw new RuntimeException("Error creating temp file.", e);
-		}
-		file.deleteOnExit();
-
-		// Generate some content:
-		byte[] bytes = new byte[filesize];
-		Random.getInstance().nextBytes(bytes);
-
-		// Write the content to the file:
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(file);
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException("Error creating output stream.", e);
-		}
-		try {
-			for (byte b : bytes) {
-				fos.write(b);
-			}
-			fos.write(sequence++);
-			fos.close();
-		} catch (IOException e) {
-			throw new RuntimeException("Error writing content to temp file.", e);
-		}
-
-		// Return the file:
-		return file;
 	}
 
 }
