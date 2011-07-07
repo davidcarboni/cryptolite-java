@@ -39,7 +39,7 @@ public class Keys {
 	public static final String ASYMMETRIC_ALGORITHM = "RSA";
 
 	/** The key size for asymmetric keys: {@value #ASYMMETRIC_KEY_SIZE}. */
-	public static final int ASYMMETRIC_KEY_SIZE = 1024;
+	public static final int ASYMMETRIC_KEY_SIZE = 3072;
 
 	/**
 	 * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
