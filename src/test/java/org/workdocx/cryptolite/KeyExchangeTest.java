@@ -13,8 +13,6 @@ import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 
-import org.bouncycastle.jce.provider.JCERSAPrivateKey;
-import org.bouncycastle.jce.provider.JCERSAPublicKey;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,11 +47,9 @@ public class KeyExchangeTest {
 		PublicKey destinationPublicKey = keyPair.getPublic();
 
 		// When 
-		System.out.println("Key size = " + ((JCERSAPublicKey) destinationPublicKey).getModulus().bitLength());
 		String encryptedKey = keyExchange.encryptKey(key, destinationPublicKey);
 
 		// Then
-		System.out.println("Key size = " + ((JCERSAPrivateKey) keyPair.getPrivate()).getModulus().bitLength());
 		SecretKey decryptedKey = keyExchange.decryptKey(encryptedKey, keyPair.getPrivate());
 		assertTrue(Arrays.equals(key.getEncoded(), decryptedKey.getEncoded()));
 	}
