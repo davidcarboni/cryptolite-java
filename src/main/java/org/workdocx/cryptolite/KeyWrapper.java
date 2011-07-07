@@ -59,7 +59,7 @@ public class KeyWrapper {
 	private static final String WRAP_ALGORITHM_ASYMMETRIC = "AES/ECB/PKCS7Padding";
 
 	/** The key size for the wrapping key: {@value #WRAP_KEY_SIZE}. */
-	private static final int WRAP_KEY_SIZE = 128;
+	private static final int WRAP_KEY_SIZE = Keys.SYMMETRIC_KEY_SIZE;
 
 	/**
 	 * The algorithm to use for password-based key derivation, which is used to generate the
