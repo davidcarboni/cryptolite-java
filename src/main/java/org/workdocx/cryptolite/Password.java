@@ -1,9 +1,13 @@
 package org.workdocx.cryptolite;
 
-import java.security.MessageDigest;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /**
  * This class provides password hashing and verification. The returned hashes consist of the
@@ -20,7 +24,7 @@ import java.util.Arrays;
 public class Password {
 
 	/** The password hashing function. */
-	public static final String ALGORITHM = "SHA-512";
+	public static final String ALGORITHM_ = "PBKDF2WithHmacSHA1";
 
 	/** The iteration count for the function. */
 	public static final int ITERATION_COUNT = 1024;
@@ -28,13 +32,8 @@ public class Password {
 	/** The number of bytes to use in the salt value. */
 	public static final int SALT_SIZE = 16;
 
-	//
-	// Once we migrate to 1.6, switch to PBKDF2 - but remember that user accounts will need to be migrated on next login, 
-	// (can't recover and re-hash passwords, so we have to wait until the user logs in) so we will have to keep old 
-	// capabilities around as long as there are accounts that use them.
-	//
-	// public static final String ALGORITHM = "PBKDF2";// ?WithHmacSHA1 - See "Cryptographic Right Answers" via Google. 
-	//
+	/** The number of bytes to produce in the hash. */
+	public static final int HASH_SIZE = 256;
 
 	/**
 	 * Produces a good hash of the given password, using {@value #ALGORITHM}, an iteration count of
@@ -96,7 +95,8 @@ public class Password {
 	}
 
 	/**
-	 * This method does the actual work of hashing a plaintext password string.
+	 * This method does the actual work of hashing a plaintext password string, using
+	 * {@value #ALGORITHM_}.
 	 * 
 	 * @param password
 	 *            The plaintext password.
@@ -106,28 +106,33 @@ public class Password {
 	 */
 	private static byte[] hash(String password, byte[] salt) {
 
-		// Get a message digest instance:
-		MessageDigest digest;
+		// Get a SecretKeyFactory for ALGORITHM:
+		SecretKeyFactory factory;
 		try {
-			digest = MessageDigest.getInstance(ALGORITHM, SecurityProvider.getProviderName());
+			// TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
+			factory = SecretKeyFactory.getInstance(ALGORITHM_, SecurityProvider.getProviderName());
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to locate password hashing algorithm: " + ALGORITHM, e);
+			try {
+				// TODO: If PBKDF2 is not available from BouncyCastle, try to use a default provider (Sun provides PBKDF2 in JDK 1.5):
+				factory = SecretKeyFactory.getInstance(ALGORITHM_);
+			} catch (NoSuchAlgorithmException e1) {
+				throw new RuntimeException("Unable to locate algorithm " + ALGORITHM_, e1);
+			}
 		} catch (NoSuchProviderException e) {
-			throw new RuntimeException("Unable to locate provider " + SecurityProvider.getProviderName()
-					+ " is the BouncyCastle library installed?", e);
+			throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
 		}
 
-		// Digest the password and salt:
-		byte[] bytes = Codec.toByteArray(password);
-		digest.update(salt);
-		digest.update(bytes);
-
-		// Now iterate:
-		for (int i = 1; i < ITERATION_COUNT; i++) {
-			digest.update(digest.digest());
+		// Generate the bytes for the hash by generating a key and using its encoded form:
+		PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, HASH_SIZE);
+		byte[] bytes;
+		try {
+			Key key = factory.generateSecret(pbeKeySpec);
+			bytes = key.getEncoded();
+		} catch (InvalidKeySpecException e) {
+			throw new RuntimeException("Error generating password-based key.", e);
 		}
 
-		return digest.digest();
+		return bytes;
 	}
 
 	/**
