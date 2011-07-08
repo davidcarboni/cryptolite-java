@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -8,7 +8,13 @@ import java.io.UnsupportedEncodingException;
 import org.apache.commons.codec.binary.Base64;
 
 /**
- * @author david
+ * 
+ * This class provides the ability to convert a byte array to Base-64 and back, or to a hexadecimal
+ * string for printing out.
+ * <p>
+ * It also provides for converting text String objects to and from a byte array.
+ * 
+ * @author David Carboni
  * 
  */
 public class Codec {

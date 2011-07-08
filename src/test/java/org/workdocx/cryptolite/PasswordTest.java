@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -9,9 +9,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link Password}.
  * 
- * @author david
+ * @author David Carboni
  * 
  */
 public class PasswordTest {

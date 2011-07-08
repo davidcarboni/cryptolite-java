@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.security.InvalidKeyException;
@@ -15,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
+ * 
  * This class provides for key exchange, using public-private key encryption (also known as
  * asymmetric encryption).
  * <p>

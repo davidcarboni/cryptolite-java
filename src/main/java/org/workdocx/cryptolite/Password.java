@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.security.Key;
@@ -10,6 +13,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
+ * 
  * This class provides password hashing and verification. The returned hashes consist of the
  * password hash, prepended with a random salt value. In order to verify a password, the plaintext
  * password should be passed to {@link #verify(String, String)} along with the stored value

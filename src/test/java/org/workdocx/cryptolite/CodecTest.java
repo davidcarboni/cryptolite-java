@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -12,9 +12,10 @@ import java.util.Arrays;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link Codec}.
  * 
- * @author david
+ * @author David Carboni
  * 
  */
 public class CodecTest {

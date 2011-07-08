@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import static junit.framework.Assert.assertEquals;
@@ -12,6 +15,7 @@ import javax.crypto.SecretKey;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link KeyWrapper}.
  * 
  * @author David Carboni

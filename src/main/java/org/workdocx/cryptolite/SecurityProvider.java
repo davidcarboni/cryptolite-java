@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -9,7 +9,8 @@ import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
- * @author david
+ * 
+ * @author David Carboni
  * 
  */
 public class SecurityProvider {

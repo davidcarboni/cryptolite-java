@@ -1,11 +1,5 @@
-/*
- * Copyright (c) 2010 WorkDocX Ltd.
- * 
- * All rights reserved.
- * 
- * This software is the confidential and proprietary information of WorkDocX Ltd.
- * ("Confidential Information"). You shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement you entered into with WorkDocX.
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -29,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link Crypto}.
  * 
  * @author David Carboni

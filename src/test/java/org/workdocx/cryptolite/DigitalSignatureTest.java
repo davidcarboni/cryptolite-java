@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -18,9 +18,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link DigitalSignature}.
  * 
- * @author david
+ * @author David Carboni
  * 
  */
 public class DigitalSignatureTest {

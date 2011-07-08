@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.io.IOException;
@@ -21,6 +24,7 @@ import javax.crypto.spec.IvParameterSpec;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
+ * 
  * This class provides simple encryption and decryption of Strings and streams.
  * <p>
  * This class uses the {@value #CIPHER_ALGORITHM} algorithm in {@value #CYPHER_MODE} cipher mode,
@@ -95,9 +99,6 @@ import org.apache.commons.lang.ArrayUtils;
  * 
  */
 public class Crypto {
-
-//	/** The key size for symmetric cryptographic operations. */
-//	public static final int KEY_SIZE = 128;
 
 	/** The name of the cipher algorithm to use for symmetric cryptographic operations. */
 	public static final String CIPHER_ALGORITHM = "AES";

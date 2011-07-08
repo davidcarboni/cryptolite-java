@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.security.KeyPair;
@@ -9,6 +12,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 /**
+ * 
  * This class generates cryptographic keys.
  * <p>
  * The following key types are available:

@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -16,7 +16,11 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 /**
- * @author david
+ * 
+ * This class provides a public-private key digital signature capability. The signature algorithm
+ * used is {@value #ALGORITHM}.
+ * 
+ * @author David Carboni
  * 
  */
 public class DigitalSignature {

@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.security.InvalidKeyException;
@@ -19,6 +22,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
+ * 
  * This class provides secure "wrapping" of keys. Wrapping a key is important if you need to store
  * it in, for example, a database. It is not safe to store a raw key as this could be compromised,
  * so you need to wrap a key before storing it.

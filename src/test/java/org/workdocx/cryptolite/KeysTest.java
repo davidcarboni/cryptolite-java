@@ -1,5 +1,5 @@
 /**
- * 
+ * Copyright (C) 2011 WorkDocx Ltd.
  */
 package org.workdocx.cryptolite;
 
@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 import org.junit.Test;
 
 /**
+ * 
  * Test for {@link Keys}.
  * 
  * @author David Carboni

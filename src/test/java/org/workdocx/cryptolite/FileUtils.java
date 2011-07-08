@@ -1,9 +1,13 @@
+/**
+ * Copyright (C) 2011 WorkDocx Ltd.
+ */
 package org.workdocx.cryptolite;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
+ * 
  * Utility class to generate and compares random files to support the tests.
  * 
  * @author David Carboni
