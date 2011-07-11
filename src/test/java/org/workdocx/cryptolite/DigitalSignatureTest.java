@@ -15,6 +15,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -27,14 +28,21 @@ import org.junit.Test;
 public class DigitalSignatureTest {
 
 	private DigitalSignature digitalSignature;
-	private KeyPair keyPair;
+	private static KeyPair keyPair;
+
+	/**
+	 * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		keyPair = Keys.newKeyPair();
+	}
 
 	/**
 	 * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
 	 */
 	@Before
 	public void setUp() {
-		keyPair = Keys.newKeyPair();
 		digitalSignature = new DigitalSignature();
 	}
 
