@@ -249,8 +249,11 @@ public class Crypto {
 	 *            The key to be used to encrypt data written to the returned
 	 *            {@link CipherOutputStream}.
 	 * @return A {@link CipherOutputStream}, which wraps the given {@link OutputStream}.
+	 * @throws IOException
+	 *             If an error occurs in writing the initialisation vector to the destination
+	 *             stream.
 	 */
-	public OutputStream encrypt(OutputStream destination, SecretKey key) {
+	public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException {
 
 		// Get a cipher instance and instantiate the CipherOutputStream:
 		Cipher cipher = getCipher(Cipher.ENCRYPT_MODE, key);
@@ -258,12 +261,7 @@ public class Crypto {
 
 		// Initialise the CipherOutputStream with the initialisation vector:
 		byte[] iv = generateInitialisationVector(cipher);
-		try {
-			cipherOutputStream.write(iv);
-		} catch (IOException e) {
-			throw new RuntimeException("Error initialising " + CipherOutputStream.class.getSimpleName()
-					+ ": Error writing initialisation vector to OutputStream.", e);
-		}
+		cipherOutputStream.write(iv);
 
 		// Return the initialised stream:
 		return cipherOutputStream;
@@ -289,8 +287,10 @@ public class Crypto {
 	 *            The key to be used for decryption.
 	 * @return A {@link CipherInputStream}, which wraps the given source stream and will decrypt the
 	 *         data as they are read.
+	 * @throws IOException
+	 *             If an error occurs in reading the initialisation vector from the source stream.
 	 */
-	public InputStream decrypt(InputStream source, SecretKey key) {
+	public InputStream decrypt(InputStream source, SecretKey key) throws IOException {
 
 		// Get a cipher instance and create the cipherInputStream:
 		Cipher cipher = getCipher(Cipher.DECRYPT_MODE, key);
@@ -299,12 +299,7 @@ public class Crypto {
 		// Remove the random initialisation vector from the start of the stream.
 		// NB if the stream is empty, the read will return -1 and no harm will be done.
 		byte[] iv = new byte[cipher.getBlockSize()];
-		try {
-			cipherInputStream.read(iv);
-		} catch (IOException e) {
-			throw new RuntimeException("Error initialising " + CipherInputStream.class.getSimpleName()
-					+ ": Error reading initialisation vector.", e);
-		}
+		cipherInputStream.read(iv);
 
 		// Return the initialised stream:
 		return cipherInputStream;
