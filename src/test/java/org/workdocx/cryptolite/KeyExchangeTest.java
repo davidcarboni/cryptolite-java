@@ -14,6 +14,7 @@ import java.util.Arrays;
 import javax.crypto.SecretKey;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -25,6 +26,15 @@ import org.junit.Test;
  */
 public class KeyExchangeTest {
 	private KeyExchange keyExchange = new KeyExchange();
+	private static KeyPair keyPair;
+
+	/**
+	 * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		keyPair = Keys.newKeyPair();
+	}
 
 	/**
 	 * Instantiates the {@link KeyExchange} instance.
@@ -43,7 +53,6 @@ public class KeyExchangeTest {
 	public void testEncryptKey() {
 
 		// Given
-		KeyPair keyPair = Keys.newKeyPair();
 		SecretKey key = Keys.newSecretKey();
 		PublicKey destinationPublicKey = keyPair.getPublic();
 
@@ -64,7 +73,6 @@ public class KeyExchangeTest {
 	public void testDecryptKey() {
 
 		// Given
-		KeyPair keyPair = Keys.newKeyPair();
 		SecretKey key = Keys.newSecretKey();
 		PublicKey destinationPublicKey = keyPair.getPublic();
 		String encryptedKey = keyExchange.encryptKey(key, destinationPublicKey);
@@ -86,7 +94,7 @@ public class KeyExchangeTest {
 
 		// Given
 		SecretKey key = null;
-		PublicKey publicKey = Keys.newKeyPair().getPublic();
+		PublicKey publicKey = keyPair.getPublic();
 
 		// When 
 		String encryptedKey = keyExchange.encryptKey(key, publicKey);
@@ -105,7 +113,7 @@ public class KeyExchangeTest {
 
 		// Given
 		String encryptedKey = null;
-		PrivateKey privateKey = Keys.newKeyPair().getPrivate();
+		PrivateKey privateKey = keyPair.getPrivate();
 
 		// When 
 		SecretKey decryptedKey = keyExchange.decryptKey(encryptedKey, privateKey);

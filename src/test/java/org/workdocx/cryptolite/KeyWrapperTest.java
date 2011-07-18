@@ -6,12 +6,14 @@ package org.workdocx.cryptolite;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
+import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Arrays;
 
 import javax.crypto.SecretKey;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -22,6 +24,16 @@ import org.junit.Test;
  * 
  */
 public class KeyWrapperTest {
+
+	private static KeyPair keyPair;
+
+	/**
+	 * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
+	 */
+	@BeforeClass
+	public static void setUpBeforeClass() {
+		keyPair = Keys.newKeyPair();
+	}
 
 	/**
 	 * Test for {@link KeyWrapper#KeyWrapper(String, String)}.
@@ -94,7 +106,7 @@ public class KeyWrapperTest {
 		// Given 
 		String password = "testWrapPrivateKey";
 		String salt = Random.generateSalt();
-		PrivateKey key = Keys.newKeyPair().getPrivate();
+		PrivateKey key = keyPair.getPrivate();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
 		// When
@@ -112,7 +124,7 @@ public class KeyWrapperTest {
 	public void testEncodePublicKey() {
 
 		// Given 
-		PublicKey key = Keys.newKeyPair().getPublic();
+		PublicKey key = keyPair.getPublic();
 
 		// When
 		String wrappedKey = KeyWrapper.encodePublicKey(key);
@@ -151,7 +163,7 @@ public class KeyWrapperTest {
 		// Given 
 		String password = "testWrapPrivateKey";
 		String salt = Random.generateSalt();
-		PrivateKey key = Keys.newKeyPair().getPrivate();
+		PrivateKey key = keyPair.getPrivate();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 		String wrappedKey = keyWrapper.wrapPrivateKey(key);
 
@@ -169,7 +181,7 @@ public class KeyWrapperTest {
 	public void testDecodePublicKey() {
 
 		// Given 
-		PublicKey key = Keys.newKeyPair().getPublic();
+		PublicKey key = keyPair.getPublic();
 		String wrappedKey = KeyWrapper.encodePublicKey(key);
 
 		// When
