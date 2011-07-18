@@ -150,7 +150,7 @@ public class KeyWrapper {
 	 * @return A String representation (base64-encoded) of the raw {@link PublicKey}, for ease of
 	 *         storage.
 	 */
-	public String encodePublicKey(PublicKey key) {
+	public static String encodePublicKey(PublicKey key) {
 		byte[] bytes = key.getEncoded();
 		return Codec.toBase64String(bytes);
 	}
@@ -192,7 +192,7 @@ public class KeyWrapper {
 	 *            {@link #encodePublicKey(PublicKey)} .
 	 * @return The unwrapped {@link PublicKey}.
 	 */
-	public PublicKey decodePublicKey(String encodedKey) {
+	public static PublicKey decodePublicKey(String encodedKey) {
 
 		byte[] bytes = Codec.fromBase64String(encodedKey);
 		KeyFactory keyFactory;

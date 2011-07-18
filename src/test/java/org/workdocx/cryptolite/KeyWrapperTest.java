@@ -112,16 +112,13 @@ public class KeyWrapperTest {
 	public void testEncodePublicKey() {
 
 		// Given 
-		String password = "testEncodePublicKey";
-		String salt = Random.generateSalt();
 		PublicKey key = Keys.newKeyPair().getPublic();
-		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
 		// When
-		String wrappedKey = keyWrapper.encodePublicKey(key);
+		String wrappedKey = KeyWrapper.encodePublicKey(key);
 
 		// Then
-		PublicKey recovered = keyWrapper.decodePublicKey(wrappedKey);
+		PublicKey recovered = KeyWrapper.decodePublicKey(wrappedKey);
 		assertTrue(Arrays.equals(key.getEncoded(), recovered.getEncoded()));
 	}
 
@@ -172,14 +169,11 @@ public class KeyWrapperTest {
 	public void testDecodePublicKey() {
 
 		// Given 
-		String password = "testDecodePublicKey";
-		String salt = Random.generateSalt();
 		PublicKey key = Keys.newKeyPair().getPublic();
-		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
-		String wrappedKey = keyWrapper.encodePublicKey(key);
+		String wrappedKey = KeyWrapper.encodePublicKey(key);
 
 		// When
-		PublicKey recovered = keyWrapper.decodePublicKey(wrappedKey);
+		PublicKey recovered = KeyWrapper.decodePublicKey(wrappedKey);
 
 		// Then
 		assertTrue(Arrays.equals(key.getEncoded(), recovered.getEncoded()));
