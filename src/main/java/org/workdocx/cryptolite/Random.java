@@ -32,7 +32,10 @@ public class Random {
 	/**
 	 * 
 	 * @return A lazily-instantiated, cached {@link SecureRandom} instance for the algorithm
-	 *         {@value #ALGORITHM}.
+	 *         {@value #ALGORITHM}. This is a global instance and is thread-safe. The only
+	 *         consideration is whether thread contention could be an issue. See
+	 *         http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe for more
+	 *         details.
 	 */
 	public static SecureRandom getInstance() {
 
