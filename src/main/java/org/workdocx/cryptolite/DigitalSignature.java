@@ -36,9 +36,13 @@ public class DigitalSignature {
 	 * @param privateKey
 	 *            The {@link PrivateKey} with which the string is to be signed. This can be obtained
 	 *            via {@link Keys#newKeyPair()}.
-	 * @return The signature as a base64-encoded string.
+	 * @return The signature as a base64-encoded string. If the content is null, null is returned.
 	 */
 	public String sign(String content, PrivateKey privateKey) {
+
+		if (content == null) {
+			return null;
+		}
 
 		try {
 			byte[] bytes = content.getBytes(Codec.ENCODING);
