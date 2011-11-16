@@ -6,6 +6,8 @@ package org.workdocx.cryptolite;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 /**
  * 
  * @author David Carboni
@@ -65,6 +67,20 @@ public class Random {
 		getInstance().nextBytes(bytes);
 
 		return Codec.toHexString(bytes);
+	}
+
+	/**
+	 * Convenience method to generate a random password using Apache
+	 * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)},
+	 * providing the {@link SecureRandom} returned by {@link #getInstance()} as the last parameter.
+	 * 
+	 * @param length
+	 *            The length of the password to be returned.
+	 * @return A String of the specified length, composed of uppercase letters, lowercase letters
+	 *         and numbers.
+	 */
+	public static String generatePassword(int length) {
+		return RandomStringUtils.random(length, 0, 0, true, true, null, getInstance());
 	}
 
 	/**
