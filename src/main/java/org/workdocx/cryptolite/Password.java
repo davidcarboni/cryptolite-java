@@ -28,7 +28,7 @@ import javax.crypto.spec.PBEKeySpec;
 public class Password {
 
 	/** The password hashing function. */
-	public static final String ALGORITHM_ = "PBKDF2WithHmacSHA1";
+	public static final String ALGORITHM = "PBKDF2WithHmacSHA1";
 
 	/** The iteration count for the function. */
 	public static final int ITERATION_COUNT = 1024;
@@ -67,13 +67,12 @@ public class Password {
 	}
 
 	/**
-	 * Verifies the given plaintext password against a value that {@link #hashPassword(String)}
-	 * produced.
+	 * Verifies the given plaintext password against a value that {@link #hash(String)} produced.
 	 * 
 	 * @param password
 	 *            A plaintext password.
 	 * @param hash
-	 *            A value previously produced by {@link #hashPassword(String)}.
+	 *            A value previously produced by {@link #hash(String)}.
 	 * @return If the password hashes to the same value as that contained in the hash parameter,
 	 *         true.
 	 */
@@ -100,7 +99,7 @@ public class Password {
 
 	/**
 	 * This method does the actual work of hashing a plaintext password string, using
-	 * {@value #ALGORITHM_}.
+	 * {@value #ALGORITHM}.
 	 * 
 	 * @param password
 	 *            The plaintext password.
@@ -114,13 +113,13 @@ public class Password {
 		SecretKeyFactory factory;
 		try {
 			// TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
-			factory = SecretKeyFactory.getInstance(ALGORITHM_, SecurityProvider.getProviderName());
+			factory = SecretKeyFactory.getInstance(ALGORITHM, SecurityProvider.getProviderName());
 		} catch (NoSuchAlgorithmException e) {
 			try {
 				// TODO: If PBKDF2 is not available from BouncyCastle, try to use a default provider (Sun provides PBKDF2 in JDK 1.5):
-				factory = SecretKeyFactory.getInstance(ALGORITHM_);
+				factory = SecretKeyFactory.getInstance(ALGORITHM);
 			} catch (NoSuchAlgorithmException e1) {
-				throw new RuntimeException("Unable to locate algorithm " + ALGORITHM_, e1);
+				throw new RuntimeException("Unable to locate algorithm " + ALGORITHM, e1);
 			}
 		} catch (NoSuchProviderException e) {
 			throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
