@@ -159,7 +159,8 @@ public class CryptoTest {
 	 * Test method for
 	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}.
 	 * 
-	 * @throws IOException .
+	 * @throws IOException
+	 *             {@link IOException}
 	 */
 	@Test
 	public void testEncryptOutputStreamSecretKey() throws IOException {
@@ -167,7 +168,7 @@ public class CryptoTest {
 		// Given 
 		String content = Random.generateId();
 		SecretKey key = Keys.newSecretKey();
-		File file = File.createTempFile(this.getClass().getSimpleName(), "testEncryptOutputStreamSecretKey");
+		File file = File.createTempFile(getClass().getSimpleName(), "testEncryptOutputStreamSecretKey");
 		OutputStream destination = new BufferedOutputStream(new FileOutputStream(file));
 
 		// When
@@ -187,7 +188,8 @@ public class CryptoTest {
 	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)}.
 	 * This test is in fact the same as {@link #testEncryptOutputStreamSecretKey()}.
 	 * 
-	 * @throws IOException .
+	 * @throws IOException
+	 *             {@link IOException}
 	 */
 	@Test
 	public void testDecryptInputStreamSecretKey() throws IOException {
@@ -195,7 +197,7 @@ public class CryptoTest {
 		// Given 
 		String content = Random.generateId();
 		SecretKey key = Keys.newSecretKey();
-		File file = File.createTempFile(this.getClass().getSimpleName(), "testDecryptInputStreamSecretKey");
+		File file = File.createTempFile(getClass().getSimpleName(), "testDecryptInputStreamSecretKey");
 		OutputStream destination = new BufferedOutputStream(new FileOutputStream(file));
 		OutputStream outputStream = crypto.encrypt(destination, key);
 		IOUtils.write(content, outputStream);
