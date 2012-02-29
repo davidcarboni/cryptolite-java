@@ -52,8 +52,7 @@ public class Password {
 	public static String hash(String password) {
 
 		// Generate a random salt:
-		byte[] salt = new byte[SALT_SIZE];
-		Random.getInstance().nextBytes(salt);
+		byte[] salt = Codec.fromBase64String(Random.generateSalt());
 
 		// Hash the password:
 		byte[] hash = hash(password, salt);
