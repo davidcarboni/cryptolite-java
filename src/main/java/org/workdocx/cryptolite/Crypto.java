@@ -22,6 +22,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 
@@ -150,9 +151,9 @@ public class Crypto {
 	 */
 	public String encrypt(String string, SecretKey key) {
 
-		// Basic null check
-		if (string == null) {
-			return null;
+		// Basic null/empty check:
+		if (StringUtils.isEmpty(string)) {
+			return string;
 		}
 
 		// Convert the input Sting to a byte array:
@@ -208,10 +209,8 @@ public class Crypto {
 	public String decrypt(String encrypted, SecretKey key) {
 
 		// Basic null/empty check:
-		if (encrypted == null) {
-			return null;
-		} else if ("".equals(encrypted)) {
-			return "";
+		if (StringUtils.isEmpty(encrypted)) {
+			return encrypted;
 		}
 
 		// Prepare input and output byte arrays:
