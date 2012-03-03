@@ -12,6 +12,8 @@ import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import org.apache.commons.lang.ArrayUtils;
+
 /**
  * 
  * This class provides password hashing and verification. The returned hashes consist of the
@@ -58,7 +60,7 @@ public class Password {
 		byte[] hash = hash(password, salt);
 
 		// Concatenate the salt and hash: 
-		byte[] result = concatenate(salt, hash);
+		byte[] result = ArrayUtils.addAll(salt, hash);
 
 		// Base-64 encode the result:
 		String base64 = Codec.toBase64String(result);
@@ -135,28 +137,6 @@ public class Password {
 		}
 
 		return bytes;
-	}
-
-	/**
-	 * Concatenates two arrays.
-	 * <p>
-	 * see: http://stackoverflow.com/questions/80476/how-to-concatenate-two-arrays-in-java
-	 * <p>
-	 * This could have been done with commons-lang, but doing it directly saves a dependency and
-	 * potential dependency conflict. Probably worth e.g. using a version-range dependency
-	 * 
-	 * @param salt
-	 *            The salt value to be concatenated.
-	 * @param hash
-	 *            The hash value to be concatenated.
-	 * @return The two arrays as a single byte array.
-	 */
-	private static byte[] concatenate(byte[] salt, byte[] hash) {
-
-		byte[] result = new byte[salt.length + hash.length];
-		System.arraycopy(salt, 0, result, 0, salt.length);
-		System.arraycopy(hash, 0, result, salt.length, hash.length);
-		return result;
 	}
 
 	/**
