@@ -27,7 +27,7 @@ import org.apache.commons.lang.ArrayUtils;
  * 
  * This class provides simple encryption and decryption of Strings and streams.
  * <p>
- * This class uses the {@value #CIPHER_ALGORITHM} algorithm in {@value #CYPHER_MODE} cipher mode,
+ * This class uses the {@value #CIPHER_ALGORITHM} algorithm in {@value #CIPHER_MODE} cipher mode,
  * padding and initialisation vector handling. This hides the complexity involved in selecting types
  * and values for these and allows the caller to simply request encryption and decryption
  * operations.
@@ -114,13 +114,33 @@ public class Crypto {
 	private static final String CIPHER_NAME = CIPHER_ALGORITHM + "/" + CIPHER_MODE + "/" + CIPHER_PADDING;
 
 	/** The {@link Cipher} for this instance. */
-	private Cipher cipher;
+	private final Cipher cipher;
+
+	/**
+	 * Initialises the instance by getting and caching a {@link Cipher} instance for
+	 * {@value #CIPHER_NAME}.
+	 */
+	public Crypto() {
+
+		try {
+
+			// Get a Cipher instance:
+			cipher = Cipher.getInstance(CIPHER_NAME, SecurityProvider.getProviderName());
+
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Unable to locate algorithm for " + CIPHER_NAME, e);
+		} catch (NoSuchProviderException e) {
+			throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
+		} catch (NoSuchPaddingException e) {
+			throw new RuntimeException("Unable to locate padding method " + CIPHER_PADDING, e);
+		}
+	}
 
 	/**
 	 * This method encrypts the given String, returning a base-64 encoded String. Note that the
 	 * base-64 String will be longer than the input String by 30-40% for an 85 character String. An
-	 * 85-character database field can therefore only hold 60 characters of plaintext. See the
-	 * output of {@link Codec#main(String[])} for details.
+	 * 85-character database field can therefore only hold 60 characters of (single-byte character)
+	 * plaintext.
 	 * 
 	 * @param string
 	 *            The input String.
@@ -342,17 +362,10 @@ public class Crypto {
 
 			try {
 
-				// Get and initialise a Cipher instance:
-				cipher = Cipher.getInstance(CIPHER_NAME, SecurityProvider.getProviderName());
+				// Initialise the cipher:
 				IvParameterSpec ivParameterSpec = new IvParameterSpec(new byte[cipher.getBlockSize()]);
 				cipher.init(mode, key, ivParameterSpec);
 
-			} catch (NoSuchAlgorithmException e) {
-				throw new RuntimeException("Unable to locate algorithm for " + CIPHER_NAME, e);
-			} catch (NoSuchProviderException e) {
-				throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
-			} catch (NoSuchPaddingException e) {
-				throw new RuntimeException("Unable to locate padding method " + CIPHER_PADDING, e);
 			} catch (InvalidKeyException e) {
 				throw new RuntimeException("Invalid key used to initialise cipher.", e);
 			} catch (InvalidAlgorithmParameterException e) {
