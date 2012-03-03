@@ -211,5 +211,4 @@ public class CryptoTest {
 		String recovered = IOUtils.readLines(inputStream).get(0);
 		assertEquals(content, recovered);
 	}
-
 }

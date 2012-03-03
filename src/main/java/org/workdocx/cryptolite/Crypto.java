@@ -151,19 +151,20 @@ public class Crypto {
 	 */
 	public String encrypt(String string, SecretKey key) {
 
-		// Basic null/empty check:
-		if (StringUtils.isEmpty(string)) {
-			return string;
+		// Basic null check. 
+		// An empty string can be encrypted:
+		if (string == null) {
+			return null;
 		}
 
 		// Convert the input Sting to a byte array:
 		byte[] bytes = Codec.toByteArray(string);
 
-		// Prepare a cipher instance:
-		Cipher cipher = getCipher(Cipher.ENCRYPT_MODE, key);
+		// Prepare the cipher:
+		initialiseCipher(Cipher.ENCRYPT_MODE, key);
 
 		// Generate a random initialisation vector:
-		byte[] iv = generateInitialisationVector(cipher);
+		byte[] iv = generateInitialisationVector();
 
 		// The output byte array needs to be the length of the encrypted data, plus the size of the initialisation vector.
 		// Note that the estimated output size may be larger than the actual encrypted result.
@@ -189,8 +190,6 @@ public class Crypto {
 		}
 
 		// Copy the actual length of encrypted bytes to the result, removing any unused bytes at the end:
-//		byte[] result = new byte[actualLength];
-//		System.arraycopy(encrypted, 0, result, 0, actualLength);
 		byte[] result = ArrayUtils.subarray(encrypted, 0, actualLength);
 
 		return Codec.toBase64String(result);
@@ -208,7 +207,8 @@ public class Crypto {
 	 */
 	public String decrypt(String encrypted, SecretKey key) {
 
-		// Basic null/empty check:
+		// Basic null/empty check.
+		// An empty string can be encrypted, but not decrypted:
 		if (StringUtils.isEmpty(encrypted)) {
 			return encrypted;
 		}
@@ -217,7 +217,7 @@ public class Crypto {
 		byte[] bytes = Codec.fromBase64String(encrypted);
 
 		// Prepare a cipher instance with a zero IV:
-		Cipher cipher = getCipher(Cipher.DECRYPT_MODE, key);
+		initialiseCipher(Cipher.DECRYPT_MODE, key);
 
 		// Prepare the output byte array - this may be larger than the actual decrypted result:
 		byte[] decrypted = new byte[cipher.getOutputSize(bytes.length)];
@@ -242,8 +242,6 @@ public class Crypto {
 		// Now take out the initialisation vector from the start of the decrypted array and remove any unused bytes at the end:
 		int ivSize = cipher.getBlockSize();
 		int resultSize = actualLength - ivSize;
-//		byte[] result = new byte[resultSize];
-//		System.arraycopy(decrypted, ivSize, result, 0, resultSize);
 		byte[] result = ArrayUtils.subarray(decrypted, ivSize, ivSize + resultSize);
 		return Codec.fromByteArray(result);
 	}
@@ -275,11 +273,11 @@ public class Crypto {
 	public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException {
 
 		// Get a cipher instance and instantiate the CipherOutputStream:
-		Cipher cipher = getCipher(Cipher.ENCRYPT_MODE, key);
+		initialiseCipher(Cipher.ENCRYPT_MODE, key);
 		CipherOutputStream cipherOutputStream = new CipherOutputStream(destination, cipher);
 
 		// Initialise the CipherOutputStream with the initialisation vector:
-		byte[] iv = generateInitialisationVector(cipher);
+		byte[] iv = generateInitialisationVector();
 		cipherOutputStream.write(iv);
 
 		// Return the initialised stream:
@@ -312,7 +310,7 @@ public class Crypto {
 	public InputStream decrypt(InputStream source, SecretKey key) throws IOException {
 
 		// Get a cipher instance and create the cipherInputStream:
-		Cipher cipher = getCipher(Cipher.DECRYPT_MODE, key);
+		initialiseCipher(Cipher.DECRYPT_MODE, key);
 		CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
 
 		// Remove the random initialisation vector from the start of the stream.
@@ -326,16 +324,12 @@ public class Crypto {
 
 	/**
 	 * This method generates a random initialisation vector. The length of the IV is determined by
-	 * calling {@link Cipher#getBlockSize()} on the given cipher.
-	 * 
-	 * @param cipher
-	 *            The {@link Cipher} to generate an initialisation vector for. This will be used to
-	 *            determine the size of the initialisation vector in bytes.
+	 * calling {@link Cipher#getBlockSize()} on {@link #cipher}.
 	 * 
 	 * @return A byte array, of a size corresponding to the block size of the given {@link Cipher},
 	 *         containing random bytes.
 	 */
-	private byte[] generateInitialisationVector(Cipher cipher) {
+	private byte[] generateInitialisationVector() {
 		byte[] bytes = new byte[cipher.getBlockSize()];
 		Random.getInstance().nextBytes(bytes);
 		return bytes;
@@ -353,27 +347,21 @@ public class Crypto {
 	 *            One of {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}).
 	 * @param key
 	 *            The {@link SecretKey} to be used with the {@link Cipher}.
-	 * 
-	 * @return A lazily-instantiated, cached {@link Cipher} instance.
 	 */
-	private Cipher getCipher(int mode, SecretKey key) {
-		if (cipher == null) {
+	private void initialiseCipher(int mode, SecretKey key) {
 
-			try {
+		try {
 
-				// Initialise the cipher:
-				IvParameterSpec ivParameterSpec = new IvParameterSpec(new byte[cipher.getBlockSize()]);
-				cipher.init(mode, key, ivParameterSpec);
+			// Initialise the cipher:
+			IvParameterSpec ivParameterSpec = new IvParameterSpec(new byte[cipher.getBlockSize()]);
+			cipher.init(mode, key, ivParameterSpec);
 
-			} catch (InvalidKeyException e) {
-				throw new RuntimeException("Invalid key used to initialise cipher.", e);
-			} catch (InvalidAlgorithmParameterException e) {
-				throw new RuntimeException(
-						"Invalid parameter passed to initialiset cipher for encryption: zero IvParameterSpec containing "
-								+ cipher.getBlockSize() + " bytes.", e);
-			}
+		} catch (InvalidKeyException e) {
+			throw new RuntimeException("Invalid key used to initialise cipher.", e);
+		} catch (InvalidAlgorithmParameterException e) {
+			throw new RuntimeException(
+					"Invalid parameter passed to initialiset cipher for encryption: zero IvParameterSpec containing "
+							+ cipher.getBlockSize() + " bytes.", e);
 		}
-
-		return cipher;
 	}
 }
