@@ -46,16 +46,11 @@ public class CryptoNewTest {
 	 * 
 	 * @throws NoSuchFieldException
 	 *             {@link NoSuchFieldException}
-	 * @throws SecurityException
-	 *             {@link SecurityException}
 	 * @throws IllegalAccessException
 	 *             {@link IllegalAccessException}
-	 * @throws IllegalArgumentException
-	 *             {@link IllegalArgumentException}
 	 */
 	@Test
-	public void testCryptoNew() throws SecurityException, NoSuchFieldException, IllegalArgumentException,
-			IllegalAccessException {
+	public void testCryptoNew() throws NoSuchFieldException, IllegalAccessException {
 
 		// Given
 		Field cipherField = CryptoNew.class.getDeclaredField("cipher");
@@ -70,7 +65,7 @@ public class CryptoNewTest {
 	 * Verifies that null is returned for null encryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -82,7 +77,7 @@ public class CryptoNewTest {
 		String plaintext = null;
 
 		// When
-		String ciphertext = cryptoNew.encrypt(plaintext, key);
+		String ciphertext = cryptoNew.encrypt(plaintext, key, false);
 
 		// Then 
 		assertNull(ciphertext);
@@ -92,7 +87,7 @@ public class CryptoNewTest {
 	 * Verifies that an empty String gets encrypted.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -104,19 +99,19 @@ public class CryptoNewTest {
 		String plaintext = "";
 
 		// When
-		String ciphertext = cryptoNew.encrypt(plaintext, key);
+		String ciphertext = cryptoNew.encrypt(plaintext, key, false);
 
 		// Then 
 		assertNotNull(ciphertext);
 		assertFalse(StringUtils.isEmpty(ciphertext));
-		assertEquals(plaintext, cryptoNew.decrypt(ciphertext, key));
+		assertEquals(plaintext, cryptoNew.decrypt(ciphertext, key, false));
 	}
 
 	/**
 	 * Verifies that the same String gets encrypted differently every time.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -127,7 +122,7 @@ public class CryptoNewTest {
 		// Given 
 		String plaintext = "The quick brown fox jumped over the lazy dog.";
 		// Ignore any newlines:
-		String ciphertext1 = cryptoNew.encrypt(plaintext, key).replace("\n", "").replace("\r", "");
+		String ciphertext1 = cryptoNew.encrypt(plaintext, key, false).replace("\n", "").replace("\r", "");
 		int length = ciphertext1.length();
 		boolean[] different = new boolean[length];
 		final int maxAttempts = 100;
@@ -138,7 +133,7 @@ public class CryptoNewTest {
 		// we have seen a different character at every position:
 		while (ArrayUtils.contains(different, false) && attempt++ < maxAttempts) {
 
-			String ciphertext2 = cryptoNew.encrypt(plaintext, key).replace("\n", "").replace("\r", "");
+			String ciphertext2 = cryptoNew.encrypt(plaintext, key, false).replace("\n", "").replace("\r", "");
 			for (int i = 0; i < length; i++) {
 				// Compare each character, but ignore base-64 padding:
 				different[i] |= ciphertext1.charAt(i) != ciphertext2.charAt(i) || ciphertext1.charAt(i) == '=';
@@ -150,10 +145,54 @@ public class CryptoNewTest {
 	}
 
 	/**
+	 * Verifies that the same String gets encrypted differently every time.
+	 * <p>
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
+	 * 
+	 * @throws InvalidKeyException
+	 *             {@link InvalidKeyException}
+	 */
+	@Test
+	public void shouldEncryptLegacyStyle() throws InvalidKeyException {
+
+		// Given 
+		String plaintext = "You can't use an inline-IV in CTR mode because each block is independent.";
+		// Ignore any newlines:
+		String ivOnly = cryptoNew.encrypt("", key, true).replace("\n", "").replace("\r", "");
+
+		// When
+		// Encrypt the same string twice.
+		String ciphertext1 = cryptoNew.encrypt(plaintext, key, true).replace("\n", "").replace("\r", "");
+		String ciphertext2 = cryptoNew.encrypt(plaintext, key, true).replace("\n", "").replace("\r", "");
+
+		// Then  
+
+		// The IV portion should be different:
+		boolean different = false;
+		for (int i = 0; i < ivOnly.length(); i++) {
+			// Most characters should be different, because
+			// two different inline IVs should be generated:
+			different |= ciphertext1.charAt(i) == ciphertext2.charAt(i);
+		}
+		assertTrue(different);
+
+		// The data portion will be the same:
+		boolean same = true;
+		for (int i = ivOnly.length(); i < ciphertext1.length(); i++) {
+			// All characters should be the same, because
+			// both encryptions will have used a zero IV and the
+			// inline IV will not have affected the ciphertext:
+			different &= ciphertext1.charAt(i) == ciphertext2.charAt(i);
+		}
+		assertTrue(same);
+	}
+
+	/**
 	 * Verifies that null is returned for null decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -165,7 +204,7 @@ public class CryptoNewTest {
 		String ciphertext = null;
 
 		// When
-		String plaintext = cryptoNew.decrypt(ciphertext, key);
+		String plaintext = cryptoNew.decrypt(ciphertext, key, false);
 
 		// Then 
 		assertNull(plaintext);
@@ -175,7 +214,7 @@ public class CryptoNewTest {
 	 * Verifies that an empty string is returned for empty decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -187,17 +226,19 @@ public class CryptoNewTest {
 		String ciphertext = "";
 
 		// When
-		String plaintext = cryptoNew.decrypt(ciphertext, key);
+		String plaintext = cryptoNew.decrypt(ciphertext, key, false);
 
 		// Then 
 		assertEquals(ciphertext, plaintext);
 	}
 
 	/**
-	 * Verifies that decryption is successful and consistent, even for different ciphertext Strings.
+	 * Verifies that decryption is successful and consistent, even for different ciphertext Strings
+	 * - ie if you encrypt something twice, the encrypted data should be different each time, but
+	 * should decrypt back to the same thing.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -207,16 +248,16 @@ public class CryptoNewTest {
 
 		// Given 
 		String input = "My love is like a red, red rose.";
-		String ciphertext1 = cryptoNew.encrypt(input, key);
+		String ciphertext1 = cryptoNew.encrypt(input, key, false);
 		String ciphertext2;
 		do {
 			// Ensure we have a different String:
-			ciphertext2 = cryptoNew.encrypt(input, key);
+			ciphertext2 = cryptoNew.encrypt(input, key, false);
 		} while (ciphertext1.equals(ciphertext2));
 
 		// When
-		String plaintext1 = cryptoNew.decrypt(ciphertext1, key);
-		String plaintext2 = cryptoNew.decrypt(ciphertext2, key);
+		String plaintext1 = cryptoNew.decrypt(ciphertext1, key, false);
+		String plaintext2 = cryptoNew.decrypt(ciphertext2, key, false);
 
 		// Then 
 		assertEquals(input, plaintext1);
@@ -224,10 +265,43 @@ public class CryptoNewTest {
 	}
 
 	/**
+	 * Verifies that {@link CryptoNew} and {@link CryptoLegacy} are interoperable (ie each can
+	 * decrypt data encrypted by the other).
+	 * <p>
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.lang.String, javax.crypto.SecretKey, boolean)}
+	 * and
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.lang.String, javax.crypto.SecretKey, boolean)}.
+	 * 
+	 * @throws InvalidKeyException
+	 *             {@link InvalidKeyException}
+	 */
+	@SuppressWarnings({"deprecation", "javadoc"})
+	@Test
+	public void shouldInteroperateWithCryptoLegacyForString() throws InvalidKeyException {
+
+		// Given 
+		String plaintext = "Let's be sure we're not leaving anyone out in the cold here.";
+		// Ignore any newlines:
+		CryptoLegacy cryptoLegacy = new CryptoLegacy();
+		String legacy = cryptoLegacy.encrypt(plaintext, key);
+		String backwardCompatible = cryptoNew.encrypt(plaintext, key, true);
+
+		// When
+		// Swap answer sheets and decrypt:
+		String legacyDecrypted = cryptoNew.decrypt(legacy, key, true);
+		String backwardCompatibleDecrypted = cryptoLegacy.decrypt(backwardCompatible, key);
+
+		// Then  
+		assertEquals(plaintext, legacyDecrypted);
+		assertEquals(plaintext, backwardCompatibleDecrypted);
+	}
+
+	/**
 	 * Verifies that attempting to encrypt a null output stream just returns null.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.io.OutputStream, javax.crypto.SecretKey, boolean)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -242,7 +316,7 @@ public class CryptoNewTest {
 		OutputStream destination = null;
 
 		// When
-		OutputStream encryptor = cryptoNew.encrypt(destination, key);
+		OutputStream encryptor = cryptoNew.encrypt(destination, key, false);
 
 		// Then 
 		assertNull(encryptor);
@@ -250,7 +324,7 @@ public class CryptoNewTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.io.OutputStream, javax.crypto.SecretKey, boolean)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -264,7 +338,7 @@ public class CryptoNewTest {
 		// Given 
 		byte[] data = ("Three french hens, two turtle doves " + "and a partridge in a pear tree.").getBytes("UTF8");
 		ByteArrayOutputStream destination = new ByteArrayOutputStream();
-		int size = IOUtils.copy(new ByteArrayInputStream(data), cryptoNew.encrypt(destination, key));
+		int size = IOUtils.copy(new ByteArrayInputStream(data), cryptoNew.encrypt(destination, key, false));
 		byte[] ciphertext1 = destination.toByteArray();
 		boolean[] different = new boolean[size];
 		final int maxAttempts = 100;
@@ -276,7 +350,7 @@ public class CryptoNewTest {
 		while (ArrayUtils.contains(different, false) && attempt++ < maxAttempts) {
 
 			destination = new ByteArrayOutputStream();
-			IOUtils.copy(new ByteArrayInputStream(data), cryptoNew.encrypt(destination, key));
+			IOUtils.copy(new ByteArrayInputStream(data), cryptoNew.encrypt(destination, key, false));
 			byte[] ciphertext2 = destination.toByteArray();
 			for (int i = 0; i < size; i++) {
 				// Compare each byte:
@@ -289,22 +363,28 @@ public class CryptoNewTest {
 	}
 
 	/**
+	 * Verifies that decryption of differing ciphertext streams result in the same plaintext - ie if
+	 * you encrypt something twice, the encrypted data should be different each time, but should
+	 * decrypt back to the same thing.
+	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.io.InputStream, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.io.InputStream, javax.crypto.SecretKey,boolean)}
 	 * .
 	 * 
 	 * @throws IOException
+	 *             {@link IOException}
 	 * @throws InvalidKeyException
+	 *             {@link InvalidKeyException}
 	 */
 	@Test
-	public void testDecryptInputStreamSecretKey() throws InvalidKeyException, IOException {
+	public void shouldDecryptDifferentStreamsToSamePlaintext() throws InvalidKeyException, IOException {
 
 		// Given 
 		byte[] input = ("It's really important, you know, to take care of other peoples' stuff "
 				+ "if they are trusting you to look after it.").getBytes("UTF8");
 		ByteArrayOutputStream destination = new ByteArrayOutputStream();
 		OutputStream encryptor;
-		encryptor = cryptoNew.encrypt(destination, key);
+		encryptor = cryptoNew.encrypt(destination, key, false);
 		IOUtils.copy(new ByteArrayInputStream(input), encryptor);
 		encryptor.close();
 		byte[] ciphertext1 = destination.toByteArray();
@@ -312,7 +392,7 @@ public class CryptoNewTest {
 		do {
 			// Ensure we have a different byte array:
 			destination = new ByteArrayOutputStream();
-			encryptor = cryptoNew.encrypt(destination, key);
+			encryptor = cryptoNew.encrypt(destination, key, false);
 			IOUtils.copy(new ByteArrayInputStream(input), encryptor);
 			encryptor.close();
 			ciphertext2 = destination.toByteArray();
@@ -320,10 +400,10 @@ public class CryptoNewTest {
 
 		// When
 		destination = new ByteArrayOutputStream();
-		IOUtils.copy(cryptoNew.decrypt(new ByteArrayInputStream(ciphertext1), key), destination);
+		IOUtils.copy(cryptoNew.decrypt(new ByteArrayInputStream(ciphertext1), key, false), destination);
 		byte[] plaintext1 = destination.toByteArray();
 		destination = new ByteArrayOutputStream();
-		IOUtils.copy(cryptoNew.decrypt(new ByteArrayInputStream(ciphertext2), key), destination);
+		IOUtils.copy(cryptoNew.decrypt(new ByteArrayInputStream(ciphertext2), key, false), destination);
 		byte[] plaintext2 = destination.toByteArray();
 
 		// Then 
@@ -331,64 +411,55 @@ public class CryptoNewTest {
 		assertTrue(Arrays.equals(plaintext1, plaintext2));
 	}
 
-	public static void main(String[] args) throws InvalidKeyException {
+	/**
+	 * Verifies that {@link CryptoNew} and {@link CryptoLegacy} are interoperable (ie each can
+	 * decrypt data encrypted by the other).
+	 * <p>
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.CryptoNew#encrypt(java.io.OutputStream, javax.crypto.SecretKey, boolean)}
+	 * and
+	 * {@link org.workdocx.cryptolite.CryptoNew#decrypt(java.io.InputStream, javax.crypto.SecretKey, boolean)}.
+	 * 
+	 * @throws InvalidKeyException
+	 *             {@link InvalidKeyException}
+	 * @throws IOException
+	 *             {@link IOException}
+	 */
+	@SuppressWarnings({"deprecation", "javadoc"})
+	@Test
+	public void shouldInteroperateWithCryptoLegacyForStream() throws InvalidKeyException, IOException {
 
-		SecretKey key = Keys.newSecretKey();
-		Crypto crypto1 = new Crypto();
-		CryptoNew crypto2 = new CryptoNew();
+		// Given 
+		byte[] input = ("Let's be sure we're not leaving anyone out in the cold here.").getBytes("UTF8");
+		CryptoLegacy cryptoLegacy = new CryptoLegacy();
+		ByteArrayOutputStream destination;
+		OutputStream encryptor;
 
-		String input = "I think I understand now.";
+		// CryptoNew:
+		destination = new ByteArrayOutputStream();
+		encryptor = cryptoNew.encrypt(destination, key, true);
+		IOUtils.copy(new ByteArrayInputStream(input), encryptor);
+		encryptor.close();
+		byte[] ciphertext1 = destination.toByteArray();
 
-		for (int n = 0; n < 5; n++) {
+		// CryptoLegacy:
+		destination = new ByteArrayOutputStream();
+		encryptor = cryptoLegacy.encrypt(destination, key);
+		IOUtils.copy(new ByteArrayInputStream(input), encryptor);
+		encryptor.close();
+		byte[] ciphertext2 = destination.toByteArray();
 
-			System.out.println(input);
+		// When
+		// Swap answer sheets and decrypt:
+		destination = new ByteArrayOutputStream();
+		IOUtils.copy(cryptoLegacy.decrypt(new ByteArrayInputStream(ciphertext1), key), destination);
+		byte[] plaintext1 = destination.toByteArray();
+		destination = new ByteArrayOutputStream();
+		IOUtils.copy(cryptoNew.decrypt(new ByteArrayInputStream(ciphertext2), key, true), destination);
+		byte[] plaintext2 = destination.toByteArray();
 
-			String ciphertext1a = crypto1.encrypt(input, key).trim();
-			String plaintext1a = crypto1.decrypt(ciphertext1a, key);
-			System.out.println("Crypto1: " + ciphertext1a + " -> " + plaintext1a);
-
-			String ciphertext1b = crypto1.encrypt(input, key).trim();
-			String plaintext1b = crypto1.decrypt(ciphertext1b, key);
-			System.out.println("Crypto1: " + ciphertext1b + " -> " + plaintext1b);
-
-			String ciphertext2a = crypto2.encrypt(input, key).trim();
-			String plaintext2a = crypto2.decrypt(ciphertext2a, key);
-			System.out.println("CryptoNew: " + ciphertext2a + " -> " + plaintext2a);
-
-			String ciphertext2b = crypto2.encrypt(input, key).trim();
-			String plaintext2b = crypto2.decrypt(ciphertext2b, key);
-			System.out.println("CryptoNew: " + ciphertext2b + " -> " + plaintext2b);
-
-			String ciphertext1am = migrateCiphertext(ciphertext1a);
-			String ciphertext1bm = migrateCiphertext(ciphertext1b);
-			String plaintext1am = crypto2.decrypt(ciphertext1am, key);
-			plaintext1am = migratePlaintext(plaintext1am);
-			System.out.println("CryptoM: " + ciphertext1am + " -> " + plaintext1am);
-			String plaintext1bm = crypto2.decrypt(ciphertext1bm, key);
-			plaintext1bm = migratePlaintext(plaintext1bm);
-			System.out.println("CryptoM: " + ciphertext1bm + " -> " + plaintext1bm);
-			System.out.println();
-		}
+		// Then  
+		assertTrue(Arrays.equals(input, plaintext1));
+		assertTrue(Arrays.equals(input, plaintext2));
 	}
-
-	private static String migrateCiphertext(String ciphertext) {
-
-		CryptoNew crypto = new CryptoNew();
-//		byte[] iv = crypto.generateInitialisationVector(crypto.cipher);
-		byte[] iv = new byte[crypto.generateInitialisationVector().length];
-		byte[] migrate = Codec.fromBase64String(ciphertext);
-		migrate = ArrayUtils.addAll(iv, migrate);
-//		for (int i = 0; i < iv.length; i++) {
-//			migrate[i] = 0;
-//		}
-		return Codec.toBase64String(migrate).trim();
-	}
-
-	private static String migratePlaintext(String plaintext) {
-		byte[] bytes = Codec.toByteArray(plaintext);
-		CryptoNew crypto = new CryptoNew();
-		bytes = ArrayUtils.subarray(bytes, crypto.generateInitialisationVector().length, bytes.length);
-		return Codec.fromByteArray(bytes);
-	}
-
 }

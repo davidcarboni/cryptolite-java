@@ -99,7 +99,8 @@ import org.apache.commons.lang.StringUtils;
  * @author David Carboni
  * 
  */
-public class Crypto {
+@Deprecated
+public class CryptoLegacy {
 
 	/** The name of the cipher algorithm to use for symmetric cryptographic operations. */
 	public static final String CIPHER_ALGORITHM = "AES";
@@ -121,7 +122,7 @@ public class Crypto {
 	 * Initialises the instance by getting and caching a {@link Cipher} instance for
 	 * {@value #CIPHER_NAME}.
 	 */
-	public Crypto() {
+	public CryptoLegacy() {
 
 		try {
 

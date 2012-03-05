@@ -34,14 +34,14 @@ import javax.crypto.spec.SecretKeySpec;
  * is slightly different, using both public-private and secret key encryption. If you wish to do
  * this, you need to use something along the lines of the following:
  * <ul>
- * <li>Encrypt the data being transmitted with a {@link SecretKey}, using the {@link Crypto} class.</li>
+ * <li>Encrypt the data being transmitted with a {@link SecretKey}, using the {@link CryptoLegacy} class.</li>
  * <li>Encrypt the {@link SecretKey} using the destination user's {@link PublicKey} by calling
  * {@link KeyExchange#encryptKey(SecretKey, PublicKey)}.</li>
  * <li>Send the encrypted {@link SecretKey} to the destination user with the encrypted data.</li>
  * <li>Use the destination user's {@link PrivateKey} to decrypt the {@link SecretKey}, by calling
  * {@link KeyExchange#decryptKey(String, PrivateKey)}.</li>
  * <li>The destination user can then use the recovered {@link SecretKey} to decrypt the data, using
- * the {@link Crypto} class.</li>
+ * the {@link CryptoLegacy} class.</li>
  * </ul>
  * <p>
  * This solves the problem of securely exchanging a {@link SecretKey} so that two parties can use
@@ -140,7 +140,7 @@ public class KeyExchange {
 		}
 
 		// Reconstruct the key:
-		SecretKeySpec key = new SecretKeySpec(decrypted, Crypto.CIPHER_ALGORITHM);
+		SecretKeySpec key = new SecretKeySpec(decrypted, CryptoLegacy.CIPHER_ALGORITHM);
 
 		return key;
 	}

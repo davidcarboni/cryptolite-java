@@ -24,28 +24,28 @@ import org.junit.Test;
 
 /**
  * 
- * Test for {@link Crypto}.
+ * Test for {@link CryptoLegacy}.
  * 
  * @author David Carboni
  * 
  */
 public class CryptoTest {
 
-	private Crypto crypto;
+	private CryptoLegacy crypto;
 	private SecretKey key;
 
 	/**
-	 * Gets a {@link Crypto} instance and a {@link SecretKey} instance.
+	 * Gets a {@link CryptoLegacy} instance and a {@link SecretKey} instance.
 	 */
 	@Before
 	public void setUp() {
-		crypto = new Crypto();
+		crypto = new CryptoLegacy();
 		key = Keys.newSecretKey();
 	}
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 */
 	@Test
 	public void testEncryptStringSecretKey() {
@@ -63,7 +63,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#encrypt(java.lang.String, javax.crypto.SecretKey)}
 	 * where the plaintext is an empty string.
 	 * 
 	 */
@@ -84,7 +84,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#encrypt(java.lang.String, javax.crypto.SecretKey)}
 	 * where the plaintext is null.
 	 */
 	@Test
@@ -102,7 +102,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 */
 	@Test
 	public void testDecryptStringSecretKey() {
@@ -121,7 +121,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#decrypt(java.lang.String, javax.crypto.SecretKey)}
 	 * where the ciphertext is an empty string.
 	 */
 	@Test
@@ -139,7 +139,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#decrypt(java.lang.String, javax.crypto.SecretKey)}
 	 * where the ciphertext is null.
 	 */
 	@Test
@@ -157,7 +157,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws IOException
 	 *             {@link IOException}
@@ -185,7 +185,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)}.
+	 * {@link org.workdocx.cryptolite.CryptoLegacy#decrypt(java.io.InputStream, javax.crypto.SecretKey)}.
 	 * This test is in fact the same as {@link #testEncryptOutputStreamSecretKey()}.
 	 * 
 	 * @throws IOException
