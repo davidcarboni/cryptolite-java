@@ -33,49 +33,32 @@
 		</repository>
 	</repositories>
 
-	<!-- All dependencies are specified using a lower-bounded range in order to be flexible. -->
+	<!-- All dependencies are specified using a lower-bounded range in order 
+		to be flexible. -->
 
 	<dependencies>
-	
-	<!-- BouncyCastle is the main dependency: -->
-	
+
+		<!-- BouncyCastle is the main dependency: -->
+
 		<dependency>
 			<groupId>bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
 			<version>136</version>
 		</dependency>
-		
-		
-		<!--  For Java 1.6 -->
-		<!-- 
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
-			<version>140</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
-		
-		<!--  For Java 1.5 -->
-		<!-- 
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk15</artifactId>
-			<version>140</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
-		
-		<!--  For Java 1.4 -->
-		<!-- 
-		<dependency>
-			<groupId>bouncycastle</groupId>
-			<artifactId>bcprov-jdk14</artifactId>
-			<version>140</version>
-			<scope>provided</scope>
-		</dependency>
-		-->
-		
+
+
+		<!-- For Java 1.6 -->
+		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk16</artifactId> 
+			<version>140</version> <scope>provided</scope> </dependency> -->
+
+		<!-- For Java 1.5 -->
+		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk15</artifactId> 
+			<version>140</version> <scope>provided</scope> </dependency> -->
+
+		<!-- For Java 1.4 -->
+		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk14</artifactId> 
+			<version>140</version> <scope>provided</scope> </dependency> -->
+
 		<!-- Compile dependencies -->
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -85,9 +68,9 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.5</version>
+			<version>2.6</version>
 		</dependency>
-		
+
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -101,7 +84,7 @@
 			<version>2.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
@@ -117,7 +100,7 @@
 				</includes>
 			</resource>
 		</resources>
-	
+
 		<plugins>
 
 			<!-- This configures the build to use JVM 1.5 compliance: -->
