@@ -120,7 +120,7 @@ public class KeyWrapper implements Serializable {
 	 * 
 	 * @param key
 	 *            The {@link SecretKey} to be wrapped. This method internally just calls
-	 *            {@link #wrap(Key)}, but this provides a clear naming match with
+	 *            {@link #wrap(Key, String)}, but this provides a clear naming match with
 	 *            {@link #unwrapSecretKey(String)}.
 	 * @return A String representation (base64-encoded) of the wrapped {@link SecretKey}, for ease
 	 *         of storage.
@@ -134,7 +134,7 @@ public class KeyWrapper implements Serializable {
 	 * 
 	 * @param key
 	 *            The {@link PrivateKey} to be wrapped. This method internally just calls
-	 *            {@link #wrap(Key)}, but this provides a clear naming match with
+	 *            {@link #wrap(Key, String)}, but this provides a clear naming match with
 	 *            {@link #unwrapPrivateKey(String)}.
 	 * @return A String representation (base64-encoded) of the wrapped {@link PrivateKey}, for ease
 	 *         of storage.
@@ -228,7 +228,7 @@ public class KeyWrapper implements Serializable {
 	/**
 	 * @param wrapKey
 	 *            the base64-encoded wrapKey to set. This value can be obtained from
-	 *            {@link #getWrapKey()} and {@link #generateWrapKey(String, String)}. This is only
+	 *            {@link #getWrapKey()} and {@link #generateKey(String, String)}. This is only
 	 *            useful if you want to initialise an instance with a previously stored key, rather
 	 *            than recomputing a key from a password and salt.
 	 */

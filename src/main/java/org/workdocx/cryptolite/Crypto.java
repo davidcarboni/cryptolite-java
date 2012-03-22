@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author David Carboni
  * 
  */
-public class CryptoNew {
+public class Crypto {
 
 	/** The name of the cipher algorithm to use for symmetric cryptographic operations. */
 	public static final String CIPHER_ALGORITHM = "AES";
@@ -119,7 +119,7 @@ public class CryptoNew {
 	 * Initialises the instance by getting and caching a {@link Cipher} instance for
 	 * {@value #CIPHER_NAME}.
 	 */
-	public CryptoNew() {
+	public Crypto() {
 
 		try {
 
@@ -145,15 +145,12 @@ public class CryptoNew {
 	 *            The input String.
 	 * @param key
 	 *            The key to be used to encrypt the String.
-	 * @param isLegacy
-	 *            This should be false if at all possible. Use true only if you absolutely have to
-	 *            work with pre-Cryptolite-0.3.0 encryption.
 	 * @return The encrypted String, base-64 encoded, or null if the given String is null. An empty
 	 *         string can be encrypted, but a null one cannot.
 	 * @throws InvalidKeyException
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
 	 */
-	public String encrypt(String string, SecretKey key, boolean isLegacy) throws InvalidKeyException {
+	public String encrypt(String string, SecretKey key) throws InvalidKeyException {
 
 		// Basic null check. 
 		// An empty string can be encrypted:
@@ -166,20 +163,6 @@ public class CryptoNew {
 
 		// Generate an initialisation vector:
 		byte[] iv = generateInitialisationVector();
-
-		// Cryptolite versions earlier that 0.3.0 used a an inline IV. 
-		// This isn't effective in CTR mode because each block is independent. 
-		// An inline IV is only useful in modes where subsequent block are 
-		// affected by previous ones, such as CBC.
-		if (isLegacy) {
-
-			// Use a zero IV:
-			iv = new byte[cipher.getBlockSize()];
-
-			// For legacy encryption, prepend the IV. 
-			// This was intended to be an inline IV:
-			bytes = ArrayUtils.addAll(generateInitialisationVector(), bytes);
-		}
 
 		// Prepare a cipher instance:
 		initCipher(Cipher.ENCRYPT_MODE, key, iv);
@@ -195,9 +178,7 @@ public class CryptoNew {
 		}
 
 		// Concatenate the iv and the encrypted data:
-		if (!isLegacy) {
-			result = ArrayUtils.addAll(iv, result);
-		}
+		result = ArrayUtils.addAll(iv, result);
 
 		return Codec.toBase64String(result);
 	}
@@ -207,17 +188,14 @@ public class CryptoNew {
 	 * 
 	 * @param encrypted
 	 *            The encrypted String, base-64 encoded, as returned by
-	 *            {@link #encrypt(String, SecretKey, boolean)}.
+	 *            {@link #encrypt(String, SecretKey)}.
 	 * @param key
 	 *            The key to be used for decryption.
-	 * @param isLegacy
-	 *            This should be false if at all possible. Use true only if you absolutely have to
-	 *            work with pre-Cryptolite-0.3.0 encryption.
 	 * @return The decrypted String, or null if the encrypted String is null.
 	 * @throws InvalidKeyException
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
 	 */
-	public String decrypt(String encrypted, SecretKey key, boolean isLegacy) throws InvalidKeyException {
+	public String decrypt(String encrypted, SecretKey key) throws InvalidKeyException {
 
 		// Basic null/empty check.
 		// An empty string can be encrypted, but not decrypted:
@@ -230,25 +208,9 @@ public class CryptoNew {
 		byte[] iv;
 		byte[] data;
 
-		// Cryptolite versions earlier that 0.3.0 used a an inline IV. 
-		// This isn't effective in CTR mode because each block is independent. 
-		// An inline IV is only useful in modes where subsequent block are 
-		// affected by previous ones, such as CBC.
-		if (isLegacy) {
-
-			// Use a zero IV:
-			iv = new byte[cipher.getBlockSize()];
-
-			// For legacy encryption, the initial random block was
-			// intended to be an inline IV and is stripped out later:
-			data = bytes;
-
-		} else {
-
-			// Separate the IV from the data:
-			iv = ArrayUtils.subarray(bytes, 0, ivSize);
-			data = ArrayUtils.subarray(bytes, ivSize, bytes.length);
-		}
+		// Separate the IV from the data:
+		iv = ArrayUtils.subarray(bytes, 0, ivSize);
+		data = ArrayUtils.subarray(bytes, ivSize, bytes.length);
 
 		// Prepare a cipher instance with the IV:
 		initCipher(Cipher.DECRYPT_MODE, key, iv);
@@ -263,10 +225,6 @@ public class CryptoNew {
 			throw new RuntimeException("Padding error detected when completing String encrypiton.", e);
 		}
 
-		if (isLegacy) {
-			// Remove the "inline IV" block from the decrypted data:
-			result = ArrayUtils.subarray(result, ivSize, result.length);
-		}
 		return Codec.fromByteArray(result);
 	}
 
@@ -281,17 +239,14 @@ public class CryptoNew {
 	 * Note that this method writes an initialisation vector to the destination OutputStream, so the
 	 * destination parameter will have some bytes written to it before this method returns. These
 	 * bytes are necessary for decryption and a corresponding call to
-	 * {@link #decrypt(InputStream, SecretKey, boolean)} will read and filter them out from the
-	 * underlying InputStream before returning it.
+	 * {@link #decrypt(InputStream, SecretKey)} will read and filter them out from the underlying
+	 * InputStream before returning it.
 	 * 
 	 * @param destination
 	 *            The output stream to be wrapped with a {@link CipherOutputStream}.
 	 * @param key
 	 *            The key to be used to encrypt data written to the returned
 	 *            {@link CipherOutputStream}.
-	 * @param isLegacy
-	 *            This should be false if at all possible. Use true only if you absolutely have to
-	 *            work with pre-Cryptolite-0.3.0 encryption.
 	 * @return A {@link CipherOutputStream}, which wraps the given {@link OutputStream}.
 	 * @throws IOException
 	 *             If an error occurs in writing the initialisation vector to the destination
@@ -299,8 +254,7 @@ public class CryptoNew {
 	 * @throws InvalidKeyException
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
 	 */
-	public OutputStream encrypt(OutputStream destination, SecretKey key, boolean isLegacy) throws IOException,
-			InvalidKeyException {
+	public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException, InvalidKeyException {
 
 		// Basic null check. 
 		// An empty stream can be encrypted:
@@ -310,23 +264,13 @@ public class CryptoNew {
 
 		// Generate an initialisation vector:
 		byte[] iv = generateInitialisationVector();
-		if (isLegacy) {
-			// Legacy encryption uses a zero IV.
-			// It tries to use an inline IV instead.
-			iv = new byte[cipher.getBlockSize()];
-		}
 
 		// Get a cipher instance and instantiate the CipherOutputStream:
 		initCipher(Cipher.ENCRYPT_MODE, key, iv);
 		CipherOutputStream cipherOutputStream = new CipherOutputStream(destination, cipher);
 
-		if (isLegacy) {
-			// Legacy encryption attempted to use an inline IV:
-			cipherOutputStream.write(iv);
-		} else {
-			// Correct use is to store the IV unencrypted at the start of the stream:
-			destination.write(iv);
-		}
+		// Correct use is to store the IV unencrypted at the start of the stream:
+		destination.write(iv);
 
 		// Return the initialised stream:
 		return cipherOutputStream;
@@ -343,16 +287,13 @@ public class CryptoNew {
 	 * Note that this method reads and discards the random initialisation vector from the source
 	 * InputStream, so the source parameter will have some bytes read from it before this method
 	 * returns. These bytes are necessary for decryption and the call to
-	 * {@link #encrypt(OutputStream, SecretKey,boolean)} will have added these to the start of the
+	 * {@link #encrypt(OutputStream, SecretKey)} will have added these to the start of the
 	 * underlying data automatically.
 	 * 
 	 * @param source
 	 *            The source {@link InputStream}, containing encrypted data.
 	 * @param key
 	 *            The key to be used for decryption.
-	 * @param isLegacy
-	 *            This should be false if at all possible. Use true only if you absolutely have to
-	 *            work with pre-Cryptolite-0.3.0 encryption.
 	 * @return A {@link CipherInputStream}, which wraps the given source stream and will decrypt the
 	 *         data as they are read.
 	 * @throws IOException
@@ -360,26 +301,18 @@ public class CryptoNew {
 	 * @throws InvalidKeyException
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
 	 */
-	public InputStream decrypt(InputStream source, SecretKey key, boolean isLegacy) throws IOException,
-			InvalidKeyException {
+	public InputStream decrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
 
 		// Remove the initialisation vector from the start of the stream.
 		// NB if the stream is empty, the read will return -1 and no harm will be done.
 		byte[] iv = new byte[cipher.getBlockSize()];
-		if (!isLegacy) {
-			// The IV is stored unencrypted at the start of the stream:
-			source.read(iv);
-		}
+
+		// The IV is stored unencrypted at the start of the stream:
+		source.read(iv);
 
 		// Get a cipher instance and create the cipherInputStream:
 		initCipher(Cipher.DECRYPT_MODE, key, iv);
 		CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
-
-		// For legacy encryption, read past the block
-		// which was intended as an inline IV:
-		if (isLegacy) {
-			cipherInputStream.read(iv);
-		}
 
 		// Return the initialised stream:
 		return cipherInputStream;

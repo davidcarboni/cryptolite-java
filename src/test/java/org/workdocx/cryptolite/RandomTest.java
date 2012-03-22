@@ -25,8 +25,10 @@ public class RandomTest {
 	/**
 	 * Clears the cached instance.
 	 * 
-	 * @throws NoSuchFieldException .
-	 * @throws IllegalAccessException .
+	 * @throws NoSuchFieldException
+	 *             {@link NoSuchFieldException}
+	 * @throws IllegalAccessException
+	 *             {@link IllegalAccessException}
 	 */
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -60,7 +62,7 @@ public class RandomTest {
 	 * number of bits in the returned ID is the same as specified by {@link Random#ID_BITS}.
 	 */
 	@Test
-	public void testGenerateId() {
+	public void shouldGenerateIdOfExpectedLength() {
 
 		// Given
 		String id;
@@ -80,12 +82,12 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Random#testGenerateSalt()}. This checks that
-	 * the number of bytes in the returned salt value matches the length specified in
+	 * Test method for {@link org.workdocx.cryptolite.Random#generateSalt()}. This checks that the
+	 * number of bytes in the returned salt value matches the length specified in
 	 * {@link Random#SALT_BYTES}.
 	 */
 	@Test
-	public void testGenerateSalt() {
+	public void shouldGenerateSaltOfExpectedLength() {
 
 		// Given
 		String salt;
@@ -95,6 +97,27 @@ public class RandomTest {
 
 		// Then
 		assertEquals(Random.SALT_BYTES, Codec.fromBase64String(salt).length);
+	}
+
+	/**
+	 * Test method for {@link org.workdocx.cryptolite.Random#generatePassword(int)}. This checks
+	 * that the number of characters in the returned password matches the specified length of the
+	 * password.
+	 */
+	@Test
+	public void shouldGeneratePasswordOfSpecifiedLength() {
+
+		// Given
+		String password;
+		final int maxSize = 100;
+
+		for (int i = 1; i < maxSize; i++) {
+			// When
+			password = Random.generatePassword(i);
+
+			// Then
+			assertEquals(i, password.length());
+		}
 	}
 
 	/**
@@ -140,6 +163,30 @@ public class RandomTest {
 
 			// Then
 			assertFalse(salt1.equals(salt2));
+		}
+	}
+
+	/**
+	 * Test the general randomness of password generation. If this test fails, consider yourself
+	 * astoundingly lucky.. or check the code is really producing random numbers.
+	 */
+	@Test
+	public void shouldProduceRandomPasswords() {
+
+		final int iterations = 1000;
+		final int passwordSize = 8;
+		for (int i = 0; i < iterations; i++) {
+
+			// Given
+			String password1;
+			String password2;
+
+			// When
+			password1 = Random.generatePassword(passwordSize);
+			password2 = Random.generatePassword(passwordSize);
+
+			// Then
+			assertFalse(password1.equals(password2));
 		}
 	}
 

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.workdocx</groupId>
 	<artifactId>cryptolite</artifactId>
-	<version>0.3.0</version>
+	<version>0.4.0</version>
 	<name>Good, clean cryptography</name>
 	<description>Provides simple, "right" cryptography, bypassing all the options. See: http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</description>
 	<url>http://workdocx.com</url>
@@ -41,23 +41,23 @@
 		<!-- BouncyCastle is the main dependency: -->
 
 		<dependency>
-			<groupId>bouncycastle</groupId>
+			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15</artifactId>
-			<version>136</version>
+			<version>1.46</version>
 		</dependency>
 
 
 		<!-- For Java 1.6 -->
-		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk16</artifactId> 
-			<version>140</version> <scope>provided</scope> </dependency> -->
+		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk16</artifactId> 
+			<version>1.46</version> <scope>provided</scope> </dependency> -->
 
 		<!-- For Java 1.5 -->
-		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk15</artifactId> 
-			<version>140</version> <scope>provided</scope> </dependency> -->
+		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk15</artifactId> 
+			<version>1.46</version> <scope>provided</scope> </dependency> -->
 
 		<!-- For Java 1.4 -->
-		<!-- <dependency> <groupId>bouncycastle</groupId> <artifactId>bcprov-jdk14</artifactId> 
-			<version>140</version> <scope>provided</scope> </dependency> -->
+		<!-- <dependency> <groupId>org.bouncycastle</groupId> <artifactId>bcprov-jdk14</artifactId> 
+			<version>1.46</version> <scope>provided</scope> </dependency> -->
 
 		<!-- Compile dependencies -->
 		<dependency>
