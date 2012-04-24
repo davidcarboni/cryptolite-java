@@ -4,6 +4,7 @@
 package org.workdocx.cryptolite;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -52,6 +53,25 @@ public class DigitalSignatureTest {
 	 * .
 	 */
 	@Test
+	public void shouldReturnNullForNullContentString() {
+
+		// Given
+		String content = null;
+		PrivateKey privateKey = keyPair.getPrivate();
+
+		// When
+		String signature = digitalSignature.sign(content, privateKey);
+
+		// Then
+		assertNull(signature);
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
+	 * .
+	 */
+	@Test
 	public void testSignStringPrivateKey() {
 
 		// Given
@@ -85,6 +105,25 @@ public class DigitalSignatureTest {
 		// Then
 		System.out.println("Signature: " + signature + " (" + signature.length() + ")");
 		assertFalse(digitalSignature.verify(changedContent, keyPair.getPublic(), signature));
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
+	 * .
+	 */
+	@Test
+	public void shouldReturnNullForNullContentStream() {
+
+		// Given
+		InputStream content = null;
+		PrivateKey privateKey = keyPair.getPrivate();
+
+		// When
+		String signature = digitalSignature.sign(content, privateKey);
+
+		// Then
+		assertNull(signature);
 	}
 
 	/**

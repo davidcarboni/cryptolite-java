@@ -62,9 +62,13 @@ public class DigitalSignature {
 	 * @param privateKey
 	 *            The {@link PrivateKey} with which the input is to be signed. This can be obtained
 	 *            via {@link Keys#newKeyPair()}.
-	 * @return The signature as a base64-encoded string.
+	 * @return The signature as a base64-encoded string. If the content is null, null is returned.
 	 */
 	public String sign(InputStream content, PrivateKey privateKey) {
+
+		if (content == null) {
+			return null;
+		}
 
 		Signature signer = getSignature();
 		try {
@@ -165,7 +169,7 @@ public class DigitalSignature {
 	/**
 	 * @return A new {@link Signature} instance.
 	 */
-	private Signature getSignature() {
+	protected Signature getSignature() {
 
 		try {
 			return Signature.getInstance(ALGORITHM, SecurityProvider.getProviderName());
