@@ -13,6 +13,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 
@@ -49,53 +50,66 @@ public class Password {
 	 * 
 	 * @param password
 	 *            The password to be hashed.
-	 * @return The password hash as a base-64 encoded String.
+	 * @return The password hash as a base-64 encoded String. If the given password is null, null is
+	 *         returned.
 	 */
 	public static String hash(String password) {
 
-		// Generate a random salt:
-		byte[] salt = Codec.fromBase64String(Random.generateSalt());
+		String result = null;
 
-		// Hash the password:
-		byte[] hash = hash(password, salt);
+		if (password != null) {
 
-		// Concatenate the salt and hash: 
-		byte[] result = ArrayUtils.addAll(salt, hash);
+			// Generate a random salt:
+			byte[] salt = Codec.fromBase64String(Random.generateSalt());
 
-		// Base-64 encode the result:
-		String base64 = Codec.toBase64String(result);
-		return base64;
+			// Hash the password:
+			byte[] hash = hash(password, salt);
+
+			// Concatenate the salt and hash: 
+			byte[] concatenated = ArrayUtils.addAll(salt, hash);
+
+			// Base-64 encode the result:
+			result = Codec.toBase64String(concatenated);
+		}
+
+		return result;
 	}
 
 	/**
 	 * Verifies the given plaintext password against a value that {@link #hash(String)} produced.
 	 * 
 	 * @param password
-	 *            A plaintext password.
+	 *            A plaintext password. If this is null, false will be returned.
 	 * @param hash
-	 *            A value previously produced by {@link #hash(String)}.
+	 *            A value previously produced by {@link #hash(String)}. If this is empty or shorter
+	 *            than expected, false will be returned.
 	 * @return If the password hashes to the same value as that contained in the hash parameter,
 	 *         true.
 	 */
 	public static boolean verify(String password, String hash) {
 
-		// Get the salt and hash from the input string:
-		byte[] value = Codec.fromBase64String(hash);
+		boolean result = false;
 
-		// Check the size of the value to ensure it's at least as long as the salt: 
-		if (value.length <= SALT_SIZE) {
-			return false;
+		if (StringUtils.isNotBlank(hash) && password != null) {
+			// Get the salt and hash from the input string:
+			byte[] value = Codec.fromBase64String(hash);
+
+			// Check the size of the value to ensure it's at least as long as the salt: 
+			if (value.length >= SALT_SIZE) {
+
+				// Extract the salt and password hash:
+				byte[] valueSalt = getSalt(value);
+				byte[] valueHash = getHash(value);
+
+				// Hash the password with the same salt in order to get the same result:
+				byte[] passwordHash = hash(password, valueSalt);
+
+				// See whether they match:
+				result = Arrays.equals(valueHash, passwordHash);
+			}
 		}
 
-		// Extract the salt and password hash:
-		byte[] valueSalt = getSalt(value);
-		byte[] valueHash = getHash(value);
-
-		// Hash the password with the same salt in order to get the same result:
-		byte[] passwordHash = hash(password, valueSalt);
-
-		// See whether they match:
-		return Arrays.equals(valueHash, passwordHash);
+		return result;
 	}
 
 	/**
@@ -127,7 +141,8 @@ public class Password {
 		}
 
 		// Generate the bytes for the hash by generating a key and using its encoded form:
-		PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, ITERATION_COUNT, HASH_SIZE);
+		char[] passwordCharacters = toCharArray(password);
+		PBEKeySpec pbeKeySpec = new PBEKeySpec(passwordCharacters, salt, ITERATION_COUNT, HASH_SIZE);
 		byte[] bytes;
 		try {
 			Key key = factory.generateSecret(pbeKeySpec);
@@ -137,6 +152,26 @@ public class Password {
 		}
 
 		return bytes;
+	}
+
+	/**
+	 * Converts the given password to a char array.
+	 * <p>
+	 * NB: an empty char array can cause errors when passed to
+	 * {@link SecretKeyFactory#generateSecret(java.security.spec.KeySpec)}, so if the password is an
+	 * empty String, the return value is a char array containing a single element of value 0.
+	 * 
+	 * @param password
+	 *            The password to be converted.
+	 * @return {@link String#toCharArray()} or, if the password is an empty string
+	 *         <code>new char[] {0}</code>
+	 */
+	private static char[] toCharArray(String password) {
+		char[] result = password.toCharArray();
+		if (result.length == 0) {
+			result = new char[] {0};
+		}
+		return result;
 	}
 
 	/**

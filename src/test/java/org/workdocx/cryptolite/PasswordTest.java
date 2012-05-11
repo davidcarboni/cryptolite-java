@@ -4,6 +4,7 @@
 package org.workdocx.cryptolite;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -18,10 +19,11 @@ import org.junit.Test;
 public class PasswordTest {
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Password#hash(java.lang.String)}.
+	 * Verifies that {@link org.workdocx.cryptolite.Password#hash(java.lang.String)} at least
+	 * returns something other than the String passed in.
 	 */
 	@Test
-	public void testHash() {
+	public void shouldHash() {
 		// Given
 		String password = "testHash";
 
@@ -34,11 +36,11 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Password#hash(java.lang.String)}. Checks that
-	 * two hashes of the same password are different thanks to a random salt value.
+	 * Verifies that {@link org.workdocx.cryptolite.Password#hash(java.lang.String)} hashes the same
+	 * password to a different value on subsequent invocations - i.e. that the hash is salted.
 	 */
 	@Test
-	public void testHashDifferently() {
+	public void shouldHashDifferentlyEachTime() {
 
 		// Given
 		String password = "testHashDifferently";
@@ -52,12 +54,12 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)}. Checks
-	 * that a password can be verified against its hash.
+	 * Checks that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
+	 * successfully verify a password against its hash.
 	 */
 	@Test
-	public void testVerify() {
+	public void shouldVerifyCorrectPassword() {
 
 		// Given
 		String password = "testVerify";
@@ -71,18 +73,59 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} where the
-	 * hash value is shorter that the size of the salt. This checks that we get a polite refusal
-	 * rather than an exception.
+	 * Checks that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
+	 * successfully verify a blank password against its hash.
 	 */
 	@Test
-	public void testVerifyTooShort() {
+	public void shouldVerifyBlankPassword() {
 
 		// Given
-		String password = "testVerifyTooShort";
-		String hash = "too short";
-		assertTrue(Codec.toByteArray(hash).length <= Password.SALT_SIZE);
+		String password = "";
+		String hash = Password.hash(password);
+
+		// When
+		boolean result = Password.verify(password, hash);
+
+		// Then
+		assertTrue(result);
+	}
+
+	/**
+	 * Ensures that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns
+	 * false for an incorrect password.
+	 */
+	@Test
+	public void shouldntVerifyIncorrectPassword() {
+
+		// Given
+		String password = "password";
+		String incorrect = "something else";
+		// Note we add 
+		String hash = Password.hash(password);
+
+		// When
+		boolean result = Password.verify(incorrect, hash);
+
+		// Then
+		assertFalse(result);
+	}
+
+	/**
+	 * Verifies that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * polite refusal, rather than throwing an exception, if the hash value is too short (ie less
+	 * that the size of the salt).
+	 */
+	@Test
+	public void shouldntThrowExceptionIfHashTooShort() {
+
+		// Given
+		String password = "password";
+		byte[] hashBytes = new byte[Password.SALT_SIZE - 1];
+		Random.getInstance().nextBytes(hashBytes);
+		String hash = Codec.toBase64String(hashBytes);
 
 		// When
 		boolean result = Password.verify(password, hash);
@@ -92,21 +135,75 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)}. Checks
-	 * that an incorrect password doesn't verify.
+	 * Checks that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * gracefully returns false, rather than throwing an exception if the hash only contains enough
+	 * bytes for the salt value (i.e. zero bytes for the password part of the hash).
 	 */
 	@Test
-	public void testVerifyFail() {
+	public void shouldntThrowExceptionIfHashHasNoPassword() {
 
 		// Given
-		String password = "testVerifyFail";
-		String incorrect = "testVerifyFailz";
-		// Note we add 
-		String hash = Password.hash(password);
+		String password = "password";
+		String hash = Random.generateSalt();
 
 		// When
-		boolean result = Password.verify(incorrect, hash);
+		boolean result = Password.verify(password, hash);
+
+		// Then
+		assertFalse(result);
+	}
+
+	/**
+	 * Verifies that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * polite refusal, rather than throwing an exception, if the password value is null.
+	 */
+	@Test
+	public void shouldntThrowExceptionIfVerifyPasswordNull() {
+
+		// Given
+		String password = null;
+		String hash = Password.hash("password");
+
+		// When
+		boolean result = Password.verify(password, hash);
+
+		// Then
+		assertFalse(result);
+	}
+
+	/**
+	 * Verifies that {@link org.workdocx.cryptolite.Password#hash(String)} returns null if the
+	 * password value given is null.
+	 */
+	@Test
+	public void shouldReturnNullForNullPassword() {
+
+		// Given
+		String password = null;
+
+		// When
+		String hash = Password.hash(password);
+
+		// Then
+		assertNull(hash);
+	}
+
+	/**
+	 * Verifies that
+	 * {@link org.workdocx.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * polite refusal, rather than throwing an exception, if the hash value is null.
+	 */
+	@Test
+	public void shouldntThrowExceptionIfVerifyHashNull() {
+
+		// Given
+		String password = "password";
+		String hash = null;
+
+		// When
+		boolean result = Password.verify(password, hash);
 
 		// Then
 		assertFalse(result);
