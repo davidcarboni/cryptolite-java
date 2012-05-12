@@ -26,8 +26,10 @@ public class SecurityProviderTest {
 	/**
 	 * Clears the cached instance.
 	 * 
-	 * @throws NoSuchFieldException .
-	 * @throws IllegalAccessException .
+	 * @throws NoSuchFieldException
+	 *             {@link NoSuchFieldException}
+	 * @throws IllegalAccessException
+	 *             {@link IllegalAccessException}
 	 */
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {

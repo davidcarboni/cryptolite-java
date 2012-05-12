@@ -7,9 +7,13 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * 
@@ -17,16 +21,37 @@ import javax.crypto.SecretKey;
  * <p>
  * The following key types are available:
  * <ul>
- * <li>Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@value #SYMMETRIC_KEY_SIZE}</li>
+ * <li>Deterministic Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length
+ * {@value #SYMMETRIC_KEY_SIZE}, based on a password</li>
+ * <li>Random Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@value #SYMMETRIC_KEY_SIZE}</li>
  * <li>Asymmetric {@value #ASYMMETRIC_ALGORITHM} keys of length {@value #ASYMMETRIC_KEY_SIZE}</li>
- * <li>Key-wrapping keys using {@value #WRAP_ALGORITHM}, of length {@value #WRAP_KEY_SIZE}</li>
  * </ul>
- * This class also provides functionality for "wrapping" and "unwrapping" keys so that they can be
- * safely stored. NB there is an exception to this, which is that it's not really helpful to wrap a
- * key used to wrap other keys, as this requires a further wrapping key. Wrap keys are therefore
- * generated directly as a base64-encoded String and need to be managed appropriately. This is
- * always a tricky question. The answer may be to implement a password-based key derivation
- * function, such as PBKDF2, once Cryptolite moves to JDK 1.6.
+ * <em>Deterministic keys:</em> these are the easiest to manage as they don't need to be stored. So
+ * long as you pass in the same password each time, the same key will be generated every time. The
+ * drawback is that if you want to generate more than one key you'll need more than one password.
+ * However, if you do only need one key, this approach can be ideal as you can use the user's
+ * plaintext password to generate the key. Since you never store a user's plaintext password (see
+ * {@link Password#hash(String)}) the key can only be regenerated using the correct password. Bear
+ * in mind however that if the user changes (or resets) their password this will result in a
+ * different key, so you'll need a plan for recovering data encrypted with the old key and
+ * re-encrypting it with the new one.
+ * <p>
+ * <em>Random keys:</em> these are simple to generate, but need to be stored because it's
+ * effectively impossible to regenerate the key. To store a key you should use
+ * {@link KeyWrapper#wrapSecretKey(SecretKey)}. This produces an encrypted version of the key which
+ * can safely be stored in, for example, a database or properties file. The benefit of the
+ * {@link KeyWrapper} approach is that when a user changes their password you'll only need to
+ * re-encrypt the stored keys using a {@link KeyWrapper} initialised with the new password, rather
+ * than have to re-encrypt all data encrypted with the key.
+ * <p>
+ * In both cases when a user changes their password you will have the old and the new plaintext
+ * passwords, meaning you can decrypt with the old an re-encrypt with the new. The difficulty comes
+ * when you need to reset a password, because it's not possible to recover the old password. In this
+ * case you either need a secondary password, such as a security question, or you need to be clear
+ * that data cannot be recovered. Whatever your solution, remember that storing someone's password
+ * in any recoverable form is a clear security no-no, so you'll need to put some thought into the
+ * recovery process.
+ * 
  * 
  * @author David Carboni
  * 
@@ -38,6 +63,18 @@ public class Keys {
 
 	/** The key size for symmetric keys: {@value #SYMMETRIC_KEY_SIZE}. */
 	public static final int SYMMETRIC_KEY_SIZE = 128;
+
+	/**
+	 * The algorithm to use to generate password-based secret keys:
+	 * {@value #SYMMETRIC_PASSWORD_ALGORITHM}.
+	 */
+	public static final String SYMMETRIC_PASSWORD_ALGORITHM = "PBKDF2WithHmacSHA1";
+
+	/**
+	 * The number of iterations to use for password-based key derivation:
+	 * {@value #SYMMETRIC_PASSWORD_ITERATIONS}.
+	 */
+	public static final int SYMMETRIC_PASSWORD_ITERATIONS = 1024;
 
 	/** The asymmetric encryption algorithm: {@value #ASYMMETRIC_ALGORITHM}. */
 	public static final String ASYMMETRIC_ALGORITHM = "RSA";
@@ -68,6 +105,98 @@ public class Keys {
 		SecretKey result = keyGenerator.generateKey();
 
 		return result;
+	}
+
+	/**
+	 * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
+	 * algorithm, using the given password and salt values. Given the same password and salt, this
+	 * method will (re)generate the same key.
+	 * <p>
+	 * Note that this method may or may not handle blank passwords. This seems to be related to the
+	 * implementation of the {@value #SYMMETRIC_PASSWORD_ALGORITHM} algorithm in different Java
+	 * and/or BouncyCastle provider versions.
+	 * 
+	 * @param password
+	 *            The starting point to use in generating the key. This can be a password, or any
+	 *            suitably secret string. It's worth noting that, if a user's plaintext password is
+	 *            used, this makes key derivation secure, but means the key can never be recovered
+	 *            if a user forgets their password. If a different value, such as a password hash is
+	 *            used, this is not really secure, but does mean the key can be recovered if a user
+	 *            forgets their password. It's a trade-off, right?
+	 * @param salt
+	 *            A value for this parameter can be generated by calling
+	 *            {@link Random#generateSalt()}. You'll need to store the salt value (this is ok to
+	 *            do because salt isn't particularly sensitive) and use the same salt each time in
+	 *            order to always generate the same key. Using salt is good practice as it ensures
+	 *            that keys generated from the same password will be different - i.e. if two users
+	 *            use the password "password", having a salt value avoids the generated keys being
+	 *            identical which, for example, might give away someone's password.
+	 * @return A deterministic {@link SecretKey}, defined by the given password and salt
+	 */
+	public static SecretKey generateSecretKey(String password, String salt) {
+		return generateSecretKey(password.toCharArray(), salt, SYMMETRIC_KEY_SIZE);
+	}
+
+	/**
+	 * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
+	 * algorithm, using the given password and salt values. Given the same password and salt, this
+	 * method will (re)generate the same key.
+	 * 
+	 * @param password
+	 *            The starting point to use in generating the key. This can be a password, or any
+	 *            suitably secret string. It's worth noting that, if a user's plaintext password is
+	 *            used, this makes key derivation secure, but means the key can never be recovered
+	 *            if a user forgets their password. If a different value, such as a password hash is
+	 *            used, this is not really secure, but does mean the key can be recovered if a user
+	 *            forgets their password. It's a trade-off, right?
+	 * @param salt
+	 *            A value for this parameter can be generated by calling
+	 *            {@link Random#generateSalt()}. You'll need to store the salt value (this is ok to
+	 *            do because salt isn't particularly sensitive) and use the same salt each time in
+	 *            order to always generate the same key. Using salt is good practice as it ensures
+	 *            that keys generated from the same password will be different - i.e. if two users
+	 *            use the password "password", having a salt value avoids the generated keys being
+	 *            identical which, for example, might give away someone's password.
+	 * @param keySize
+	 *            The size of key to generate. For encryption this should be
+	 *            {@link #SYMMETRIC_KEY_SIZE}. For password hashing this should be
+	 *            {@link Password#HASH_SIZE}
+	 * @return A deterministic {@link SecretKey}, defined by the given password and salt
+	 */
+	static SecretKey generateSecretKey(char[] password, String salt, int keySize) {
+
+		// Get a SecretKeyFactory for ALGORITHM:
+		SecretKeyFactory factory;
+		try {
+			// TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
+			factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM, SecurityProvider.getProviderName());
+		} catch (NoSuchAlgorithmException e) {
+			try {
+				// TODO: If PBKDF2 is not available from BouncyCastle, try to use a default provider (Sun provides PBKDF2 in JDK 1.5):
+				factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM);
+			} catch (NoSuchAlgorithmException e1) {
+				throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_PASSWORD_ALGORITHM, e1);
+			}
+		} catch (NoSuchProviderException e) {
+			throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
+		}
+
+		// Generate the key:
+		byte[] saltBytes = Codec.fromBase64String(salt);
+		PBEKeySpec pbeKeySpec = new PBEKeySpec(password, saltBytes, SYMMETRIC_PASSWORD_ITERATIONS, keySize);
+		SecretKey key;
+		try {
+			key = factory.generateSecret(pbeKeySpec);
+		} catch (InvalidKeySpecException e) {
+			throw new RuntimeException("Error generating password-based key.", e);
+		}
+
+		// NB: At this point, key.getAlgorithm() returns SYMMETRIC_PASSWORD_ALGORITHM, 
+		// rather than SYMMETRIC_ALGORITHM, so create a new SecretKeySpec with the correct
+		// Algorithm.
+		// For an example of someone using this method, see:
+		// http://stackoverflow.com/questions/2860943/suggestions-for-library-to-hash-passwords-in-java
+		return new SecretKeySpec(key.getEncoded(), SYMMETRIC_ALGORITHM);
 	}
 
 	/**

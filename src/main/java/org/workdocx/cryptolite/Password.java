@@ -4,13 +4,7 @@
 package org.workdocx.cryptolite;
 
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -60,13 +54,13 @@ public class Password {
 		if (password != null) {
 
 			// Generate a random salt:
-			byte[] salt = Codec.fromBase64String(Random.generateSalt());
+			String salt = Random.generateSalt();
 
 			// Hash the password:
 			byte[] hash = hash(password, salt);
 
 			// Concatenate the salt and hash: 
-			byte[] concatenated = ArrayUtils.addAll(salt, hash);
+			byte[] concatenated = ArrayUtils.addAll(Codec.fromBase64String(salt), hash);
 
 			// Base-64 encode the result:
 			result = Codec.toBase64String(concatenated);
@@ -98,7 +92,7 @@ public class Password {
 			if (value.length >= SALT_SIZE) {
 
 				// Extract the salt and password hash:
-				byte[] valueSalt = getSalt(value);
+				String valueSalt = getSalt(value);
 				byte[] valueHash = getHash(value);
 
 				// Hash the password with the same salt in order to get the same result:
@@ -114,7 +108,7 @@ public class Password {
 
 	/**
 	 * This method does the actual work of hashing a plaintext password string, using
-	 * {@value #ALGORITHM}.
+	 * {@link Keys#generateSecretKey(char[], String, int)}.
 	 * 
 	 * @param password
 	 *            The plaintext password.
@@ -122,44 +116,19 @@ public class Password {
 	 *            The salt value to use in the hash.
 	 * @return The hash of the password.
 	 */
-	private static byte[] hash(String password, byte[] salt) {
+	private static byte[] hash(String password, String salt) {
 
-		// Get a SecretKeyFactory for ALGORITHM:
-		SecretKeyFactory factory;
-		try {
-			// TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
-			factory = SecretKeyFactory.getInstance(ALGORITHM, SecurityProvider.getProviderName());
-		} catch (NoSuchAlgorithmException e) {
-			try {
-				// TODO: If PBKDF2 is not available from BouncyCastle, try to use a default provider (Sun provides PBKDF2 in JDK 1.5):
-				factory = SecretKeyFactory.getInstance(ALGORITHM);
-			} catch (NoSuchAlgorithmException e1) {
-				throw new RuntimeException("Unable to locate algorithm " + ALGORITHM, e1);
-			}
-		} catch (NoSuchProviderException e) {
-			throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
-		}
-
-		// Generate the bytes for the hash by generating a key and using its encoded form:
-		char[] passwordCharacters = toCharArray(password);
-		PBEKeySpec pbeKeySpec = new PBEKeySpec(passwordCharacters, salt, ITERATION_COUNT, HASH_SIZE);
-		byte[] bytes;
-		try {
-			Key key = factory.generateSecret(pbeKeySpec);
-			bytes = key.getEncoded();
-		} catch (InvalidKeySpecException e) {
-			throw new RuntimeException("Error generating password-based key.", e);
-		}
-
-		return bytes;
+		Key key = Keys.generateSecretKey(toCharArray(password), salt, HASH_SIZE);
+		return key.getEncoded();
 	}
 
 	/**
 	 * Converts the given password to a char array.
 	 * <p>
 	 * NB: an empty char array can cause errors when passed to
-	 * {@link SecretKeyFactory#generateSecret(java.security.spec.KeySpec)}, so if the password is an
-	 * empty String, the return value is a char array containing a single element of value 0.
+	 * {@link javax.crypto.SecretKeyFactory#generateSecret(java.security.spec.KeySpec)} in
+	 * {@link Keys#generateSecretKey(char[], String, int)}, so if the password is an empty String,
+	 * the return value is a char array containing a single element of value 0.
 	 * 
 	 * @param password
 	 *            The password to be converted.
@@ -181,11 +150,11 @@ public class Password {
 	 *            The overall password hash value.
 	 * @return The salt, which is the first {@value #SALT_SIZE} bytes of the
 	 */
-	private static byte[] getSalt(byte[] value) {
+	private static String getSalt(byte[] value) {
 
 		byte[] salt = new byte[SALT_SIZE];
 		System.arraycopy(value, 0, salt, 0, salt.length);
-		return salt;
+		return Codec.toBase64String(salt);
 	}
 
 	/**
