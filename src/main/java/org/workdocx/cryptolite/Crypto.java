@@ -359,7 +359,7 @@ public class Crypto {
 
 		} catch (InvalidAlgorithmParameterException e) {
 			throw new RuntimeException(
-					"Invalid parameter passed to initialiset cipher for encryption: zero IvParameterSpec containing "
+					"Invalid parameter passed to initialise cipher for encryption: zero IvParameterSpec containing "
 							+ cipher.getBlockSize() + " bytes.", e);
 		}
 	}
