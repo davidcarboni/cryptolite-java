@@ -22,8 +22,8 @@ import javax.crypto.spec.SecretKeySpec;
  * The following key types are available:
  * <ul>
  * <li>Deterministic Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length
- * {@value #SYMMETRIC_KEY_SIZE}, based on a password</li>
- * <li>Random Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@value #SYMMETRIC_KEY_SIZE}</li>
+ * {@value #symmetricKeySize}, based on a password</li>
+ * <li>Random Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@value #symmetricKeySize}</li>
  * <li>Asymmetric {@value #ASYMMETRIC_ALGORITHM} keys of length {@value #ASYMMETRIC_KEY_SIZE}</li>
  * </ul>
  * <em>Deterministic keys:</em> these are the easiest to manage as they don't need to be stored. So
@@ -61,8 +61,11 @@ public class Keys {
 	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
 	public static final String SYMMETRIC_ALGORITHM = "AES";
 
-	/** The key size for symmetric keys: {@value #SYMMETRIC_KEY_SIZE}. */
-	public static final int SYMMETRIC_KEY_SIZE = 128;
+	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
+	public static final int SYMMETRIC_KEY_SIZE_STANDARD = 128;
+
+	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
+	public static final int SYMMETRIC_KEY_SIZE_UNLIMITED = 256;
 
 	/**
 	 * The algorithm to use to generate password-based secret keys:
@@ -83,8 +86,15 @@ public class Keys {
 	public static final int ASYMMETRIC_KEY_SIZE = 3072;
 
 	/**
+	 * The key size for symmetric keys. This defaults to {@value #SYMMETRIC_KEY_SIZE_STANDARD}-bit,
+	 * but can be changed to {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit by calling
+	 * {@link #setSymmetricKeySize(int)} with the constant {@link #SYMMETRIC_KEY_SIZE_UNLIMITED}.
+	 */
+	private static int symmetricKeySize = SYMMETRIC_KEY_SIZE_STANDARD;
+
+	/**
 	 * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
-	 * algorithm with a key size of {@value #SYMMETRIC_KEY_SIZE} bits.
+	 * algorithm with a key size of {@value #symmetricKeySize} bits.
 	 * 
 	 * @return A new, randomly generated {@link SecretKey}.
 	 */
@@ -94,7 +104,7 @@ public class Keys {
 		KeyGenerator keyGenerator;
 		try {
 			keyGenerator = KeyGenerator.getInstance(SYMMETRIC_ALGORITHM, SecurityProvider.getProviderName());
-			keyGenerator.init(SYMMETRIC_KEY_SIZE, Random.getInstance());
+			keyGenerator.init(symmetricKeySize, Random.getInstance());
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_ALGORITHM, e);
 		} catch (NoSuchProviderException e) {
@@ -134,7 +144,7 @@ public class Keys {
 	 * @return A deterministic {@link SecretKey}, defined by the given password and salt
 	 */
 	public static SecretKey generateSecretKey(String password, String salt) {
-		return generateSecretKey(password.toCharArray(), salt, SYMMETRIC_KEY_SIZE);
+		return generateSecretKey(password.toCharArray(), salt, symmetricKeySize);
 	}
 
 	/**
@@ -159,7 +169,7 @@ public class Keys {
 	 *            identical which, for example, might give away someone's password.
 	 * @param keySize
 	 *            The size of key to generate. For encryption this should be
-	 *            {@link #SYMMETRIC_KEY_SIZE}. For password hashing this should be
+	 *            {@link #symmetricKeySize}. For password hashing this should be
 	 *            {@link Password#HASH_SIZE}
 	 * @return A deterministic {@link SecretKey}, defined by the given password and salt
 	 */
@@ -226,6 +236,31 @@ public class Keys {
 		KeyPair result = keyPairGenerator.generateKeyPair();
 
 		return result;
+	}
+
+	/**
+	 * @return the symmetricKeySize
+	 */
+	public static int getSymmetricKeySize() {
+		return symmetricKeySize;
+	}
+
+	/**
+	 * Sets the key size for symmetric keys. This defaults to {@value #SYMMETRIC_KEY_SIZE_STANDARD}
+	 * -bit ( {@link #SYMMETRIC_KEY_SIZE_STANDARD}) but can be changed to
+	 * {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit by setting this field using
+	 * {@link #SYMMETRIC_KEY_SIZE_UNLIMITED}.
+	 * <p>
+	 * Note that whilst it's possible to generate a {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit key
+	 * in any environment, you will need the
+	 * "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" installed in
+	 * your JVM in order to use it.
+	 * 
+	 * @param symmetricKeySize
+	 *            the symmetricKeySize to set
+	 */
+	public static void setSymmetricKeySize(int symmetricKeySize) {
+		Keys.symmetricKeySize = symmetricKeySize;
 	}
 
 }
