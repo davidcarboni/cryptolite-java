@@ -62,10 +62,18 @@ public class Keys {
 	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
 	public static final String SYMMETRIC_ALGORITHM = "AES";
 
-	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
+	/**
+	 * By default, the JVM will only allow {@value #SYMMETRIC_ALGORITHM} up to
+	 * {@value #SYMMETRIC_KEY_SIZE_STANDARD} bit keys. This is the default value used by this class.
+	 */
 	public static final int SYMMETRIC_KEY_SIZE_STANDARD = 128;
 
-	/** The symmetric encryption algorithm: {@value #SYMMETRIC_ALGORITHM}. */
+	/**
+	 * If the "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" are
+	 * correctly installed for your JVM, it's possible to use {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}
+	 * bit keys. Pass this constant to the {@link #setSymmetricKeySize(int)} method to enable
+	 * unlimited-strength cryptography.
+	 */
 	public static final int SYMMETRIC_KEY_SIZE_UNLIMITED = 256;
 
 	/**
@@ -87,8 +95,8 @@ public class Keys {
 	public static final int ASYMMETRIC_KEY_SIZE = 3072;
 
 	/**
-	 * The key size for symmetric keys. This defaults to {@value #SYMMETRIC_KEY_SIZE_STANDARD}-bit,
-	 * but can be changed to {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit by calling
+	 * The key size for symmetric keys. This defaults to {@value #SYMMETRIC_KEY_SIZE_STANDARD} bit,
+	 * but can be changed to {@value #SYMMETRIC_KEY_SIZE_UNLIMITED} bit by calling
 	 * {@link #setSymmetricKeySize(int)} with the constant {@link #SYMMETRIC_KEY_SIZE_UNLIMITED}.
 	 */
 	private static int symmetricKeySize = SYMMETRIC_KEY_SIZE_STANDARD;
@@ -100,6 +108,21 @@ public class Keys {
 	 * @return A new, randomly generated {@link SecretKey}.
 	 */
 	public static SecretKey newSecretKey() {
+
+		return newSecretKey(symmetricKeySize);
+	}
+
+	/**
+	 * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
+	 * algorithm with a key size of {@value #symmetricKeySize} bits.
+	 * 
+	 * @param symmetricKeySize
+	 *            The key size to use. One of {@link #SYMMETRIC_KEY_SIZE_STANDARD} or
+	 *            {@link #SYMMETRIC_KEY_SIZE_UNLIMITED}.
+	 * 
+	 * @return A new, randomly generated {@link SecretKey}.
+	 */
+	private static SecretKey newSecretKey(int symmetricKeySize) {
 
 		// Get a key generator instance
 		KeyGenerator keyGenerator;
@@ -248,14 +271,15 @@ public class Keys {
 
 	/**
 	 * Sets the key size for symmetric keys. This defaults to {@value #SYMMETRIC_KEY_SIZE_STANDARD}
-	 * -bit ( {@link #SYMMETRIC_KEY_SIZE_STANDARD}) but can be changed to
-	 * {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit by setting this field using
-	 * {@link #SYMMETRIC_KEY_SIZE_UNLIMITED}.
+	 * bit ( {@link #SYMMETRIC_KEY_SIZE_STANDARD}) but can be changed to
+	 * {@value #SYMMETRIC_KEY_SIZE_UNLIMITED} bit by setting this field using the
+	 * {@link #SYMMETRIC_KEY_SIZE_UNLIMITED} constant.
 	 * <p>
-	 * Note that whilst it's possible to generate a {@value #SYMMETRIC_KEY_SIZE_UNLIMITED}-bit key
+	 * Note that whilst it's possible to generate a {@value #SYMMETRIC_KEY_SIZE_UNLIMITED} bit key
 	 * in any environment, you will need the
 	 * "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" installed in
-	 * your JVM in order to use it.
+	 * your JVM in order to use it. To test this, you can use the {@link #canUseStrongKeys()}
+	 * method.
 	 * 
 	 * @param symmetricKeySize
 	 *            the symmetricKeySize to set
@@ -267,19 +291,15 @@ public class Keys {
 	/**
 	 * Tests whether the
 	 * "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" are
-	 * installed.
+	 * correctly installed.
 	 * 
 	 * @return If strong keys can be used, true, otherwise false.
 	 */
 	public static boolean canUseStrongKeys() {
 		boolean result;
 
-		// Save for later:
-		int symmetricKeySize = Keys.symmetricKeySize;
-
-		// Generate a 256-bit key:
-		setSymmetricKeySize(Keys.SYMMETRIC_KEY_SIZE_UNLIMITED);
-		SecretKey key = newSecretKey();
+		// Generate a 256 bit key:
+		SecretKey key = newSecretKey(SYMMETRIC_KEY_SIZE_UNLIMITED);
 
 		try {
 
@@ -292,10 +312,6 @@ public class Keys {
 			// Policy Files are not installed [correctly]:
 			result = false;
 
-		} finally {
-
-			// Restore setting:
-			setSymmetricKeySize(symmetricKeySize);
 		}
 
 		return result;
