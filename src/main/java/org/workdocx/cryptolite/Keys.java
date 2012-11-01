@@ -3,6 +3,7 @@
  */
 package org.workdocx.cryptolite;
 
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -263,4 +264,40 @@ public class Keys {
 		Keys.symmetricKeySize = symmetricKeySize;
 	}
 
+	/**
+	 * Tests whether the
+	 * "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" are
+	 * installed.
+	 * 
+	 * @return If strong keys can be used, true, otherwise false.
+	 */
+	public static boolean canUseStrongKeys() {
+		boolean result;
+
+		// Save for later:
+		int symmetricKeySize = Keys.symmetricKeySize;
+
+		// Generate a 256-bit key:
+		setSymmetricKeySize(Keys.SYMMETRIC_KEY_SIZE_UNLIMITED);
+		SecretKey key = newSecretKey();
+
+		try {
+
+			// Try to use the key:
+			new Crypto().encrypt("test", key);
+			result = true;
+
+		} catch (InvalidKeyException e) {
+
+			// Policy Files are not installed [correctly]:
+			result = false;
+
+		} finally {
+
+			// Restore setting:
+			setSymmetricKeySize(symmetricKeySize);
+		}
+
+		return result;
+	}
 }
