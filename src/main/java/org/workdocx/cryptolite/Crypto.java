@@ -161,6 +161,41 @@ public class Crypto {
 		// Convert the input Sting to a byte array:
 		byte[] bytes = Codec.toByteArray(string);
 
+		// Encrypt the data:
+		byte[] result = encrypt(bytes, key);
+
+		// Return as a String:
+		return Codec.toBase64String(result);
+	}
+
+	/**
+	 * This method encrypts a byte array. This is useful if you have raw binary data you need to
+	 * encrypt.
+	 * <p>
+	 * To keep the interface simple, this method is marked as protected. The intention is that, if
+	 * you need to encrypt byte arrays, you can subclass {@link Crypto} to expose this method.
+	 * <p>
+	 * This is the bread-and-butter of most encryption operations, but ultimately is a less common
+	 * application-level use-case, because binary data is usually stream-based. This is why it isn't
+	 * exposed by default.
+	 * 
+	 * @param bytes
+	 *            The input data.
+	 * @param key
+	 *            The key to be used to encrypt the data.
+	 * @return The encrypted data, or null if the given byte array is null. An empty array can be
+	 *         encrypted, but a null one cannot.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	protected byte[] encrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
+
+		// Basic null check. 
+		// An empty array can be encrypted:
+		if (bytes == null) {
+			return null;
+		}
+
 		// Generate an initialisation vector:
 		byte[] iv = generateInitialisationVector();
 
@@ -172,15 +207,15 @@ public class Crypto {
 		try {
 			result = cipher.doFinal(bytes);
 		} catch (IllegalBlockSizeException e) {
-			throw new RuntimeException("Block-size exception when completing String encrypiton.", e);
+			throw new RuntimeException("Block-size exception when completing encrypiton.", e);
 		} catch (BadPaddingException e) {
-			throw new RuntimeException("Padding error detected when completing String encrypiton.", e);
+			throw new RuntimeException("Padding error detected when completing encrypiton.", e);
 		}
 
 		// Concatenate the iv and the encrypted data:
 		result = ArrayUtils.addAll(iv, result);
 
-		return Codec.toBase64String(result);
+		return result;
 	}
 
 	/**
