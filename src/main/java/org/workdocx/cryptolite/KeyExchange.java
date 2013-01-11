@@ -136,7 +136,7 @@ public class KeyExchange {
 			throw new RuntimeException(
 					"Error encrypting SecretKey: " + IllegalBlockSizeException.class.getSimpleName(), e);
 		} catch (BadPaddingException e) {
-			throw new RuntimeException("Error encrypting SecretKey: " + BadPaddingException.class.getSimpleName(), e);
+			throw new RuntimeException("Error decrypting SecretKey", e);
 		}
 
 		// Reconstruct the key:
