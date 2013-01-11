@@ -42,7 +42,7 @@ import org.apache.commons.lang.StringUtils;
  * out-of-band parameter.</li>
  * </ul>
  * <p>
- * Notes on background information used in selectingthe cipher, mode and padding:
+ * Notes on background information used in selecting the cipher, mode and padding:
  * <p>
  * <ul>
  * <li>Wikipedia: http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</li>
@@ -141,6 +141,8 @@ public class Crypto {
 	 * 85-character database field can therefore only hold 60 characters of (single-byte character)
 	 * plaintext.
 	 * 
+	 * @see #decrypt(String, SecretKey)
+	 * 
 	 * @param string
 	 *            The input String.
 	 * @param key
@@ -176,8 +178,10 @@ public class Crypto {
 	 * you need to encrypt byte arrays, you can subclass {@link Crypto} to expose this method.
 	 * <p>
 	 * This is the bread-and-butter of most encryption operations, but ultimately is a less common
-	 * application-level use-case, because binary data is usually stream-based. This is why it isn't
-	 * exposed by default.
+	 * application-level use-case, because binary data is usually stream-based and the rest of the
+	 * time it tends to be Strings you need to deal with. This is why it isn't exposed by default.
+	 * 
+	 * @see #decrypt(byte[], SecretKey)
 	 * 
 	 * @param bytes
 	 *            The input data.
@@ -221,6 +225,8 @@ public class Crypto {
 	/**
 	 * This method decrypts the given String and returns the plain text.
 	 * 
+	 * @see #encrypt(String, SecretKey)
+	 * 
 	 * @param encrypted
 	 *            The encrypted String, base-64 encoded, as returned by
 	 *            {@link #encrypt(String, SecretKey)}.
@@ -239,7 +245,44 @@ public class Crypto {
 		}
 
 		byte[] bytes = Codec.fromBase64String(encrypted);
+		return Codec.fromByteArray(decrypt(bytes, key));
+	}
+
+	/**
+	 * This method decrypts the given bytes and returns the plain text. This is useful if you have
+	 * raw binary data you need to decrypt.
+	 * <p>
+	 * To keep the interface simple, this method is marked as protected. The intention is that, if
+	 * you need to encrypt byte arrays, you can subclass {@link Crypto} to expose this method.
+	 * <p>
+	 * This is the bread-and-butter of most encryption operations, but ultimately is a less common
+	 * application-level use-case, because binary data is usually stream-based and the rest of the
+	 * time it tends to be Strings you need to deal with. This is why it isn't exposed by default.
+	 * 
+	 * @see #encrypt(byte[], SecretKey)
+	 * 
+	 * @param bytes
+	 *            The encrypted data.
+	 * @param key
+	 *            The key to be used for decryption.
+	 * @return The decrypted String, or null if the encrypted String is null.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	protected byte[] decrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
+
+		// Basic null/empty check.
+		// An empty array can be encrypted, but not decrypted 
+		// - it must at least contain an initialisation vector:
+		if (bytes == null) {
+			return null;
+		}
+
 		int ivSize = cipher.getBlockSize();
+		if (bytes.length < ivSize) {
+			throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
+					+ ") is shorter than an initialisation vector.");
+		}
 		byte[] iv;
 		byte[] data;
 
@@ -260,7 +303,7 @@ public class Crypto {
 			throw new RuntimeException("Padding error detected when completing String encrypiton.", e);
 		}
 
-		return Codec.fromByteArray(result);
+		return result;
 	}
 
 	/**
@@ -276,6 +319,8 @@ public class Crypto {
 	 * bytes are necessary for decryption and a corresponding call to
 	 * {@link #decrypt(InputStream, SecretKey)} will read and filter them out from the underlying
 	 * InputStream before returning it.
+	 * 
+	 * @see #decrypt(InputStream, SecretKey)
 	 * 
 	 * @param destination
 	 *            The output stream to be wrapped with a {@link CipherOutputStream}.
@@ -324,6 +369,8 @@ public class Crypto {
 	 * returns. These bytes are necessary for decryption and the call to
 	 * {@link #encrypt(OutputStream, SecretKey)} will have added these to the start of the
 	 * underlying data automatically.
+	 * 
+	 * @see #encrypt(OutputStream, SecretKey)
 	 * 
 	 * @param source
 	 *            The source {@link InputStream}, containing encrypted data.
