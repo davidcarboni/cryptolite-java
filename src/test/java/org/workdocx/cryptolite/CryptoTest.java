@@ -186,6 +186,32 @@ public class CryptoTest {
 	}
 
 	/**
+	 * Verifies that decryption input which is too short to contain an initialisation vector throws
+	 * an exception.
+	 * <p>
+	 * Test method for
+	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * 
+	 * @throws InvalidKeyException
+	 *             {@link InvalidKeyException}
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldNotDecryptTooShortString() throws InvalidKeyException {
+
+		// Given 
+		byte[] bytes = new byte[1];
+		String ciphertext = Codec.toBase64String(bytes);
+
+		// When
+		cryptoNew.decrypt(ciphertext, key);
+
+		// Then 
+		// We should get an IllegalArgumentException because 
+		// the input is too short to contain an IV, so does 
+		// not match the expected format of [IV][data]
+	}
+
+	/**
 	 * Verifies that decryption is successful and consistent, even for different ciphertext Strings
 	 * - ie if you encrypt something twice, the encrypted data should be different each time, but
 	 * should decrypt back to the same thing.
