@@ -20,6 +20,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  * This class provides secure "wrapping" of keys. Wrapping a key is important if you need to store
@@ -91,17 +93,38 @@ public class KeyWrapper implements Serializable {
 	}
 
 	/**
-	 * This constructor should only be used if you have a secure way of storing the wrap key and
-	 * cannot generate it from a password and salt value.
+	 * This constructor sets the wrap key directly, rather than generating it from a password and
+	 * salt as {@link #KeyWrapper(String, String)} does.
 	 * <p>
-	 * This sets the given wrap key directly, rather than generating it.
+	 * The wrap key must be an {@link #WRAP_KEY_ALGORITHM} key. Both {@link Keys#newSecretKey()} and
+	 * {@link Keys#generateSecretKey(String, String)} can be used to generate the right type of key.
+	 * 
+	 * @param wrapKey
+	 *            The key which will be used for wrapping other keys.
+	 */
+	public KeyWrapper(SecretKey wrapKey) {
+		if (!StringUtils.equals(WRAP_KEY_ALGORITHM, wrapKey.getAlgorithm())) {
+			throw new IllegalArgumentException("The wrapping key algorithm needs to be " + WRAP_KEY_ALGORITHM);
+		}
+		this.wrapKey = wrapKey;
+	}
+
+	/**
+	 * This constructor should only be used if you have a secure way of storing the wrap key and
+	 * cannot generate it from a password and salt value (using {@link #KeyWrapper(String, String)})
+	 * and don't have a stored {@link SecretKey} (for {@link #KeyWrapper(SecretKey)}).
+	 * <p>
+	 * This constructor generates a {@link SecretKeySpec} using the byes in the given base-64
+	 * encoded string and {@link #WRAP_KEY_ALGORITHM}.
 	 * 
 	 * @param wrapKey
 	 *            The wrap key, base64-encoded, as returned by {@link #getWrapKey()}.
 	 */
+	@Deprecated
 	public KeyWrapper(String wrapKey) {
 
-		setWrapKey(wrapKey);
+		byte[] wrapKeyBytes = Codec.fromBase64String(wrapKey);
+		this.wrapKey = new SecretKeySpec(wrapKeyBytes, WRAP_KEY_ALGORITHM);
 	}
 
 	/**
@@ -210,6 +233,7 @@ public class KeyWrapper implements Serializable {
 	 *         base64-encoded String. This is only useful if you want to store the key, rather than
 	 *         regenerate it from a password and salt.
 	 */
+	@Deprecated
 	public String getWrapKey() {
 		return Codec.toBase64String(wrapKey.getEncoded());
 	}
@@ -221,6 +245,7 @@ public class KeyWrapper implements Serializable {
 	 *            with a previously stored key, rather than recomputing a key from a password and
 	 *            salt.
 	 */
+	@Deprecated
 	public void setWrapKey(String wrapKey) {
 		byte[] wrapKeyBytes = Codec.fromBase64String(wrapKey);
 		this.wrapKey = new SecretKeySpec(wrapKeyBytes, WRAP_KEY_ALGORITHM);
