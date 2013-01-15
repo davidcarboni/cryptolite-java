@@ -6,6 +6,7 @@ package org.workdocx.cryptolite;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * 
@@ -24,12 +25,12 @@ public class Codec {
 	 */
 	public static final String ENCODING = "UTF8";
 
-	private static final int mask = 0xff;
-	private static final int shift = 0x100;
-	private static final int radix = 16;
-
 	/**
-	 * Renders the given byte array as a hex String.
+	 * Renders the given byte array as a hex String. This is a convenience method useful for
+	 * checking values during development.
+	 * <p>
+	 * Internally, this checks for null and then calls the Apache commons-codec method
+	 * {@link Hex#encodeHexString(byte[])}.
 	 * 
 	 * @param bytes
 	 *            The array to be rendered.
@@ -41,13 +42,7 @@ public class Codec {
 			return null;
 		}
 
-		StringBuilder result = new StringBuilder();
-
-		for (byte b : bytes) {
-			result.append(Integer.toString((b & mask) + shift, radix).substring(1));
-		}
-
-		return result.toString();
+		return Hex.encodeHexString(bytes);
 	}
 
 	/**
