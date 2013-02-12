@@ -3,13 +3,13 @@
  */
 package org.workdocx.cryptolite;
 
-import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -296,24 +296,11 @@ public class Keys {
 	 * @return If strong keys can be used, true, otherwise false.
 	 */
 	public static boolean canUseStrongKeys() {
-		boolean result;
-
-		// Generate a 256 bit key:
-		SecretKey key = newSecretKey(SYMMETRIC_KEY_SIZE_UNLIMITED);
-
 		try {
-
-			// Try to use the key:
-			new Crypto().encrypt("test", key);
-			result = true;
-
-		} catch (InvalidKeyException e) {
-
-			// Policy Files are not installed [correctly]:
-			result = false;
-
+			int maxKeyLen = Cipher.getMaxAllowedKeyLength(Crypto.CIPHER_ALGORITHM);
+			return maxKeyLen >= SYMMETRIC_KEY_SIZE_UNLIMITED;
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("Unable to locate algorithm " + Crypto.CIPHER_ALGORITHM, e);
 		}
-
-		return result;
 	}
 }
