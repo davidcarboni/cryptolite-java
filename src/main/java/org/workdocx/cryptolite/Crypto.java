@@ -120,18 +120,30 @@ public class Crypto {
 	 * {@value #CIPHER_NAME}.
 	 */
 	public Crypto() {
+		this(CIPHER_NAME);
+	}
+
+	/**
+	 * This constructor is protected so that, should you need a different algorithm (e.g. if you're
+	 * integrating with a system that uses different crypto settings) it is possible to create a
+	 * subclass with different settings.
+	 * 
+	 * @param cipherName
+	 *            This should normally be {@value #CIPHER_NAME}.
+	 */
+	protected Crypto(String cipherName) {
 
 		try {
 
 			// Get a Cipher instance:
-			cipher = Cipher.getInstance(CIPHER_NAME, SecurityProvider.getProviderName());
+			cipher = Cipher.getInstance(cipherName, SecurityProvider.getProviderName());
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to locate algorithm for " + CIPHER_NAME, e);
+			throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
 		} catch (NoSuchProviderException e) {
 			throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
 		} catch (NoSuchPaddingException e) {
-			throw new RuntimeException("Unable to locate padding method " + CIPHER_PADDING, e);
+			throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
 		}
 	}
 

@@ -16,7 +16,6 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 /**
- * 
  * This class provides a public-private key digital signature capability. The signature algorithm
  * used is {@value #ALGORITHM}.
  * 
@@ -27,6 +26,27 @@ public class DigitalSignature {
 
 	/** The digital signature algorithm to use: {@value #ALGORITHM}. */
 	public static final String ALGORITHM = "SHA256withRSAandMGF1";
+
+	private String algorithm;
+
+	/**
+	 * The default constructor initialises the instance with the {@value #ALGORITHM} algorithm.
+	 */
+	public DigitalSignature() {
+		this(ALGORITHM);
+	}
+
+	/**
+	 * This constructor is protected so that, should you need a different algorithm (e.g. if you're
+	 * integrating with a system that uses different crypto settings) it is possible to create a
+	 * subclass with different settings.
+	 * 
+	 * @param algorithm
+	 *            This should normally be {@value #ALGORITHM}.
+	 */
+	protected DigitalSignature(String algorithm) {
+		this.algorithm = algorithm;
+	}
 
 	/**
 	 * Generates a digital signature for the given string.
@@ -172,9 +192,9 @@ public class DigitalSignature {
 	protected Signature getSignature() {
 
 		try {
-			return Signature.getInstance(ALGORITHM, SecurityProvider.getProviderName());
+			return Signature.getInstance(algorithm, SecurityProvider.getProviderName());
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to find algorithm " + ALGORITHM + " for provider "
+			throw new RuntimeException("Unable to find algorithm " + algorithm + " for provider "
 					+ SecurityProvider.getProviderName(), e);
 		} catch (NoSuchProviderException e) {
 			throw new RuntimeException("Unable to find provider. Are the BouncyCastle libraries installed?", e);

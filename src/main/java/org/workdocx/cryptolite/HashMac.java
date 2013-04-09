@@ -22,6 +22,8 @@ public class HashMac {
 
 	private byte[] key;
 
+	private String algorithm;
+
 	/**
 	 * This constructor provides parity with PHP's
 	 * <code>hash_hmac("sha256", "message", "key")</code> function.
@@ -30,7 +32,7 @@ public class HashMac {
 	 *            An arbitrary String to use as a key.
 	 */
 	public HashMac(String key) {
-		this.key = Codec.toByteArray(key);
+		this(Codec.toByteArray(key), ALGORITHM);
 	}
 
 	/**
@@ -40,10 +42,25 @@ public class HashMac {
 	 * This is the case for keys generated/unwrapped using Cryptolite.
 	 * 
 	 * @param key
-	 *            An arbitrary String to use as a key.
+	 *            An key, whose {@link SecretKey#getEncoded()} method will be called.
 	 */
 	public HashMac(SecretKey key) {
-		this.key = key.getEncoded();
+		this(key.getEncoded(), ALGORITHM);
+	}
+
+	/**
+	 * This constructor is protected so that, should you need a different algorithm (e.g. if you're
+	 * integrating with a system that uses different crypto settings) it is possible to create a
+	 * subclass with different settings.
+	 * 
+	 * @param key
+	 *            A byte array to use as the key.
+	 * @param algorithm
+	 *            This should normally be {@value #ALGORITHM}.
+	 */
+	protected HashMac(byte[] key, String algorithm) {
+		this.key = key;
+		this.algorithm = algorithm;
 	}
 
 	/**
@@ -56,15 +73,15 @@ public class HashMac {
 	public String digest(String message) {
 
 		try {
-			Mac mac = Mac.getInstance(ALGORITHM);
-			SecretKeySpec macKey = new SecretKeySpec(key, ALGORITHM);
+			Mac mac = Mac.getInstance(algorithm);
+			SecretKeySpec macKey = new SecretKeySpec(key, algorithm);
 			mac.init(macKey);
 			byte[] digest = mac.doFinal(Codec.toByteArray(message));
 			return Codec.toHexString(digest);
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to locate algorithm for " + ALGORITHM, e);
+			throw new RuntimeException("Unable to locate algorithm for " + algorithm, e);
 		} catch (InvalidKeyException e) {
-			throw new RuntimeException("Unable to construct key for " + ALGORITHM
+			throw new RuntimeException("Unable to construct key for " + algorithm
 					+ ". Please check the value passed in when this class was initialised.", e);
 		}
 	}

@@ -68,6 +68,26 @@ public class KeyExchange {
 
 	/** The {@link Cipher} for this instance. */
 	private Cipher cipher;
+	private String cipherName;
+
+	/**
+	 * Initialises the instance with the recommended setting of {@value #CIPHER_NAME}.
+	 */
+	public KeyExchange() {
+		this(CIPHER_NAME);
+	}
+
+	/**
+	 * This constructor is protected so that, should you need a different algorithm (e.g. if you're
+	 * integrating with a system that uses different crypto settings) it is possible to create a
+	 * subclass with different settings.
+	 * 
+	 * @param cipherName
+	 *            This should normally be {@value #CIPHER_NAME}.
+	 */
+	protected KeyExchange(String cipherName) {
+		this.cipherName = cipherName;
+	}
 
 	/**
 	 * This method encrypts the given {@link SecretKey} with the destination user's
@@ -200,14 +220,14 @@ public class KeyExchange {
 			try {
 
 				// Get a Cipher instance:
-				cipher = Cipher.getInstance(CIPHER_NAME, SecurityProvider.getProviderName());
+				cipher = Cipher.getInstance(cipherName, SecurityProvider.getProviderName());
 
 			} catch (NoSuchAlgorithmException e) {
-				throw new RuntimeException("Unable to locate algorithm for " + CIPHER_NAME, e);
+				throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
 			} catch (NoSuchProviderException e) {
 				throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
 			} catch (NoSuchPaddingException e) {
-				throw new RuntimeException("Unable to locate padding method " + CIPHER_PADDING, e);
+				throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
 			}
 		}
 
