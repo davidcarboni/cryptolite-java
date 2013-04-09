@@ -28,7 +28,7 @@
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<name>WorkDocx Artifact repository</name>
+			<name>Workdocx Artifact repository</name>
 			<url>http://192.168.4.2:8081/nexus/content/groups/public</url>
 		</repository>
 	</repositories>
