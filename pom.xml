@@ -8,6 +8,12 @@
 	<description>Provides simple, "right" cryptography, bypassing all the options. See: http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</description>
 	<url>http://workdocx.com</url>
 
+	<scm>
+		<connection>scm:git:git@github.com:workdocx/Cryptolite.git</connection>
+		<url>scm:git:git@github.com:workdocx/Cryptolite.git</url>
+		<developerConnection>scm:git:git@github.com:workdocx/Cryptolite.git</developerConnection>
+	</scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
