@@ -28,7 +28,7 @@ Much of the inspiration for the algorithms, modes and parameters comes from http
 
 This library is released under the LGPL, like many other libraries, which means you are free to use it in commercial products. The main requirement is that you distribute the source code of this library (including any modifications) with your application. It doesn't impose obligations on your own code. See http://stackoverflow.com/questions/919549/lgpl-licensed-library for a good summary.
 
-If you have any questions, feel free to contact me via support@workdocx.com, @WorkdocxDev or find me on GitHub at https://github.com/davidcarboni.
+If you have any questions, feel free to contact me via developers@workdocx.com, @WorkdocxDev or find me on GitHub at https://github.com/davidcarboni.
 
 David Carboni
 http://workdocx.com/
