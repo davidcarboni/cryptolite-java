@@ -3,10 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.workdocx</groupId>
 	<artifactId>cryptolite</artifactId>
-	<version>0.8.0</version>
+	<version>0.7.0</version>
 	<name>Good, clean cryptography</name>
 	<description>Provides simple, "right" cryptography, bypassing all the options. See: http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</description>
-	<url>http://workdocx.com</url>
+	<url>https://github.com/workdocx/Cryptolite</url>
+	<organization>
+		<name>Workdocx</name>
+		<url>http://workdocx.com/</url>
+	</organization>
 
 	<scm>
 		<connection>scm:git:git@github.com:workdocx/Cryptolite.git</connection>
@@ -34,7 +38,7 @@
 	<repositories>
 		<repository>
 			<id>nexus</id>
-			<name>Workdocx Artifact repository</name>
+			<name>WorkDocx Artifact repository</name>
 			<url>http://192.168.4.2:8081/nexus/content/groups/public</url>
 		</repository>
 	</repositories>
