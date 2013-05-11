@@ -13,8 +13,8 @@
 	</organization>
 
 	<scm>
-		<connection>scm:git:git@github.com:workdocx/Cryptolite.git</connection>
-		<url>scm:git:git@github.com:workdocx/Cryptolite.git</url>
+		<url>https://github.com/workdocx/Cryptolite</url>
+		<connection>scm:git:git://github.com/workdocx/Cryptolite.git</connection>
 		<developerConnection>scm:git:git@github.com:workdocx/Cryptolite.git</developerConnection>
 	</scm>
 
