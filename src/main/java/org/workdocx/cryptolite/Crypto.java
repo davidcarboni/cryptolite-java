@@ -149,9 +149,50 @@ public class Crypto {
 
 	/**
 	 * This method encrypts the given String, returning a base-64 encoded String. Note that the
-	 * base-64 String will be longer than the input String by 30-40% for an 85 character String. An
-	 * 85-character database field can therefore only hold 60 characters of (single-byte character)
-	 * plaintext.
+	 * base-64 String will be longer than the input String due base-64 encoding, the inclusion of an
+	 * initialisation vector and a salt value for the key generated from the given password.
+	 * <p>
+	 * A fixed length database field can therefore hold less encrypted than plain-text data.
+	 * 
+	 * @see #decrypt(String, String)
+	 * 
+	 * @param string
+	 *            The input String.
+	 * @param password
+	 *            A password to use as the basis for generating an encryption key. This method calls
+	 *            {@link Keys#generateSecretKey(String, String)}
+	 * @return The encrypted String, base-64 encoded, or null if the given String is null. An empty
+	 *         string can be encrypted, but a null one cannot.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	public String encrypt(String string, String password) throws InvalidKeyException {
+
+		// Basic null check. 
+		// An empty string can be encrypted:
+		if (string == null) {
+			return null;
+		}
+
+		String salt = Random.generateSalt();
+		SecretKey key = Keys.generateSecretKey(password, salt);
+
+		// Convert the input Sting to a byte array:
+		byte[] bytes = Codec.toByteArray(string);
+
+		// Encrypt the data:
+		byte[] result = ArrayUtils.addAll(Codec.fromBase64String(salt), encrypt(bytes, key));
+
+		// Return as a String:
+		return Codec.toBase64String(result);
+	}
+
+	/**
+	 * This method encrypts the given String, returning a base-64 encoded String. Note that the
+	 * base-64 String will be longer than the input String due base-64 encoding and the inclusion of
+	 * an initialisation vector.
+	 * <p>
+	 * A fixed length database field can therefore hold less encrypted than plain-text data.
 	 * 
 	 * @see #decrypt(String, SecretKey)
 	 * 
@@ -232,6 +273,45 @@ public class Crypto {
 		result = ArrayUtils.addAll(iv, result);
 
 		return result;
+	}
+
+	/**
+	 * This method decrypts the given String and returns the plain text.
+	 * 
+	 * @see #encrypt(String, SecretKey)
+	 * 
+	 * @param encrypted
+	 *            The encrypted String, base-64 encoded, as returned by
+	 *            {@link #encrypt(String, SecretKey)}.
+	 * @param password
+	 *            The password used for encryption. This will be used to generate the correct key by
+	 *            calling {@link Keys#generateSecretKey(String, String)}
+	 * @return The decrypted String, or null if the encrypted String is null.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	public String decrypt(String encrypted, String password) throws InvalidKeyException {
+
+		// Basic null/empty check.
+		// An empty string can be encrypted, but not decrypted:
+		if (StringUtils.isEmpty(encrypted)) {
+			return encrypted;
+		}
+
+		// Convert to a byte array:
+		byte[] bytes = Codec.fromBase64String(encrypted);
+		if (bytes.length < Random.SALT_BYTES) {
+			throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
+					+ ") is shorter than a salt value.");
+		}
+
+		// Separate the salt from the data:
+		byte[] salt = ArrayUtils.subarray(bytes, 0, Random.SALT_BYTES);
+		byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES, bytes.length);
+
+		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
+
+		return Codec.fromByteArray(decrypt(data, key));
 	}
 
 	/**
@@ -326,6 +406,52 @@ public class Crypto {
 	 * method to wrap the OutputStream and use the returned {@link CipherOutputStream} instead to
 	 * write the data to, so that it is encrypted as it is written to disk.
 	 * <p>
+	 * Note that this method writes a salt value and an initialisation vector to the destination
+	 * OutputStream, so the destination parameter will have some bytes written to it before this
+	 * method returns. These bytes are necessary for decryption and a corresponding call to
+	 * {@link #decrypt(InputStream, String)} will read and filter them out from the underlying
+	 * InputStream before returning it.
+	 * 
+	 * @see #decrypt(InputStream, String)
+	 * 
+	 * @param destination
+	 *            The output stream to be wrapped with a {@link CipherOutputStream}.
+	 * @param password
+	 *            The password to be used to generate a key to encrypt data written to the returned
+	 *            {@link CipherOutputStream}.
+	 * @return A {@link CipherOutputStream}, which wraps the given {@link OutputStream}.
+	 * @throws IOException
+	 *             If an error occurs in writing the initialisation vector to the destination
+	 *             stream.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	public OutputStream encrypt(OutputStream destination, String password) throws IOException, InvalidKeyException {
+
+		// Basic null check. 
+		// An empty stream can be encrypted:
+		if (destination == null) {
+			return null;
+		}
+
+		String salt = Random.generateSalt();
+		SecretKey key = Keys.generateSecretKey(password, salt);
+
+		// Correct use is to store the IV unencrypted at the start of the stream:
+		destination.write(Codec.fromBase64String(salt));
+
+		// Return the initialised stream:
+		return encrypt(destination, key);
+	}
+
+	/**
+	 * This method wraps the destination {@link OutputStream} with a {@link CipherOutputStream}.
+	 * <p>
+	 * Typical usage is when you have an InputStream for a source of unencrypted data, such as a
+	 * user-uploaded file, and an OutputStream to write the input to disk. You would call this
+	 * method to wrap the OutputStream and use the returned {@link CipherOutputStream} instead to
+	 * write the data to, so that it is encrypted as it is written to disk.
+	 * <p>
 	 * Note that this method writes an initialisation vector to the destination OutputStream, so the
 	 * destination parameter will have some bytes written to it before this method returns. These
 	 * bytes are necessary for decryption and a corresponding call to
@@ -366,6 +492,93 @@ public class Crypto {
 
 		// Return the initialised stream:
 		return cipherOutputStream;
+	}
+
+	/**
+	 * This method wraps the source {@link InputStream} with a {@link CipherInputStream}.
+	 * <p>
+	 * Typical usage is when you have an InputStream for a source of encrypted data on disk, and an
+	 * OutputStream to send the file to an HTTP response. You would call this method to wrap the
+	 * InputStream and use the returned {@link CipherInputStream} to read the data from instead so
+	 * that it is decrypted as it is read and can be written to the response unencrypted.
+	 * <p>
+	 * Note that this method reads and discards the random initialisation vector from the source
+	 * InputStream, so the source parameter will have some bytes read from it before this method
+	 * returns. These bytes are necessary for decryption and the call to
+	 * {@link #encrypt(OutputStream, SecretKey)} will have added these to the start of the
+	 * underlying data automatically.
+	 * 
+	 * @see #encrypt(OutputStream, SecretKey)
+	 * 
+	 * @param source
+	 *            The source {@link InputStream}, containing encrypted data.
+	 * @param key
+	 *            The key to be used for decryption.
+	 * @return A {@link CipherInputStream}, which wraps the given source stream and will decrypt the
+	 *         data as they are read.
+	 * @throws IOException
+	 *             If an error occurs in reading the initialisation vector from the source stream.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	public InputStream encrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
+
+		// Remove the initialisation vector from the start of the stream.
+		// NB if the stream is empty, the read will return -1 and no harm will be done.
+		byte[] iv = new byte[cipher.getBlockSize()];
+
+		// The IV is stored unencrypted at the start of the stream:
+		source.read(iv);
+
+		// Get a cipher instance and create the cipherInputStream:
+		initCipher(Cipher.DECRYPT_MODE, key, iv);
+		CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
+
+		// Return the initialised stream:
+		return cipherInputStream;
+	}
+
+	/**
+	 * This method wraps the source {@link InputStream} with a {@link CipherInputStream}.
+	 * <p>
+	 * Typical usage is when you have an InputStream for a source of encrypted data on disk, and an
+	 * OutputStream to send the file to an HTTP response. You would call this method to wrap the
+	 * InputStream and use the returned {@link CipherInputStream} to read the data from instead so
+	 * that it is decrypted as it is read and can be written to the response unencrypted.
+	 * <p>
+	 * Note that this method reads and discards a salt value and the random initialisation vector
+	 * from the source InputStream, so the source parameter will have some bytes read from it before
+	 * this method returns. These bytes are necessary for decryption and the call to
+	 * {@link #encrypt(OutputStream, String)} will have added these to the start of the underlying
+	 * data automatically.
+	 * 
+	 * @see #encrypt(OutputStream, String)
+	 * 
+	 * @param source
+	 *            The source {@link InputStream}, containing encrypted data.
+	 * @param password
+	 *            The password to be used for decryption.
+	 * @return A {@link CipherInputStream}, which wraps the given source stream and will decrypt the
+	 *         data as they are read.
+	 * @throws IOException
+	 *             If an error occurs in reading the initialisation vector from the source stream.
+	 * @throws InvalidKeyException
+	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM} key.
+	 */
+	public InputStream decrypt(InputStream source, String password) throws IOException, InvalidKeyException {
+
+		// Remove the initialisation vector from the start of the stream.
+		// NB if the stream is empty, the read will return -1 and no harm will be done.
+		byte[] salt = new byte[Random.SALT_BYTES];
+
+		// The IV is stored unencrypted at the start of the stream:
+		source.read(salt);
+
+		// Generate the key:
+		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
+
+		// Return the initialised stream:
+		return decrypt(source, key);
 	}
 
 	/**
