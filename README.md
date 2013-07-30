@@ -10,6 +10,17 @@ Cryptolite is a wrapper for the Java Cryptography Extension, providing simple, "
 Cryptolite doesn't do any cryptography itself. Instead it relies on the well known open source BouncyCastle JCE provider to do the heavy lifting. The API is focused explicitly on providing the things developers need, especially webapp developers - hashing passwords, generating random IDs, encrypting Strings and Files, digital signatures and key exchange. No options means under the covers it just does what's most appropriate - and if necessary pragmatic - enabling you to use cryptography without having to understand it in depth. For example, did you know that using AES in ECB mode is a bad idea? Neither did I when I started, so I wrote Cryptolite to take care of it. (http://www.codinghorror.com/blog/2009/05/why-isnt-my-encryption-encrypting.html)
 
 
+### Maven usage
+
+To use Cryptolite in your project:
+
+		<dependency>
+			<groupId>com.github.davidcarboni</groupId>
+			<artifactId>cryptolite</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+
+
 ### Why release it?
 
 There are two reasons: the first is to share what we believe to be a valuable by-product of WorkDocx with the community, (inspired by 37signals: http://37signals.com/svn/posts/1620-sell-your-by-products) and the second is to provide transparency for WorkDocx users as to how we are looking after their data.
