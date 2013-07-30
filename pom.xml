@@ -30,14 +30,14 @@
 
 	<distributionManagement>
 		<snapshotRepository>
-			<id>localhost-nexus-snapshots</id>
-			<name>Local Nexus snapshot repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 		<repository>
-			<id>localhost-nexus-staging</id>
-			<name>Local Nexus release repository</name>
-			<url>http://localhost:8081/nexus/content/repositories/releases/</url>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus release repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
 
