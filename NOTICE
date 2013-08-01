@@ -1,22 +1,14 @@
-
 Cryptolite - Good, clean, "right" cryptography, bypassing all the options.
-
-    Copyright (C) 2011  Workdocx Ltd.
+   
+     Copyright (C) 2013  David Carboni.
 
      This library is free software; you can redistribute it and/or
-     modify it under the terms of the GNU Lesser General Public
-     License as published by the Free Software Foundation; either
-     version 3 of the License, or (at your option) any later version.
+     modify it under the terms of the Apache 2.0 License as published
+     by the Apache Software Foundation.
 
      This library is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
-     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-     Lesser General Public License for more details.
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-If you have any questions please contact cryptolite@workdocx.com, or 
-write to WorkDocx, 1 The Mews, Wharf Street, Godalming, GU7 2PN.
-
-http://workdocx.com/
+If you have any questions please contact me via https://github.com/davidcarboni/
+or @davidcarboni
