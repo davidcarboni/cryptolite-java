@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2011 WorkDocx Ltd.
- */
 package org.workdocx.cryptolite;
 
 import java.io.IOException;
@@ -32,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
  * simply request encryption and decryption operations.
  * <p>
  * Some effort has been invested in choosing these values so that they are suitable for the needs of
- * WorkDocx:
+ * a web application:
  * <ul>
  * <li>AES cipher: NIST standard for the transmission of classified US government data.</li>
  * <li>CTR cipher mode: NIST standard cipher mode.</li>
