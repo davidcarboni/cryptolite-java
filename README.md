@@ -17,7 +17,7 @@ To use Cryptolite in your project:
 		<dependency>
 			<groupId>com.github.davidcarboni</groupId>
 			<artifactId>cryptolite</artifactId>
-			<version>0.9.0</version>
+			<version>0.9.1</version>
 		</dependency>
 
 
