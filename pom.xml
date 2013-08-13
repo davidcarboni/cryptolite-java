@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.davidcarboni</groupId>
 	<artifactId>cryptolite</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Cryptolite</name>
 	<description>Good, clean, "right" cryptography, bypassing all the options. See: http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</description>
-	<url>https://github.com/workdocx/Cryptolite</url>
+	<url>https://github.com/davidcarboni/Cryptolite</url>
 
 	<licenses>
 		<license>
@@ -18,8 +18,8 @@
 	</licenses>
 
 	<organization>
-		<name>Workdocx</name>
-		<url>http://workdocx.com/</url>
+		<name>Carboni</name>
+		<url>https://github.com/davidcarboni/</url>
 	</organization>
 
 	<scm>
@@ -210,8 +210,8 @@
 			<id>david</id>
 			<name>David Carboni</name>
 			<email>david@carboni.co</email>
-			<organization>Workdocx</organization>
-			<organizationUrl>http://workdocx.com</organizationUrl>
+			<organization>Carboni</organization>
+			<organizationUrl>https://github.com/davidcarboni</organizationUrl>
 			<url>https://github.com/davidcarboni</url>
 		</developer>
 	</developers>

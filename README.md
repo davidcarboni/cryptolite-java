@@ -23,11 +23,11 @@ To use Cryptolite in your project:
 
 ### Why release it?
 
-There are two reasons: the first is to share what we believe to be a valuable by-product of WorkDocx with the community, (inspired by 37signals: http://37signals.com/svn/posts/1620-sell-your-by-products) and the second is to provide transparency for WorkDocx users as to how we are looking after their data.
+To share what I believe to be a valuable by-product of my last startup, Workdocx with the community, (inspired by 37signals: http://37signals.com/svn/posts/1620-sell-your-by-products).
 
-The Cryptolite library was developed to provide security for the WorkDocx software-as-a-service website (http://workdocx.com/) and is the result of many hours of research and coding work I've done to keep our users safe online. Putting it into the public domain allows anyone using WorkDocx the opportunity to see how we do cryptography. It also means that if we've missed anything there's no hiding it, so if you do spot something you're not happy with, let us know (support@workdocx.com or @WorkdocxSupport) as we'll be keen to fix it.
+The Cryptolite library was developed to provide security for the Workdocx service and is the result of many hours of research and coding work I did to keep our users safe online.
 
-For the community, the hope is that this will make it such a no-brainer to use good cryptography that more and more people will get it right by default. Keeping it small and opening the source code makes it easy to see how to make use of the JCE in ways not provided for by Cryptolite, so do let us know if you'd like to feed something back in.
+For the community, the hope is that this will make it such a no-brainer to use good cryptography that more and more people will get it right by default. Keeping it small and opening the source code makes it easy to see how to make use of the JCE in ways not provided for by Cryptolite, so let me know via pull request if you'd like to feed something back in.
 
 
 ### Thanks go to..
