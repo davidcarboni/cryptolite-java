@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import java.security.InvalidKeyException;
 import java.security.Key;

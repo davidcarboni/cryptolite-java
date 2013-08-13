@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;

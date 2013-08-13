@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -60,7 +60,7 @@ public class CryptoTest {
 	 * Verifies that null is returned for null encryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -82,7 +82,7 @@ public class CryptoTest {
 	 * Verifies that null is returned for null encryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -104,7 +104,7 @@ public class CryptoTest {
 	 * Verifies that an empty String gets encrypted.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -128,7 +128,7 @@ public class CryptoTest {
 	 * Verifies that an empty String gets encrypted.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -152,7 +152,7 @@ public class CryptoTest {
 	 * Verifies that the same String gets encrypted differently every time.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -189,7 +189,7 @@ public class CryptoTest {
 	 * Verifies that the same String gets encrypted differently every time.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -226,7 +226,7 @@ public class CryptoTest {
 	 * Verifies that null is returned for null decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -248,7 +248,7 @@ public class CryptoTest {
 	 * Verifies that null is returned for null decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -270,7 +270,7 @@ public class CryptoTest {
 	 * Verifies that an empty string is returned for empty decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -292,7 +292,7 @@ public class CryptoTest {
 	 * Verifies that an empty string is returned for empty decryption input.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -315,7 +315,7 @@ public class CryptoTest {
 	 * an exception.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -341,7 +341,7 @@ public class CryptoTest {
 	 * an exception.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -368,7 +368,7 @@ public class CryptoTest {
 	 * should decrypt back to the same thing.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -400,7 +400,7 @@ public class CryptoTest {
 	 * should decrypt back to the same thing.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
 	 * 
 	 * @throws InvalidKeyException
 	 *             {@link InvalidKeyException}
@@ -430,7 +430,7 @@ public class CryptoTest {
 	 * Verifies that attempting to encrypt a null output stream just returns null.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -455,7 +455,7 @@ public class CryptoTest {
 	 * Verifies that attempting to encrypt a null output stream just returns null.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -478,7 +478,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -518,7 +518,7 @@ public class CryptoTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
+	 * {@link com.github.davidcarboni.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -562,7 +562,7 @@ public class CryptoTest {
 	 * decrypt back to the same thing.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
 	 * 
 	 * @throws IOException
 	 *             {@link IOException}
@@ -610,7 +610,7 @@ public class CryptoTest {
 	 * decrypt back to the same thing.
 	 * <p>
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
+	 * {@link com.github.davidcarboni.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
 	 * 
 	 * @throws IOException
 	 *             {@link IOException}

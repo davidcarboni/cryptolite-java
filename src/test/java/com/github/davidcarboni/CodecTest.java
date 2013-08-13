@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -18,7 +18,7 @@ import org.junit.Test;
 public class CodecTest {
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toHexString(byte[])}.
+	 * Test method for {@link com.github.davidcarboni.Codec#toHexString(byte[])}.
 	 */
 	@Test
 	public void testToHexString() {
@@ -35,7 +35,7 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toHexString(byte[])} where the parameter
+	 * Test method for {@link com.github.davidcarboni.Codec#toHexString(byte[])} where the parameter
 	 * is null.
 	 */
 	@Test
@@ -52,8 +52,8 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toBase64String(byte[])} and
-	 * {@link org.workdocx.cryptolite.Codec#fromBase64String(String)}.
+	 * Test method for {@link com.github.davidcarboni.Codec#toBase64String(byte[])} and
+	 * {@link com.github.davidcarboni.Codec#fromBase64String(String)}.
 	 */
 	@Test
 	public void testBase64String() {
@@ -72,8 +72,8 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toBase64String(byte[])} and
-	 * {@link org.workdocx.cryptolite.Codec#fromBase64String(String)} where the parameter is null.
+	 * Test method for {@link com.github.davidcarboni.Codec#toBase64String(byte[])} and
+	 * {@link com.github.davidcarboni.Codec#fromBase64String(String)} where the parameter is null.
 	 */
 	@Test
 	public void testBase64StringNull() {
@@ -92,8 +92,8 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toByteArray(String)} and
-	 * {@link org.workdocx.cryptolite.Codec#fromByteArray(byte[])}.
+	 * Test method for {@link com.github.davidcarboni.Codec#toByteArray(String)} and
+	 * {@link com.github.davidcarboni.Codec#fromByteArray(byte[])}.
 	 */
 	@Test
 	public void testByteArray() {
@@ -110,8 +110,8 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Codec#toByteArray(String)} and
-	 * {@link org.workdocx.cryptolite.Codec#fromByteArray(byte[])} where the parameter is null.
+	 * Test method for {@link com.github.davidcarboni.Codec#toByteArray(String)} and
+	 * {@link com.github.davidcarboni.Codec#fromByteArray(byte[])} where the parameter is null.
 	 */
 	@Test
 	public void testByteArrayNull() {

@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import java.io.Serializable;
 import java.security.InvalidKeyException;

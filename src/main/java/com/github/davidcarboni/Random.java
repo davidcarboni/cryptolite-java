@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

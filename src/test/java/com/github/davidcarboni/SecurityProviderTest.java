@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -36,7 +36,7 @@ public class SecurityProviderTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.SecurityProvider#getProvider()}. Checks that
+	 * Test method for {@link com.github.davidcarboni.SecurityProvider#getProvider()}. Checks that
 	 * the provider instance is cached after the first call.
 	 */
 	@Test
@@ -56,7 +56,7 @@ public class SecurityProviderTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.SecurityProvider#getProviderName()}.
+	 * Test method for {@link com.github.davidcarboni.SecurityProvider#getProviderName()}.
 	 */
 	@Test
 	public void testGetProviderName() {

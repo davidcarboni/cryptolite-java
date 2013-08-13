@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -20,7 +20,7 @@ import org.junit.Test;
 public class KeysTest {
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Keys#newSecretKey()}.
+	 * Test method for {@link com.github.davidcarboni.Keys#newSecretKey()}.
 	 * <p>
 	 * This is a cursory test to check that subsequent generated keys are different. Whilst it's
 	 * technically possible for this test to fail, consider yourself intergalactically lucky if it
@@ -44,7 +44,7 @@ public class KeysTest {
 	}
 
 	/**
-	 * Test method for {@link org.workdocx.cryptolite.Keys#newKeyPair()}.
+	 * Test method for {@link com.github.davidcarboni.Keys#newKeyPair()}.
 	 * <p>
 	 * This is a cursory test to check that subsequent generated keys are different. Whilst it's
 	 * technically possible for this test to fail, consider yourself intergalactically lucky if it

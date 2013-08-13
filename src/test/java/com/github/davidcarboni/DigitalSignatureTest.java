@@ -1,4 +1,4 @@
-package org.workdocx.cryptolite;
+package com.github.davidcarboni;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -46,7 +46,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
 	 * .
 	 */
 	@Test
@@ -65,7 +65,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
 	 * .
 	 */
 	@Test
@@ -85,7 +85,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.lang.String, java.security.PrivateKey)}
 	 * .
 	 */
 	@Test
@@ -106,7 +106,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
 	 * .
 	 */
 	@Test
@@ -125,7 +125,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -152,7 +152,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -176,7 +176,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.DigitalSignature#sign(java.io.InputStream, java.security.PrivateKey)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -204,7 +204,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#verify(java.lang.String, java.security.PublicKey, java.lang.String)}
+	 * {@link com.github.davidcarboni.DigitalSignature#verify(java.lang.String, java.security.PublicKey, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -225,7 +225,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#verify(java.lang.String, java.security.PublicKey, java.lang.String)}
+	 * {@link com.github.davidcarboni.DigitalSignature#verify(java.lang.String, java.security.PublicKey, java.lang.String)}
 	 * .
 	 */
 	@Test
@@ -247,7 +247,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
+	 * {@link com.github.davidcarboni.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -275,7 +275,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
+	 * {@link com.github.davidcarboni.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -302,7 +302,7 @@ public class DigitalSignatureTest {
 
 	/**
 	 * Test method for
-	 * {@link org.workdocx.cryptolite.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
+	 * {@link com.github.davidcarboni.DigitalSignature#verify(java.io.InputStream, java.security.PublicKey, java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
