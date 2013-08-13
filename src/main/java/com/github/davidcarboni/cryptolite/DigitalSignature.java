@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

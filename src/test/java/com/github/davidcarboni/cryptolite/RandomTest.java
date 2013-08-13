@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,7 +35,7 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Random#getInstance()}. Checks that
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#getInstance()}. Checks that
 	 * {@link Random#getInstance()} returns the same instance on every call, avoiding initialising a
 	 * new instance every time.
 	 */
@@ -55,7 +55,7 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Random#generateId()}. This checks that the
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generateId()}. This checks that the
 	 * number of bits in the returned ID is the same as specified by {@link Random#ID_BITS}.
 	 */
 	@Test
@@ -79,7 +79,7 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Random#generateSalt()}. This checks that the
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generateSalt()}. This checks that the
 	 * number of bytes in the returned salt value matches the length specified in
 	 * {@link Random#SALT_BYTES}.
 	 */
@@ -97,7 +97,7 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Random#generatePassword(int)}. This checks
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generatePassword(int)}. This checks
 	 * that the number of characters in the returned password matches the specified length of the
 	 * password.
 	 */

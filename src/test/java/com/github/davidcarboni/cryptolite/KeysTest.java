@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -20,7 +20,7 @@ import org.junit.Test;
 public class KeysTest {
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Keys#newSecretKey()}.
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Keys#newSecretKey()}.
 	 * <p>
 	 * This is a cursory test to check that subsequent generated keys are different. Whilst it's
 	 * technically possible for this test to fail, consider yourself intergalactically lucky if it
@@ -44,7 +44,7 @@ public class KeysTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.Keys#newKeyPair()}.
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Keys#newKeyPair()}.
 	 * <p>
 	 * This is a cursory test to check that subsequent generated keys are different. Whilst it's
 	 * technically possible for this test to fail, consider yourself intergalactically lucky if it

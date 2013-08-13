@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -16,7 +16,7 @@ import org.junit.Test;
 public class PasswordTest {
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.Password#hash(java.lang.String)} at least
+	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)} at least
 	 * returns something other than the String passed in.
 	 */
 	@Test
@@ -33,7 +33,7 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.Password#hash(java.lang.String)} hashes the same
+	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)} hashes the same
 	 * password to a different value on subsequent invocations - i.e. that the hash is salted.
 	 */
 	@Test
@@ -52,7 +52,7 @@ public class PasswordTest {
 
 	/**
 	 * Checks that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} can
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
 	 * successfully verify a password against its hash.
 	 */
 	@Test
@@ -71,7 +71,7 @@ public class PasswordTest {
 
 	/**
 	 * Checks that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} can
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
 	 * successfully verify a blank password against its hash.
 	 */
 	@Test
@@ -90,7 +90,7 @@ public class PasswordTest {
 
 	/**
 	 * Ensures that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} returns
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns
 	 * false for an incorrect password.
 	 */
 	@Test
@@ -111,7 +111,7 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
 	 * polite refusal, rather than throwing an exception, if the hash value is too short (ie less
 	 * that the size of the salt).
 	 */
@@ -133,7 +133,7 @@ public class PasswordTest {
 
 	/**
 	 * Checks that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)}
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
 	 * gracefully returns false, rather than throwing an exception if the hash only contains enough
 	 * bytes for the salt value (i.e. zero bytes for the password part of the hash).
 	 */
@@ -153,7 +153,7 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
 	 * polite refusal, rather than throwing an exception, if the password value is null.
 	 */
 	@Test
@@ -171,7 +171,7 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.Password#hash(String)} returns null if the
+	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(String)} returns null if the
 	 * password value given is null.
 	 */
 	@Test
@@ -189,7 +189,7 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.Password#verify(java.lang.String, java.lang.String)} returns a
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
 	 * polite refusal, rather than throwing an exception, if the hash value is null.
 	 */
 	@Test

@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;

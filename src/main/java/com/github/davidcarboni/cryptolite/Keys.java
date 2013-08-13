@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

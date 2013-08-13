@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

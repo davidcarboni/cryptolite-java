@@ -1,4 +1,4 @@
-package com.github.davidcarboni;
+package com.github.davidcarboni.cryptolite;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -43,7 +43,7 @@ public class KeyExchangeTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.KeyExchange#encryptKey(javax.crypto.SecretKey, java.security.PublicKey)}
+	 * {@link com.github.davidcarboni.cryptolite.KeyExchange#encryptKey(javax.crypto.SecretKey, java.security.PublicKey)}
 	 * . This is in fact a repeat of {@link #testDecryptKey()} with slightly different semantics.
 	 */
 	@Test
@@ -63,7 +63,7 @@ public class KeyExchangeTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.KeyExchange#decryptKey(java.lang.String, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.cryptolite.KeyExchange#decryptKey(java.lang.String, java.security.PrivateKey)}
 	 * . This is in fact a repeat of {@link #testEncryptKey()} with slightly different semantics.
 	 */
 	@Test
@@ -83,7 +83,7 @@ public class KeyExchangeTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.KeyExchange#encryptKey(javax.crypto.SecretKey, java.security.PublicKey)}
+	 * {@link com.github.davidcarboni.cryptolite.KeyExchange#encryptKey(javax.crypto.SecretKey, java.security.PublicKey)}
 	 * . This is in fact a repeat of {@link #testDecryptKey()} with slightly different semantics.
 	 */
 	@Test
@@ -102,7 +102,7 @@ public class KeyExchangeTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.KeyExchange#decryptKey(java.lang.String, java.security.PrivateKey)}
+	 * {@link com.github.davidcarboni.cryptolite.KeyExchange#decryptKey(java.lang.String, java.security.PrivateKey)}
 	 * . This is in fact a repeat of {@link #testEncryptKey()} with slightly different semantics.
 	 */
 	@Test
