@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/davidcarboni/Cryptolite.png?branch=master)](https://travis-ci.org/davidcarboni/Cryptolite)
 Cryptolite
 ----------
 
