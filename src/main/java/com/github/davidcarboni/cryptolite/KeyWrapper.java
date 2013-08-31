@@ -15,7 +15,6 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -234,30 +233,6 @@ public class KeyWrapper implements Serializable {
 			throw new RuntimeException("Unable to convert key '" + encodedKey
 					+ "' to a valid public key.", e);
 		}
-	}
-
-	/**
-	 * @return the raw wrapKey bytes, as returned by
-	 *         {@link SecretKey#getEncoded()} as a base64-encoded String. This
-	 *         is only useful if you want to store the key, rather than
-	 *         regenerate it from a password and salt.
-	 */
-	@Deprecated
-	public String getWrapKey() {
-		return Codec.toBase64String(wrapKey.getEncoded());
-	}
-
-	/**
-	 * @param wrapKey
-	 *            the base64-encoded wrapKey to set. This value can be obtained
-	 *            from {@link #getWrapKey()}. This is only useful if you want to
-	 *            initialise an instance with a previously stored key, rather
-	 *            than recomputing a key from a password and salt.
-	 */
-	@Deprecated
-	public void setWrapKey(String wrapKey) {
-		byte[] wrapKeyBytes = Codec.fromBase64String(wrapKey);
-		this.wrapKey = new SecretKeySpec(wrapKeyBytes, WRAP_KEY_ALGORITHM);
 	}
 
 	/**

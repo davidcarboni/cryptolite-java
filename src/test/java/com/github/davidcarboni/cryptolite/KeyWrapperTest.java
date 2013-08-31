@@ -1,7 +1,7 @@
 package com.github.davidcarboni.cryptolite;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -35,43 +35,42 @@ public class KeyWrapperTest {
 	/**
 	 * Test for {@link KeyWrapper#KeyWrapper(String, String)}.
 	 * <p>
-	 * Checks that two instances initialised with the same password and salt both generate the same
-	 * key.
+	 * Checks that two instances initialised with the same password and salt
+	 * both generate the same key.
 	 */
 	@Test
 	public void testKeyWrapperStringString() {
 
-		// Given 
+		// Given
 		String password = "testKeyWrapperStringString";
 		String salt = Random.generateSalt();
 
 		// When
-		KeyWrapper keyWrapper1 = new KeyWrapper(password, salt);
-		KeyWrapper keyWrapper2 = new KeyWrapper(password, salt);
+		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
+		KeyWrapper keyWrapperPass = new KeyWrapper(password, salt);
+		KeyWrapper keyWrapperFail = new KeyWrapper(password + "x", salt);
 
 		// Then
-		assertEquals(keyWrapper1.getWrapKey(), keyWrapper2.getWrapKey());
-	}
-
-	/**
-	 * Test for {@link KeyWrapper#KeyWrapper(String)}.
-	 * <p>
-	 * Checks that an instance initialised with a key, rather than a password and salt contains the
-	 * same key.
-	 */
-	@Test
-	public void testKeyWrapperString() {
-
-		// Given 
-		String password = "testKeyWrapperString";
-		String salt = Random.generateSalt();
-		KeyWrapper keyWrapperPasswordSalt = new KeyWrapper(password, salt);
-
-		// When
-		KeyWrapper keyWrapperKey = new KeyWrapper(keyWrapperPasswordSalt.getWrapKey());
-
-		// Then
-		assertEquals(keyWrapperPasswordSalt.getWrapKey(), keyWrapperKey.getWrapKey());
+		// The following should work:
+		SecretKey key = Keys.newSecretKey();
+		String wrappedKey = keyWrapper.wrapSecretKey(key);
+		try {
+			keyWrapperPass.unwrapSecretKey(wrappedKey);
+		} catch (RuntimeException e) {
+			fail("Unable to unwrap key");
+		}
+		// The following should not work -
+		// this validates that the check above
+		// is actually checking something:
+		try {
+			keyWrapperFail.unwrapSecretKey(wrappedKey);
+			fail("Please check the assumptions for this test");
+		} catch (RuntimeException e) {
+			// Expected. If we don't get this
+			// then something has changed and
+			// this test should flag that it
+			// needs updating.
+		}
 	}
 
 	/**
@@ -80,7 +79,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testWrapSecretKey() {
 
-		// Given 
+		// Given
 		String password = "testWrapSecretKey";
 		String salt = Random.generateSalt();
 		SecretKey key = Keys.newSecretKey();
@@ -100,7 +99,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testWrapPrivateKey() {
 
-		// Given 
+		// Given
 		String password = "testWrapPrivateKey";
 		String salt = Random.generateSalt();
 		PrivateKey key = keyPair.getPrivate();
@@ -120,7 +119,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testEncodePublicKey() {
 
-		// Given 
+		// Given
 		PublicKey key = keyPair.getPublic();
 
 		// When
@@ -137,7 +136,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testUnwrapSecretKey() {
 
-		// Given 
+		// Given
 		String password = "testUnwrapSecretKey";
 		String salt = Random.generateSalt();
 		SecretKey key = Keys.newSecretKey();
@@ -157,7 +156,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testUnwrapPrivateKey() {
 
-		// Given 
+		// Given
 		String password = "testWrapPrivateKey";
 		String salt = Random.generateSalt();
 		PrivateKey key = keyPair.getPrivate();
@@ -177,7 +176,7 @@ public class KeyWrapperTest {
 	@Test
 	public void testDecodePublicKey() {
 
-		// Given 
+		// Given
 		PublicKey key = keyPair.getPublic();
 		String wrappedKey = KeyWrapper.encodePublicKey(key);
 
@@ -186,24 +185,6 @@ public class KeyWrapperTest {
 
 		// Then
 		assertTrue(Arrays.equals(key.getEncoded(), recovered.getEncoded()));
-	}
-
-	/**
-	 * Test for {@link KeyWrapper#getWrapKey()} and {@link KeyWrapper#setWrapKey(String)}.
-	 */
-	@Test
-	public void testWrapKey() {
-
-		// Given 
-		KeyWrapper keyWrapper1 = new KeyWrapper("password", Random.generateSalt());
-		KeyWrapper keyWrapper2 = new KeyWrapper("something else", Random.generateSalt());
-
-		// When
-		String wrapKey = keyWrapper1.getWrapKey();
-		keyWrapper2.setWrapKey(wrapKey);
-
-		// Then
-		assertEquals(wrapKey, keyWrapper2.getWrapKey());
 	}
 
 }
