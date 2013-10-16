@@ -12,7 +12,7 @@ Cryptolite doesn't do any cryptography itself. Instead it relies on the well kno
 
 ### See it in action
 
-If you'd like to see a showcase app I put together that uses Cryptolite, have a look at https://cryptonite.herokuapp.com (it may take a while to load - it's a Heroku thing). Cryptonite also provides Encryption-as-a-service: https://cryptonite.herokuapp.com/api
+If you'd like to see a showcase app I put together with Cryptolite, have a look at https://cryptonite.herokuapp.com (it may take a while to load - it's a Heroku thing). Cryptonite also provides Encryption-as-a-service: https://cryptonite.herokuapp.com/api
 
 
 ### Maven usage
