@@ -10,6 +10,11 @@ Cryptolite is a wrapper for the Java Cryptography Extension, providing simple, "
 Cryptolite doesn't do any cryptography itself. Instead it relies on the well known open source BouncyCastle JCE provider to do the heavy lifting. The API is focused explicitly on providing the things developers need, especially webapp developers - hashing passwords, generating random IDs, encrypting Strings and Files, digital signatures and key exchange. No options means under the covers it just does what's most appropriate - and if necessary pragmatic - enabling you to use cryptography without having to understand it in depth. For example, did you know that using AES in ECB mode is a bad idea? Neither did I when I started, so I wrote Cryptolite to take care of it. (http://www.codinghorror.com/blog/2009/05/why-isnt-my-encryption-encrypting.html)
 
 
+### See it in action
+
+If you'd like to see a showcase app I put together that uses Cryptolite, have a look at https://cryptonite.herokuapp.com (it may take a while to load - it's a Heroku thing). Cryptonite also provides Encryption-as-a-service: https://cryptonite.herokuapp.com/api
+
+
 ### Maven usage
 
 To use Cryptolite in your project:
