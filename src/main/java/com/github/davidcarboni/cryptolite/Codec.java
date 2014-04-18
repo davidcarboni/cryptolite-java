@@ -7,8 +7,8 @@ import org.apache.commons.codec.binary.Hex;
 
 /**
  * 
- * This class provides the ability to convert a byte array to Base-64 and back, or to a hexadecimal
- * string for printing out.
+ * This class provides the ability to convert a byte array to Base-64 and back,
+ * or to a hexadecimal string for printing out.
  * <p>
  * It also provides for converting text String objects to and from a byte array.
  * 
@@ -23,11 +23,11 @@ public class Codec {
 	public static final String ENCODING = "UTF8";
 
 	/**
-	 * Renders the given byte array as a hex String. This is a convenience method useful for
-	 * checking values during development.
+	 * Renders the given byte array as a hex String. This is a convenience
+	 * method useful for checking values during development.
 	 * <p>
-	 * Internally, this checks for null and then calls the Apache commons-codec method
-	 * {@link Hex#encodeHexString(byte[])}.
+	 * Internally, this checks for null and then calls the Apache commons-codec
+	 * method {@link Hex#encodeHexString(byte[])}.
 	 * 
 	 * @param bytes
 	 *            The array to be rendered.
@@ -45,11 +45,19 @@ public class Codec {
 	/**
 	 * Encodes the given byte array as a base-64 String.
 	 * 
+	 * Internally, this checks for null and then calls the Apache commons-codec
+	 * method {@link Base64#encodeBase64String(byte[])}.
+	 * 
 	 * @param bytes
 	 *            The array to be encoded.
 	 * @return The byte array encoded using base-64.
 	 */
 	public static String toBase64String(byte[] bytes) {
+
+		if (bytes == null) {
+			return null;
+		}
+
 		return Base64.encodeBase64String(bytes);
 	}
 
@@ -89,7 +97,7 @@ public class Codec {
 	 * 
 	 * @param bytes
 	 *            The byte array to be converted to a String.
-	 * @return A byte array representing the String.
+	 * @return The String represented by the given bytes.
 	 */
 	public static String fromByteArray(byte[] bytes) {
 
