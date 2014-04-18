@@ -69,6 +69,11 @@ public class Codec {
 	 * @return The decoded byte array.
 	 */
 	public static byte[] fromBase64String(String base64) {
+
+		if (base64 == null) {
+			return null;
+		}
+
 		return Base64.decodeBase64(base64);
 	}
 
