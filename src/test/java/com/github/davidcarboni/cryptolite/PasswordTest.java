@@ -16,8 +16,9 @@ import org.junit.Test;
 public class PasswordTest {
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)} at least
-	 * returns something other than the String passed in.
+	 * Verifies that
+	 * {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)}
+	 * at least returns something other than the String passed in.
 	 */
 	@Test
 	public void shouldHash() {
@@ -28,13 +29,16 @@ public class PasswordTest {
 		String hash = Password.hash(password);
 
 		// Then
-		// Simplistic check to ensure the password hasn't just been returned unaltered
+		// Simplistic check to ensure the password hasn't just been returned
+		// unaltered
 		assertFalse(hash.equals(password));
 	}
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)} hashes the same
-	 * password to a different value on subsequent invocations - i.e. that the hash is salted.
+	 * Verifies that
+	 * {@link com.github.davidcarboni.cryptolite.Password#hash(java.lang.String)}
+	 * hashes the same password to a different value on subsequent invocations -
+	 * i.e. that the hash is salted.
 	 */
 	@Test
 	public void shouldHashDifferentlyEachTime() {
@@ -52,8 +56,8 @@ public class PasswordTest {
 
 	/**
 	 * Checks that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
-	 * successfully verify a password against its hash.
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * can successfully verify a password against its hash.
 	 */
 	@Test
 	public void shouldVerifyCorrectPassword() {
@@ -71,8 +75,8 @@ public class PasswordTest {
 
 	/**
 	 * Checks that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} can
-	 * successfully verify a blank password against its hash.
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * can successfully verify a blank password against its hash.
 	 */
 	@Test
 	public void shouldVerifyBlankPassword() {
@@ -90,8 +94,8 @@ public class PasswordTest {
 
 	/**
 	 * Ensures that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns
-	 * false for an incorrect password.
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * returns false for an incorrect password.
 	 */
 	@Test
 	public void shouldntVerifyIncorrectPassword() {
@@ -99,7 +103,7 @@ public class PasswordTest {
 		// Given
 		String password = "password";
 		String incorrect = "something else";
-		// Note we add 
+		// Note we add
 		String hash = Password.hash(password);
 
 		// When
@@ -111,16 +115,16 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
-	 * polite refusal, rather than throwing an exception, if the hash value is too short (ie less
-	 * that the size of the salt).
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * returns a polite refusal, rather than throwing an exception, if the hash
+	 * value is too short (ie less that the size of the salt).
 	 */
 	@Test
 	public void shouldntThrowExceptionIfHashTooShort() {
 
 		// Given
 		String password = "password";
-		byte[] hashBytes = new byte[Password.SALT_SIZE - 1];
+		byte[] hashBytes = new byte[Random.SALT_BYTES - 1];
 		Random.getInstance().nextBytes(hashBytes);
 		String hash = Codec.toBase64String(hashBytes);
 
@@ -134,8 +138,9 @@ public class PasswordTest {
 	/**
 	 * Checks that
 	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
-	 * gracefully returns false, rather than throwing an exception if the hash only contains enough
-	 * bytes for the salt value (i.e. zero bytes for the password part of the hash).
+	 * gracefully returns false, rather than throwing an exception if the hash
+	 * only contains enough bytes for the salt value (i.e. zero bytes for the
+	 * password part of the hash).
 	 */
 	@Test
 	public void shouldntThrowExceptionIfHashHasNoPassword() {
@@ -153,8 +158,9 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
-	 * polite refusal, rather than throwing an exception, if the password value is null.
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * returns a polite refusal, rather than throwing an exception, if the
+	 * password value is null.
 	 */
 	@Test
 	public void shouldntThrowExceptionIfVerifyPasswordNull() {
@@ -171,8 +177,9 @@ public class PasswordTest {
 	}
 
 	/**
-	 * Verifies that {@link com.github.davidcarboni.cryptolite.Password#hash(String)} returns null if the
-	 * password value given is null.
+	 * Verifies that
+	 * {@link com.github.davidcarboni.cryptolite.Password#hash(String)} returns
+	 * null if the password value given is null.
 	 */
 	@Test
 	public void shouldReturnNullForNullPassword() {
@@ -189,8 +196,9 @@ public class PasswordTest {
 
 	/**
 	 * Verifies that
-	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)} returns a
-	 * polite refusal, rather than throwing an exception, if the hash value is null.
+	 * {@link com.github.davidcarboni.cryptolite.Password#verify(java.lang.String, java.lang.String)}
+	 * returns a polite refusal, rather than throwing an exception, if the hash
+	 * value is null.
 	 */
 	@Test
 	public void shouldntThrowExceptionIfVerifyHashNull() {
