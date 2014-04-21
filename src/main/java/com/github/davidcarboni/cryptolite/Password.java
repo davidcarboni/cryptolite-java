@@ -83,22 +83,22 @@ public class Password {
 
 		if (StringUtils.isNotBlank(hash) && password != null) {
 			// Get the salt and hash from the input string:
-			byte[] value = Codec.fromBase64String(hash);
+			byte[] bytes = Codec.fromBase64String(hash);
 
 			// Check the size of the value to ensure it's at least as long as
 			// the salt:
-			if (value.length >= Random.SALT_BYTES) {
+			if (bytes.length >= Random.SALT_BYTES) {
 
 				// Extract the salt and password hash:
-				String valueSalt = getSalt(value);
-				byte[] valueHash = getHash(value);
+				String salt = getSalt(bytes);
+				byte[] existingHash = getHash(bytes);
 
 				// Hash the password with the same salt in order to get the same
 				// result:
-				byte[] passwordHash = hash(password, valueSalt);
+				byte[] comparisonHash = hash(password, salt);
 
 				// See whether they match:
-				result = Arrays.equals(valueHash, passwordHash);
+				result = Arrays.equals(existingHash, comparisonHash);
 			}
 		}
 
