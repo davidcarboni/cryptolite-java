@@ -127,8 +127,7 @@ public class Crypto {
 	 * The full name of the {@link Cipher} to use for cryptographic operations,
 	 * in a format suitable for passing to the JCE.
 	 */
-	public static final String CIPHER_NAME = CIPHER_ALGORITHM + "/"
-			+ CIPHER_MODE + "/" + CIPHER_PADDING;
+	public static final String CIPHER_NAME = CIPHER_ALGORITHM + "/" + CIPHER_MODE + "/" + CIPHER_PADDING;
 
 	/** The {@link Cipher} for this instance. */
 	private final Cipher cipher;
@@ -155,19 +154,14 @@ public class Crypto {
 		try {
 
 			// Get a Cipher instance:
-			cipher = Cipher.getInstance(cipherName,
-					SecurityProvider.getProviderName());
+			cipher = Cipher.getInstance(cipherName, SecurityProvider.getProviderName());
 
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to locate algorithm for "
-					+ cipherName, e);
+			throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
 		} catch (NoSuchProviderException e) {
-			throw new RuntimeException(
-					"Unable to locate provider. Are the BouncyCastle libraries installed?",
-					e);
+			throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
 		} catch (NoSuchPaddingException e) {
-			throw new RuntimeException("Unable to locate padding method for "
-					+ cipherName, e);
+			throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
 		}
 	}
 
@@ -195,8 +189,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public String encrypt(String string, String password)
-			throws InvalidKeyException {
+	public String encrypt(String string, String password) throws InvalidKeyException {
 
 		// Basic null check.
 		// An empty string can be encrypted:
@@ -211,8 +204,7 @@ public class Crypto {
 		byte[] bytes = Codec.toByteArray(string);
 
 		// Encrypt the data:
-		byte[] result = ArrayUtils.addAll(Codec.fromBase64String(salt),
-				encrypt(bytes, key));
+		byte[] result = ArrayUtils.addAll(Codec.fromBase64String(salt), encrypt(bytes, key));
 
 		// Return as a String:
 		return Codec.toBase64String(result);
@@ -239,8 +231,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public String encrypt(String string, SecretKey key)
-			throws InvalidKeyException {
+	public String encrypt(String string, SecretKey key) throws InvalidKeyException {
 
 		// Basic null check.
 		// An empty string can be encrypted:
@@ -283,8 +274,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	protected byte[] encrypt(byte[] bytes, SecretKey key)
-			throws InvalidKeyException {
+	protected byte[] encrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
 
 		// Basic null check.
 		// An empty array can be encrypted:
@@ -303,11 +293,9 @@ public class Crypto {
 		try {
 			result = cipher.doFinal(bytes);
 		} catch (IllegalBlockSizeException e) {
-			throw new RuntimeException(
-					"Block-size exception when completing encrypiton.", e);
+			throw new RuntimeException("Block-size exception when completing encrypiton.", e);
 		} catch (BadPaddingException e) {
-			throw new RuntimeException(
-					"Padding error detected when completing encrypiton.", e);
+			throw new RuntimeException("Padding error detected when completing encrypiton.", e);
 		}
 
 		// Concatenate the iv and the encrypted data:
@@ -333,8 +321,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public String decrypt(String encrypted, String password)
-			throws InvalidKeyException {
+	public String decrypt(String encrypted, String password) throws InvalidKeyException {
 
 		// Basic null/empty check.
 		// An empty string can be encrypted, but not decrypted:
@@ -345,18 +332,15 @@ public class Crypto {
 		// Convert to a byte array:
 		byte[] bytes = Codec.fromBase64String(encrypted);
 		if (bytes.length < Random.SALT_BYTES) {
-			throw new IllegalArgumentException(
-					"Are you sure this is encrypted data? Byte length ("
-							+ bytes.length + ") is shorter than a salt value.");
+			throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
+					+ ") is shorter than a salt value.");
 		}
 
 		// Separate the salt from the data:
 		byte[] salt = ArrayUtils.subarray(bytes, 0, Random.SALT_BYTES);
-		byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES,
-				bytes.length);
+		byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES, bytes.length);
 
-		SecretKey key = Keys.generateSecretKey(password,
-				Codec.toBase64String(salt));
+		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
 
 		return Codec.fromByteArray(decrypt(data, key));
 	}
@@ -376,8 +360,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public String decrypt(String encrypted, SecretKey key)
-			throws InvalidKeyException {
+	public String decrypt(String encrypted, SecretKey key) throws InvalidKeyException {
 
 		// Basic null/empty check.
 		// An empty string can be encrypted, but not decrypted:
@@ -413,8 +396,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	protected byte[] decrypt(byte[] bytes, SecretKey key)
-			throws InvalidKeyException {
+	protected byte[] decrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
 
 		// Basic null/empty check.
 		// An empty array can be encrypted, but not decrypted
@@ -425,10 +407,8 @@ public class Crypto {
 
 		int ivSize = cipher.getBlockSize();
 		if (bytes.length < ivSize) {
-			throw new IllegalArgumentException(
-					"Are you sure this is encrypted data? Byte length ("
-							+ bytes.length
-							+ ") is shorter than an initialisation vector.");
+			throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
+					+ ") is shorter than an initialisation vector.");
 		}
 		byte[] iv;
 		byte[] data;
@@ -445,13 +425,9 @@ public class Crypto {
 		try {
 			result = cipher.doFinal(data);
 		} catch (IllegalBlockSizeException e) {
-			throw new RuntimeException(
-					"Block-size exception when completing String encrypiton.",
-					e);
+			throw new RuntimeException("Block-size exception when completing String encrypiton.", e);
 		} catch (BadPaddingException e) {
-			throw new RuntimeException(
-					"Padding error detected when completing String encrypiton.",
-					e);
+			throw new RuntimeException("Padding error detected when completing String encrypiton.", e);
 		}
 
 		return result;
@@ -491,8 +467,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public OutputStream encrypt(OutputStream destination, String password)
-			throws IOException, InvalidKeyException {
+	public OutputStream encrypt(OutputStream destination, String password) throws IOException, InvalidKeyException {
 
 		// Basic null check.
 		// An empty stream can be encrypted:
@@ -545,8 +520,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public OutputStream encrypt(OutputStream destination, SecretKey key)
-			throws IOException, InvalidKeyException {
+	public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException, InvalidKeyException {
 
 		// Basic null check.
 		// An empty stream can be encrypted:
@@ -559,8 +533,7 @@ public class Crypto {
 
 		// Get a cipher instance and instantiate the CipherOutputStream:
 		initCipher(Cipher.ENCRYPT_MODE, key, iv);
-		CipherOutputStream cipherOutputStream = new CipherOutputStream(
-				destination, cipher);
+		CipherOutputStream cipherOutputStream = new CipherOutputStream(destination, cipher);
 
 		// Correct use is to store the IV unencrypted at the start of the
 		// stream:
@@ -601,8 +574,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public InputStream encrypt(InputStream source, SecretKey key)
-			throws IOException, InvalidKeyException {
+	public InputStream encrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
 
 		// Remove the initialisation vector from the start of the stream.
 		// NB if the stream is empty, the read will return -1 and no harm will
@@ -614,8 +586,7 @@ public class Crypto {
 
 		// Get a cipher instance and create the cipherInputStream:
 		initCipher(Cipher.DECRYPT_MODE, key, iv);
-		CipherInputStream cipherInputStream = new CipherInputStream(source,
-				cipher);
+		CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
 
 		// Return the initialised stream:
 		return cipherInputStream;
@@ -653,8 +624,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public InputStream decrypt(InputStream source, String password)
-			throws IOException, InvalidKeyException {
+	public InputStream decrypt(InputStream source, String password) throws IOException, InvalidKeyException {
 
 		// Remove the initialisation vector from the start of the stream.
 		// NB if the stream is empty, the read will return -1 and no harm will
@@ -665,8 +635,7 @@ public class Crypto {
 		source.read(salt);
 
 		// Generate the key:
-		SecretKey key = Keys.generateSecretKey(password,
-				Codec.toBase64String(salt));
+		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
 
 		// Return the initialised stream:
 		return decrypt(source, key);
@@ -703,8 +672,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	public InputStream decrypt(InputStream source, SecretKey key)
-			throws IOException, InvalidKeyException {
+	public InputStream decrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
 
 		// Remove the initialisation vector from the start of the stream.
 		// NB if the stream is empty, the read will return -1 and no harm will
@@ -716,8 +684,7 @@ public class Crypto {
 
 		// Get a cipher instance and create the cipherInputStream:
 		initCipher(Cipher.DECRYPT_MODE, key, iv);
-		CipherInputStream cipherInputStream = new CipherInputStream(source,
-				cipher);
+		CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
 
 		// Return the initialised stream:
 		return cipherInputStream;
@@ -732,8 +699,7 @@ public class Crypto {
 	 *         given {@link Cipher}, containing random bytes.
 	 */
 	byte[] generateInitialisationVector() {
-		byte[] bytes = new byte[cipher.getBlockSize()];
-		Random.getInstance().nextBytes(bytes);
+		byte[] bytes = Random.nextBytes(cipher.getBlockSize());
 		return bytes;
 	}
 
@@ -771,8 +737,7 @@ public class Crypto {
 	 *             If the given key is not a valid {@value #CIPHER_ALGORITHM}
 	 *             key.
 	 */
-	private void initCipher(int mode, SecretKey key, byte[] iv)
-			throws InvalidKeyException {
+	private void initCipher(int mode, SecretKey key, byte[] iv) throws InvalidKeyException {
 
 		try {
 

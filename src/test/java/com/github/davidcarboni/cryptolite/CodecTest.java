@@ -65,8 +65,7 @@ public class CodecTest {
 
 		// Given
 		final int size = 125;
-		byte[] byteArray = new byte[size];
-		Random.getInstance().nextBytes(byteArray);
+		byte[] byteArray = Random.nextBytes(size);
 
 		// When
 		String toBase64 = Codec.toBase64String(byteArray);
