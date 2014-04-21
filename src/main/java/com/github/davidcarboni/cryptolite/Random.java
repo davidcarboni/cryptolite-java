@@ -30,6 +30,9 @@ public class Random {
 	private static final int bitsInAByte = 8;
 	private static final int idLengthBytes = ID_BITS / bitsInAByte;
 
+	// Characters for pasword generation:
+	private static final String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
 	/**
 	 * Lazily-instantiated, cached {@link SecureRandom} instance.
 	 * <p>
@@ -95,10 +98,16 @@ public class Random {
 	}
 
 	/**
-	 * Convenience method to generate a random password using Apache
+	 * Convenience method to generate a random password.
+	 * <p>
+	 * This method no longer uses Apache
 	 * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}
-	 * , providing the {@link SecureRandom} returned by {@link #getInstance()}
-	 * as the last parameter.
+	 * , because the implementation of that method calls
+	 * {@link java.util.Random#nextInt()}, which is not overridden by the
+	 * {@link SecureRandom} returned by {@link #getInstance()}.
+	 * <p>
+	 * That means passwords wouldn't be generated using cryptographically strong
+	 * pseudo random numbers, despite passing a {@link SecureRandom}.
 	 * 
 	 * @param length
 	 *            The length of the password to be returned.
@@ -106,7 +115,23 @@ public class Random {
 	 *         lowercase letters and numbers.
 	 */
 	public static String generatePassword(int length) {
-		return RandomStringUtils.random(length, 0, 0, true, true, null, getInstance());
+		StringBuffer result = new StringBuffer();
+
+		while (result.length() < length) {
+			byte[] buffer = nextBytes(length);
+			int i = 0;
+			do {
+				// There are 62 possible password characters,
+				// So we mask out the leftmost 2 bits to get a value between 0
+				// and 63. That way most indices correspond to a character:
+				int index = buffer[i++] & 0x3F;
+				if (index < passwordCharacters.length()) {
+					result.append(passwordCharacters.charAt(index));
+				}
+			} while (result.length() < length && i < buffer.length);
+		}
+
+		return result.toString();
 	}
 
 	/**
