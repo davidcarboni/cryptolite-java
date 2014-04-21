@@ -6,9 +6,8 @@ import static org.junit.Assert.assertSame;
 import java.lang.reflect.Field;
 import java.security.Provider;
 
-import junit.framework.Assert;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,8 +35,9 @@ public class SecurityProviderTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProvider()}. Checks that
-	 * the provider instance is cached after the first call.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProvider()}
+	 * . Checks that the provider instance is cached after the first call.
 	 */
 	@Test
 	public void testGetProvider() {
@@ -56,7 +56,9 @@ public class SecurityProviderTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProviderName()}.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProviderName()}
+	 * .
 	 */
 	@Test
 	public void testGetProviderName() {

@@ -1,8 +1,8 @@
 package com.github.davidcarboni.cryptolite;
 
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
@@ -18,13 +18,14 @@ import org.junit.Test;
 public class CodecTest {
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])}.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])}.
 	 */
 	@Test
 	public void testToHexString() {
 
 		// Given
-		final byte[] bytes = new byte[] {0x00, (byte) 0xff, 0x10, 0x08};
+		final byte[] bytes = new byte[] { 0x00, (byte) 0xff, 0x10, 0x08 };
 		String expected = "00" + "ff" + "10" + "08";
 
 		// When
@@ -35,8 +36,9 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])} where the parameter
-	 * is null.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])}
+	 * where the parameter is null.
 	 */
 	@Test
 	public void testToHexStringNull() {
@@ -52,8 +54,11 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])} and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)}.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])}
+	 * and
+	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)}
+	 * .
 	 */
 	@Test
 	public void testBase64String() {
@@ -72,8 +77,11 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])} and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)} where the parameter is null.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])}
+	 * and
+	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)}
+	 * where the parameter is null.
 	 */
 	@Test
 	public void testBase64StringNull() {
@@ -92,7 +100,8 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
 	 * {@link com.github.davidcarboni.cryptolite.Codec#fromByteArray(byte[])}.
 	 */
 	@Test
@@ -110,8 +119,10 @@ public class CodecTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromByteArray(byte[])} where the parameter is null.
+	 * Test method for
+	 * {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
+	 * {@link com.github.davidcarboni.cryptolite.Codec#fromByteArray(byte[])}
+	 * where the parameter is null.
 	 */
 	@Test
 	public void testByteArrayNull() {
