@@ -30,7 +30,14 @@ public class Random {
 	private static final int bitsInAByte = 8;
 	private static final int idLengthBytes = ID_BITS / bitsInAByte;
 
-	/** Lazily-instantiated, cached {@link SecureRandom} instance. */
+	/**
+	 * Lazily-instantiated, cached {@link SecureRandom} instance.
+	 * <p>
+	 * SecureRandom is thread-safe: <a href=
+	 * "http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe"
+	 * >http
+	 * ://stackoverflow.com/questions/1461568/is-securerandom-thread-safe</a>
+	 */
 	private static SecureRandom secureRandom;
 
 	/**
@@ -66,14 +73,24 @@ public class Random {
 	}
 
 	/**
+	 * Convenience method to instiate and populate a byte array of the specified
+	 * length.
+	 * 
+	 * @param length
+	 *            The length of the array.
+	 * @return {@link SecureRandom#nextBytes(byte[])}
+	 */
+	public static byte[] nextBytes(int length) {
+		byte[] bytes = new byte[length];
+		getInstance().nextBytes(bytes);
+		return bytes;
+	}
+
+	/**
 	 * @return A 256-bit (32 byte) random ID as a hexadecimal string.
 	 */
 	public static String generateId() {
-
-		byte[] bytes = new byte[idLengthBytes];
-
-		getInstance().nextBytes(bytes);
-
+		byte[] bytes = nextBytes(idLengthBytes);
 		return Codec.toHexString(bytes);
 	}
 
@@ -101,11 +118,7 @@ public class Random {
 	 *         string (for easy storage).
 	 */
 	public static String generateSalt() {
-
-		byte[] salt = new byte[SALT_BYTES];
-
-		getInstance().nextBytes(salt);
-
+		byte[] salt = nextBytes(SALT_BYTES);
 		return Codec.toBase64String(salt);
 	}
 }
