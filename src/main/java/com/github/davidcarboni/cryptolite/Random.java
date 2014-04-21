@@ -15,7 +15,7 @@ import org.apache.commons.lang.RandomStringUtils;
  */
 public class Random {
 
-	/** IDs are {@value #ID_BITS}-bit random numbers. */
+	/** The length of IDs: {@value #ID_BITS}. */
 	public static final int ID_BITS = 256;
 
 	/**
@@ -23,7 +23,7 @@ public class Random {
 	 */
 	public static final String ALGORITHM = "SHA1PRNG";
 
-	/** The length of salt values. */
+	/** The length of salt values: {@value #SALT_BYTES}. */
 	public static final int SALT_BYTES = 16;
 
 	// Work out the right number of bytes for random IDs:
