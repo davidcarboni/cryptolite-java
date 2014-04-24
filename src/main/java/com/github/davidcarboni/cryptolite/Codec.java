@@ -43,6 +43,31 @@ public class Codec {
 	}
 
 	/**
+	 * With thanks to StackOverflow: <a href=
+	 * "http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java"
+	 * >Convert a string representation of a hex dump to a byte array using
+	 * Java?</a>
+	 * 
+	 * @param hex
+	 *            The hex String to parse. If it starts with 0x, this will be
+	 *            ignored automatically.
+	 * @return A byte array, as parsed from the given String
+	 */
+	public static byte[] fromHexString(String hex) {
+		String data = hex;
+		if (hex.length() > 1 && (hex.charAt(1) == 'x' || hex.charAt(1) == 'X')) {
+			data = hex.substring(2);
+		}
+		int len = data.length();
+		byte[] result = new byte[len / 2];
+		for (int i = 0; i < len; i += 2) {
+			result[i / 2] = (byte) ((Character.digit(data.charAt(i), 16) << 4) + Character
+					.digit(data.charAt(i + 1), 16));
+		}
+		return result;
+	}
+
+	/**
 	 * Encodes the given byte array as a base-64 String.
 	 * 
 	 * Internally, this checks for null and then calls the Apache commons-codec

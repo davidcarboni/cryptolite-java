@@ -18,11 +18,10 @@ import org.junit.Test;
 public class CodecTest {
 
 	/**
-	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])}.
+	 * Verifies that a byte array can be corectly converted to a hex String
 	 */
 	@Test
-	public void testToHexString() {
+	public void shouldConventBytesToHexString() {
 
 		// Given
 		final byte[] bytes = new byte[] { 0x00, (byte) 0xff, 0x10, 0x08 };
@@ -33,6 +32,41 @@ public class CodecTest {
 
 		// Then
 		assertEquals(expected, actual);
+	}
+
+	/**
+	 * Verifies that a hex String can be correctly converted to bytes.
+	 */
+	@Test
+	public void shouldConvertHexStringToBytes() {
+
+		// Given
+		final byte[] expected = new byte[] { 0x00, (byte) 0xff, 0x10, 0x08 };
+		String hexString = "00" + "ff" + "10" + "08";
+
+		// When
+		byte[] actual = Codec.fromHexString(hexString);
+
+		// Then
+		assertTrue(Arrays.equals(expected, actual));
+	}
+
+	/**
+	 * Verifies that a hex String with a 0x prefix can be correctly converted to
+	 * bytes.
+	 */
+	@Test
+	public void shouldConvertHexStringWithPrefixToBytes() {
+
+		// Given
+		final byte[] expected = new byte[] { 0x00, (byte) 0xff, 0x10, 0x08 };
+		String hexString = "0x" + "00" + "ff" + "10" + "08";
+
+		// When
+		byte[] actual = Codec.fromHexString(hexString);
+
+		// Then
+		assertTrue(Arrays.equals(expected, actual));
 	}
 
 	/**
