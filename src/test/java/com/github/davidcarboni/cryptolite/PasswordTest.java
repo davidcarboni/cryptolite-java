@@ -126,7 +126,7 @@ public class PasswordTest {
 		String password = "password";
 		byte[] hashBytes = new byte[Random.SALT_BYTES - 1];
 		Random.getInstance().nextBytes(hashBytes);
-		String hash = Codec.toBase64String(hashBytes);
+		String hash = ByteArray.toBase64String(hashBytes);
 
 		// When
 		boolean result = Password.verify(password, hash);

@@ -6,16 +6,31 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 /**
- * 
- * This class provides the ability to convert a byte array to Base-64 and back,
- * or to a hexadecimal string for printing out.
+ * This class provides the ability to convert Strings, Base-64 and hexadecimal
+ * to a byte array and vice versa.
  * <p>
- * It also provides for converting text String objects to and from a byte array.
+ * Cryptography is mainly about manipulating byte arrays, so this class provides
+ * the translations you need:
+ * <ul>
+ * <li>Plain-text strings need to be converted to a byte array for encryption
+ * and, after decryption, need to be converted from a byte array back to a
+ * String. This is done using {@value #ENCODING} encoding.</li>
+ * <li>Encrypted byte arrays look like random bytes, which means they can't be
+ * reliably represented as a String. The best way to represent arbitrary bytes
+ * as a String is using Base-64. This class lets you convert a byte array of
+ * encrypted data to Base-64 so it can be easily stored and back again so it can
+ * be decrypted</li>
+ * <li>Finally, this class also allows you to transform a byte array to a
+ * hexadecimal String and back again. This is most useful in development when
+ * you need to print out values to see what's going on. Conversion from
+ * hexadecimal to byte array is occasionally useful, but chances are you'll use
+ * <code>byte[]</code> to hex most of the time.</li>
+ * </ul>
  * 
  * @author David Carboni
  * 
  */
-public class Codec {
+public class ByteArray {
 
 	/**
 	 * The encoding to use for string operations.
@@ -109,7 +124,7 @@ public class Codec {
 	 *            The String to be converted to a byte array.
 	 * @return A byte array representing the String.
 	 */
-	public static byte[] toByteArray(String string) {
+	public static byte[] fromString(String string) {
 
 		if (string == null) {
 			return null;
@@ -129,7 +144,7 @@ public class Codec {
 	 *            The byte array to be converted to a String.
 	 * @return The String represented by the given bytes.
 	 */
-	public static String fromByteArray(byte[] bytes) {
+	public static String toString(byte[] bytes) {
 
 		if (bytes == null) {
 			return null;

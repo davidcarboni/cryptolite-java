@@ -62,12 +62,12 @@ public class DigitalSignature {
 		}
 
 		try {
-			byte[] bytes = content.getBytes(Codec.ENCODING);
+			byte[] bytes = content.getBytes(ByteArray.ENCODING);
 			InputStream input = new ByteArrayInputStream(bytes);
 			return sign(input, privateKey);
 			// ByteArrayInputStream does not need to be closed.
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Unable to get bytes from sring as " + Codec.ENCODING, e);
+			throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class DigitalSignature {
 
 			// Generate the signature:
 			byte[] signatureBytes = signer.sign();
-			return Codec.toBase64String(signatureBytes);
+			return ByteArray.toBase64String(signatureBytes);
 
 		} catch (SignatureException e) {
 			throw new RuntimeException("Error generating digital signature", e);
@@ -131,9 +131,9 @@ public class DigitalSignature {
 
 		byte[] bytes;
 		try {
-			bytes = content.getBytes(Codec.ENCODING);
+			bytes = content.getBytes(ByteArray.ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Unable to get bytes from sring as " + Codec.ENCODING, e);
+			throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
 		}
 
 		InputStream input = new ByteArrayInputStream(bytes);
@@ -153,7 +153,7 @@ public class DigitalSignature {
 	 */
 	public boolean verify(InputStream input, PublicKey publicKey, String signature) {
 
-		byte[] signatureBytes = Codec.fromBase64String(signature);
+		byte[] signatureBytes = ByteArray.fromBase64String(signature);
 
 		Signature signer = getSignature();
 		try {

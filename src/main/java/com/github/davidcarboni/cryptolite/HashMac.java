@@ -32,7 +32,7 @@ public class HashMac {
 	 *            An arbitrary String to use as a key.
 	 */
 	public HashMac(String key) {
-		this(Codec.toByteArray(key), ALGORITHM);
+		this(ByteArray.fromString(key), ALGORITHM);
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class HashMac {
 			Mac mac = Mac.getInstance(algorithm);
 			SecretKeySpec macKey = new SecretKeySpec(key, algorithm);
 			mac.init(macKey);
-			byte[] digest = mac.doFinal(Codec.toByteArray(message));
-			return Codec.toHexString(digest);
+			byte[] digest = mac.doFinal(ByteArray.fromString(message));
+			return ByteArray.toHexString(digest);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Unable to locate algorithm for " + algorithm, e);
 		} catch (InvalidKeyException e) {

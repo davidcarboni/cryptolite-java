@@ -157,7 +157,7 @@ public class KeyWrapper implements Serializable {
 	 * public key is public, this is a convenience method provided to convert it
 	 * to a String for unprotected storage.
 	 * <p>
-	 * This method internally calls {@link Codec#toBase64String(byte[])},
+	 * This method internally calls {@link ByteArray#toBase64String(byte[])},
 	 * passing the value of {@link PublicKey#getEncoded()}.
 	 * 
 	 * @param key
@@ -167,7 +167,7 @@ public class KeyWrapper implements Serializable {
 	 */
 	public static String encodePublicKey(PublicKey key) {
 		byte[] bytes = key.getEncoded();
-		return Codec.toBase64String(bytes);
+		return ByteArray.toBase64String(bytes);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class KeyWrapper implements Serializable {
 	 */
 	public static PublicKey decodePublicKey(String encodedKey) {
 
-		byte[] bytes = Codec.fromBase64String(encodedKey);
+		byte[] bytes = ByteArray.fromBase64String(encodedKey);
 		KeyFactory keyFactory;
 		try {
 			keyFactory = KeyFactory.getInstance(Keys.ASYMMETRIC_ALGORITHM,
@@ -255,7 +255,7 @@ public class KeyWrapper implements Serializable {
 					SecurityProvider.getProviderName());
 			cipher.init(Cipher.WRAP_MODE, wrapKey, Random.getInstance());
 			byte[] wrappedKey = cipher.wrap(key);
-			return Codec.toBase64String(wrappedKey);
+			return ByteArray.toBase64String(wrappedKey);
 
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("Could not locate algorithm "
@@ -297,7 +297,7 @@ public class KeyWrapper implements Serializable {
 			String wrapAlgorithm) {
 
 		try {
-			byte[] wrapped = Codec.fromBase64String(wrappedKey);
+			byte[] wrapped = ByteArray.fromBase64String(wrappedKey);
 			Cipher cipher = Cipher.getInstance(wrapAlgorithm,
 					SecurityProvider.getProviderName());
 			cipher.init(Cipher.UNWRAP_MODE, wrapKey, Random.getInstance());

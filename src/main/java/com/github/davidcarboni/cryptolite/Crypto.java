@@ -201,13 +201,13 @@ public class Crypto {
 		SecretKey key = Keys.generateSecretKey(password, salt);
 
 		// Convert the input Sting to a byte array:
-		byte[] bytes = Codec.toByteArray(string);
+		byte[] bytes = ByteArray.fromString(string);
 
 		// Encrypt the data:
-		byte[] result = ArrayUtils.addAll(Codec.fromBase64String(salt), encrypt(bytes, key));
+		byte[] result = ArrayUtils.addAll(ByteArray.fromBase64String(salt), encrypt(bytes, key));
 
 		// Return as a String:
-		return Codec.toBase64String(result);
+		return ByteArray.toBase64String(result);
 	}
 
 	/**
@@ -240,13 +240,13 @@ public class Crypto {
 		}
 
 		// Convert the input Sting to a byte array:
-		byte[] bytes = Codec.toByteArray(string);
+		byte[] bytes = ByteArray.fromString(string);
 
 		// Encrypt the data:
 		byte[] result = encrypt(bytes, key);
 
 		// Return as a String:
-		return Codec.toBase64String(result);
+		return ByteArray.toBase64String(result);
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class Crypto {
 		}
 
 		// Convert to a byte array:
-		byte[] bytes = Codec.fromBase64String(encrypted);
+		byte[] bytes = ByteArray.fromBase64String(encrypted);
 		if (bytes.length < Random.SALT_BYTES) {
 			throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
 					+ ") is shorter than a salt value.");
@@ -340,9 +340,9 @@ public class Crypto {
 		byte[] salt = ArrayUtils.subarray(bytes, 0, Random.SALT_BYTES);
 		byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES, bytes.length);
 
-		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
+		SecretKey key = Keys.generateSecretKey(password, ByteArray.toBase64String(salt));
 
-		return Codec.fromByteArray(decrypt(data, key));
+		return ByteArray.toString(decrypt(data, key));
 	}
 
 	/**
@@ -368,8 +368,8 @@ public class Crypto {
 			return encrypted;
 		}
 
-		byte[] bytes = Codec.fromBase64String(encrypted);
-		return Codec.fromByteArray(decrypt(bytes, key));
+		byte[] bytes = ByteArray.fromBase64String(encrypted);
+		return ByteArray.toString(decrypt(bytes, key));
 	}
 
 	/**
@@ -480,7 +480,7 @@ public class Crypto {
 
 		// Correct use is to store the IV unencrypted at the start of the
 		// stream:
-		destination.write(Codec.fromBase64String(salt));
+		destination.write(ByteArray.fromBase64String(salt));
 
 		// Return the initialised stream:
 		return encrypt(destination, key);
@@ -635,7 +635,7 @@ public class Crypto {
 		source.read(salt);
 
 		// Generate the key:
-		SecretKey key = Keys.generateSecretKey(password, Codec.toBase64String(salt));
+		SecretKey key = Keys.generateSecretKey(password, ByteArray.toBase64String(salt));
 
 		// Return the initialised stream:
 		return decrypt(source, key);

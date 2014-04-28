@@ -94,7 +94,7 @@ public class Random {
 	 */
 	public static String generateId() {
 		byte[] bytes = nextBytes(idLengthBytes);
-		return Codec.toHexString(bytes);
+		return ByteArray.toHexString(bytes);
 	}
 
 	/**
@@ -144,6 +144,6 @@ public class Random {
 	 */
 	public static String generateSalt() {
 		byte[] salt = nextBytes(SALT_BYTES);
-		return Codec.toBase64String(salt);
+		return ByteArray.toBase64String(salt);
 	}
 }

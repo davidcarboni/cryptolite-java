@@ -213,7 +213,7 @@ public class Keys {
 		}
 
 		// Generate the key:
-		byte[] saltBytes = Codec.fromBase64String(salt);
+		byte[] saltBytes = ByteArray.fromBase64String(salt);
 		PBEKeySpec pbeKeySpec = new PBEKeySpec(password, saltBytes, SYMMETRIC_PASSWORD_ITERATIONS, keySize);
 		SecretKey key;
 		try {

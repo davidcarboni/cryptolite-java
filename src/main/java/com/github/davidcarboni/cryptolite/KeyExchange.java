@@ -120,7 +120,7 @@ public class KeyExchange {
 			throw new RuntimeException("Error encrypting SecretKey: " + BadPaddingException.class.getSimpleName(), e);
 		}
 
-		return Codec.toBase64String(encrypted);
+		return ByteArray.toBase64String(encrypted);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class KeyExchange {
 		}
 
 		// Convert the encryptedKey key String back to a byte array:
-		byte[] bytes = Codec.fromBase64String(encryptedKey);
+		byte[] bytes = ByteArray.fromBase64String(encryptedKey);
 
 		// Decrypt the bytes:
 		byte[] decrypted;

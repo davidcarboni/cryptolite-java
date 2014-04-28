@@ -10,12 +10,12 @@ import org.junit.Test;
 
 /**
  * 
- * Test for {@link Codec}.
+ * Test for {@link ByteArray}.
  * 
  * @author David Carboni
  * 
  */
-public class CodecTest {
+public class ByteArrayTest {
 
 	/**
 	 * Verifies that a byte array can be corectly converted to a hex String
@@ -28,7 +28,7 @@ public class CodecTest {
 		String expected = "00" + "ff" + "10" + "08";
 
 		// When
-		String actual = Codec.toHexString(bytes);
+		String actual = ByteArray.toHexString(bytes);
 
 		// Then
 		assertEquals(expected, actual);
@@ -45,7 +45,7 @@ public class CodecTest {
 		String hexString = "00" + "ff" + "10" + "08";
 
 		// When
-		byte[] actual = Codec.fromHexString(hexString);
+		byte[] actual = ByteArray.fromHexString(hexString);
 
 		// Then
 		assertTrue(Arrays.equals(expected, actual));
@@ -63,7 +63,7 @@ public class CodecTest {
 		String hexString = "0x" + "00" + "ff" + "10" + "08";
 
 		// When
-		byte[] actual = Codec.fromHexString(hexString);
+		byte[] actual = ByteArray.fromHexString(hexString);
 
 		// Then
 		assertTrue(Arrays.equals(expected, actual));
@@ -71,7 +71,7 @@ public class CodecTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toHexString(byte[])}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#toHexString(byte[])}
 	 * where the parameter is null.
 	 */
 	@Test
@@ -81,7 +81,7 @@ public class CodecTest {
 		byte[] bytes = null;
 
 		// When
-		String string = Codec.toHexString(bytes);
+		String string = ByteArray.toHexString(bytes);
 
 		// Then
 		assertNull(string);
@@ -89,9 +89,9 @@ public class CodecTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#toBase64String(byte[])}
 	 * and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#fromBase64String(String)}
 	 * .
 	 */
 	@Test
@@ -102,8 +102,8 @@ public class CodecTest {
 		byte[] byteArray = Random.nextBytes(size);
 
 		// When
-		String toBase64 = Codec.toBase64String(byteArray);
-		byte[] fromBase64 = Codec.fromBase64String(toBase64);
+		String toBase64 = ByteArray.toBase64String(byteArray);
+		byte[] fromBase64 = ByteArray.fromBase64String(toBase64);
 
 		// Then
 		assertTrue(Arrays.equals(byteArray, fromBase64));
@@ -111,9 +111,9 @@ public class CodecTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toBase64String(byte[])}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#toBase64String(byte[])}
 	 * and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromBase64String(String)}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#fromBase64String(String)}
 	 * where the parameter is null.
 	 */
 	@Test
@@ -124,8 +124,8 @@ public class CodecTest {
 		String string = null;
 
 		// When
-		String toBase64 = Codec.toBase64String(bytes);
-		byte[] fromBase64 = Codec.fromBase64String(string);
+		String toBase64 = ByteArray.toBase64String(bytes);
+		byte[] fromBase64 = ByteArray.fromBase64String(string);
 
 		// Then
 		assertNull(toBase64);
@@ -134,8 +134,8 @@ public class CodecTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromByteArray(byte[])}.
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#fromString(String)} and
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#toString(byte[])}.
 	 */
 	@Test
 	public void testByteArray() {
@@ -144,8 +144,8 @@ public class CodecTest {
 		String string = "£The quick brown & fox jumpéd over the Lazy dog.";
 
 		// When
-		byte[] toByteArray = Codec.toByteArray(string);
-		String fromByteArray = Codec.fromByteArray(toByteArray);
+		byte[] toByteArray = ByteArray.fromString(string);
+		String fromByteArray = ByteArray.toString(toByteArray);
 
 		// Then
 		assertEquals(string, fromByteArray);
@@ -153,8 +153,8 @@ public class CodecTest {
 
 	/**
 	 * Test method for
-	 * {@link com.github.davidcarboni.cryptolite.Codec#toByteArray(String)} and
-	 * {@link com.github.davidcarboni.cryptolite.Codec#fromByteArray(byte[])}
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#fromString(String)} and
+	 * {@link com.github.davidcarboni.cryptolite.ByteArray#toString(byte[])}
 	 * where the parameter is null.
 	 */
 	@Test
@@ -165,8 +165,8 @@ public class CodecTest {
 		byte[] bytes = null;
 
 		// When
-		byte[] toByteArray = Codec.toByteArray(string);
-		String fromByteArray = Codec.fromByteArray(bytes);
+		byte[] toByteArray = ByteArray.fromString(string);
+		String fromByteArray = ByteArray.toString(bytes);
 
 		// Then
 		assertNull(toByteArray);

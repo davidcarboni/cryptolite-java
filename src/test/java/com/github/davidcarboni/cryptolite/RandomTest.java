@@ -93,7 +93,7 @@ public class RandomTest {
 		salt = Random.generateSalt();
 
 		// Then
-		assertEquals(Random.SALT_BYTES, Codec.fromBase64String(salt).length);
+		assertEquals(Random.SALT_BYTES, ByteArray.fromBase64String(salt).length);
 	}
 
 	/**
