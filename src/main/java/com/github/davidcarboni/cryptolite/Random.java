@@ -83,7 +83,7 @@ public class Random {
 	 *            The length of the array.
 	 * @return {@link SecureRandom#nextBytes(byte[])}
 	 */
-	public static byte[] nextBytes(int length) {
+	public static byte[] bytes(int length) {
 		byte[] bytes = new byte[length];
 		getInstance().nextBytes(bytes);
 		return bytes;
@@ -92,8 +92,8 @@ public class Random {
 	/**
 	 * @return A 256-bit (32 byte) random ID as a hexadecimal string.
 	 */
-	public static String generateId() {
-		byte[] bytes = nextBytes(idLengthBytes);
+	public static String id() {
+		byte[] bytes = bytes(idLengthBytes);
 		return ByteArray.toHexString(bytes);
 	}
 
@@ -114,11 +114,11 @@ public class Random {
 	 * @return A String of the specified length, composed of uppercase letters,
 	 *         lowercase letters and numbers.
 	 */
-	public static String generatePassword(int length) {
+	public static String password(int length) {
 		StringBuffer result = new StringBuffer();
 
 		while (result.length() < length) {
-			byte[] buffer = nextBytes(length);
+			byte[] buffer = bytes(length);
 			int i = 0;
 			do {
 				// There are 62 possible password characters,
@@ -142,8 +142,8 @@ public class Random {
 	 * @return A {@value #SALT_BYTES}-byte random salt value as a base64-encoded
 	 *         string (for easy storage).
 	 */
-	public static String generateSalt() {
-		byte[] salt = nextBytes(SALT_BYTES);
+	public static String salt() {
+		byte[] salt = bytes(SALT_BYTES);
 		return ByteArray.toBase64String(salt);
 	}
 }

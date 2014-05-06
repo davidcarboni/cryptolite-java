@@ -99,7 +99,7 @@ public class ByteArrayTest {
 
 		// Given
 		final int size = 125;
-		byte[] byteArray = Random.nextBytes(size);
+		byte[] byteArray = Random.bytes(size);
 
 		// When
 		String toBase64 = ByteArray.toBase64String(byteArray);

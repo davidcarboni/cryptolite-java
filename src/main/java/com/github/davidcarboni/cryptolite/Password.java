@@ -50,7 +50,7 @@ public class Password {
 		if (password != null) {
 
 			// Generate a random salt:
-			String salt = Random.generateSalt();
+			String salt = Random.salt();
 
 			// Hash the password:
 			byte[] hash = hash(password, salt);

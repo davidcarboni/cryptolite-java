@@ -43,7 +43,7 @@ public class KeyWrapperTest {
 
 		// Given
 		String password = "testKeyWrapperStringString";
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 
 		// When
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
@@ -81,7 +81,7 @@ public class KeyWrapperTest {
 
 		// Given
 		String password = "testWrapSecretKey";
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		SecretKey key = Keys.newSecretKey();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
@@ -101,7 +101,7 @@ public class KeyWrapperTest {
 
 		// Given
 		String password = "testWrapPrivateKey";
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		PrivateKey key = keyPair.getPrivate();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
@@ -138,7 +138,7 @@ public class KeyWrapperTest {
 
 		// Given
 		String password = "testUnwrapSecretKey";
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		SecretKey key = Keys.newSecretKey();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 		String wrappedKey = keyWrapper.wrapSecretKey(key);
@@ -158,7 +158,7 @@ public class KeyWrapperTest {
 
 		// Given
 		String password = "testWrapPrivateKey";
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		PrivateKey key = keyPair.getPrivate();
 		KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 		String wrappedKey = keyWrapper.wrapPrivateKey(key);

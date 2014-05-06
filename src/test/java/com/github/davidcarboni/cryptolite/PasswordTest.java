@@ -147,7 +147,7 @@ public class PasswordTest {
 
 		// Given
 		String password = "password";
-		String hash = Random.generateSalt();
+		String hash = Random.salt();
 
 		// When
 		boolean result = Password.verify(password, hash);

@@ -55,7 +55,7 @@ public class RandomTest {
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generateId()}. This checks that the
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#id()}. This checks that the
 	 * number of bits in the returned ID is the same as specified by {@link Random#ID_BITS}.
 	 */
 	@Test
@@ -72,14 +72,14 @@ public class RandomTest {
 		final int stringLength = (bits / byteSize) * hexSize;
 
 		// When
-		id = Random.generateId();
+		id = Random.id();
 
 		// Then
 		assertEquals(stringLength, id.length());
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generateSalt()}. This checks that the
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#salt()}. This checks that the
 	 * number of bytes in the returned salt value matches the length specified in
 	 * {@link Random#SALT_BYTES}.
 	 */
@@ -90,14 +90,14 @@ public class RandomTest {
 		String salt;
 
 		// When
-		salt = Random.generateSalt();
+		salt = Random.salt();
 
 		// Then
 		assertEquals(Random.SALT_BYTES, ByteArray.fromBase64String(salt).length);
 	}
 
 	/**
-	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#generatePassword(int)}. This checks
+	 * Test method for {@link com.github.davidcarboni.cryptolite.Random#password(int)}. This checks
 	 * that the number of characters in the returned password matches the specified length of the
 	 * password.
 	 */
@@ -110,7 +110,7 @@ public class RandomTest {
 
 		for (int i = 1; i < maxSize; i++) {
 			// When
-			password = Random.generatePassword(i);
+			password = Random.password(i);
 
 			// Then
 			assertEquals(i, password.length());
@@ -132,8 +132,8 @@ public class RandomTest {
 			String id2;
 
 			// When
-			id1 = Random.generateId();
-			id2 = Random.generateId();
+			id1 = Random.id();
+			id2 = Random.id();
 
 			// Then
 			assertFalse(id1.equals(id2));
@@ -155,8 +155,8 @@ public class RandomTest {
 			String salt2;
 
 			// When
-			salt1 = Random.generateSalt();
-			salt2 = Random.generateSalt();
+			salt1 = Random.salt();
+			salt2 = Random.salt();
 
 			// Then
 			assertFalse(salt1.equals(salt2));
@@ -179,8 +179,8 @@ public class RandomTest {
 			String password2;
 
 			// When
-			password1 = Random.generatePassword(passwordSize);
-			password2 = Random.generatePassword(passwordSize);
+			password1 = Random.password(passwordSize);
+			password2 = Random.password(passwordSize);
 
 			// Then
 			assertFalse(password1.equals(password2));

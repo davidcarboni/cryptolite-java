@@ -197,7 +197,7 @@ public class Crypto {
 			return null;
 		}
 
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		SecretKey key = Keys.generateSecretKey(password, salt);
 
 		// Convert the input Sting to a byte array:
@@ -475,7 +475,7 @@ public class Crypto {
 			return null;
 		}
 
-		String salt = Random.generateSalt();
+		String salt = Random.salt();
 		SecretKey key = Keys.generateSecretKey(password, salt);
 
 		// Correct use is to store the IV unencrypted at the start of the
@@ -699,7 +699,7 @@ public class Crypto {
 	 *         given {@link Cipher}, containing random bytes.
 	 */
 	byte[] generateInitialisationVector() {
-		byte[] bytes = Random.nextBytes(cipher.getBlockSize());
+		byte[] bytes = Random.bytes(cipher.getBlockSize());
 		return bytes;
 	}
 
