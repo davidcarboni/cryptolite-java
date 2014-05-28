@@ -67,7 +67,8 @@ public class Random {
 			try {
 				secureRandom = SecureRandom.getInstance(ALGORITHM);
 			} catch (NoSuchAlgorithmException e) {
-				throw new RuntimeException("Unable to find algorithm " + ALGORITHM + " for "
+				throw new RuntimeException("Unable to find algorithm "
+						+ ALGORITHM + " for "
 						+ SecureRandom.class.getSimpleName());
 			}
 		}
@@ -93,8 +94,8 @@ public class Random {
 	 * @return A 256-bit (32 byte) random ID as a hexadecimal string.
 	 */
 	public static String id() {
-		byte[] bytes = bytes(idLengthBytes);
-		return ByteArray.toHexString(bytes);
+		byte[] idBytes = bytes(idLengthBytes);
+		return ByteArray.toHexString(idBytes);
 	}
 
 	/**
