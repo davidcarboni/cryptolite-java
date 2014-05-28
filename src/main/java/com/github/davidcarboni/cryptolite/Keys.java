@@ -121,6 +121,9 @@ public class Keys {
 	 */
 	private static SecretKey newSecretKey(int symmetricKeySize) {
 
+		// FYI, see the source of: org.bouncycastle.crypto.CipherKeyGenerator.generateKey()
+		// AES keys are just random bytes from a strong source of randomness.
+		
 		// Get a key generator instance
 		KeyGenerator keyGenerator;
 		try {
