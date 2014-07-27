@@ -281,11 +281,11 @@ public class Keys {
 	 * your JVM in order to use it. To test this, you can use the {@link #canUseStrongKeys()}
 	 * method.
 	 * 
-	 * @param symmetricKeySize
+	 * @param newSymmetricKeySize
 	 *            the symmetricKeySize to set
 	 */
-	public static void setSymmetricKeySize(int symmetricKeySize) {
-		Keys.symmetricKeySize = symmetricKeySize;
+	public static void setSymmetricKeySize(int newSymmetricKeySize) {
+		Keys.symmetricKeySize = newSymmetricKeySize;
 	}
 
 	/**
