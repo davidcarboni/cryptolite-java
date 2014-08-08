@@ -19,7 +19,7 @@
 
 	<organization>
 		<name>Carboni</name>
-		<url>https://github.com/davidcarboni/</url>
+		<url>https://github.com/carboni/</url>
 	</organization>
 
 	<scm>
@@ -28,6 +28,10 @@
 		<developerConnection>scm:git:git@github.com:davidcarboni/Cryptolite.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -41,10 +45,6 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencies>
 
@@ -113,7 +113,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- This configures the manifest: -->
+			<!-- Ensure the manifest contains artifact version information: -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -122,6 +122,7 @@
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
 					</archive>
 				</configuration>
@@ -159,7 +160,7 @@
 				</executions>
 			</plugin>
 
-			<!-- Release -->
+			<!-- Release configuration: -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
