@@ -14,12 +14,12 @@ import java.security.spec.InvalidKeySpecException;
 
 /**
  * This class generates cryptographic keys.
- * <p/>
+ *
  * The following key types are available:
  * <ul>
  * <li>Deterministic Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length
- * {@value #symmetricKeySize}, based on a password</li>
- * <li>Random Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@value #symmetricKeySize}</li>
+ * {@link #symmetricKeySize}, based on a password</li>
+ * <li>Random Symmetric {@value #SYMMETRIC_ALGORITHM} keys of length {@link #symmetricKeySize}</li>
  * <li>Asymmetric {@value #ASYMMETRIC_ALGORITHM} keys of length {@value #ASYMMETRIC_KEY_SIZE}</li>
  * </ul>
  * <em>Deterministic keys:</em> these are the easiest to manage as they don't need to be stored. So
@@ -31,7 +31,7 @@ import java.security.spec.InvalidKeySpecException;
  * in mind however that if the user changes (or resets) their password this will result in a
  * different key, so you'll need a plan for recovering data encrypted with the old key and
  * re-encrypting it with the new one.
- * <p/>
+ *
  * <em>Random keys:</em> these are simple to generate, but need to be stored because it's
  * effectively impossible to regenerate the key. To store a key you should use
  * {@link KeyWrapper#wrapSecretKey(SecretKey)}. This produces an encrypted version of the key which
@@ -39,7 +39,7 @@ import java.security.spec.InvalidKeySpecException;
  * {@link KeyWrapper} approach is that when a user changes their password you'll only need to
  * re-encrypt the stored keys using a {@link KeyWrapper} initialised with the new password, rather
  * than have to re-encrypt all data encrypted with the key.
- * <p/>
+ *
  * In both cases when a user changes their password you will have the old and the new plaintext
  * passwords, meaning you can decrypt with the old an re-encrypt with the new. The difficulty comes
  * when you need to reset a password, because it's not possible to recover the old password. In this
@@ -102,7 +102,7 @@ public class Keys {
 
     /**
      * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
-     * algorithm with a key size of {@value #symmetricKeySize} bits.
+     * algorithm with a key size of {@link #symmetricKeySize} bits.
      *
      * @return A new, randomly generated {@link SecretKey}.
      */
@@ -145,7 +145,7 @@ public class Keys {
      * This method generates a new secret (or symmetric) key for the {@value #SYMMETRIC_ALGORITHM}
      * algorithm, using the given password and salt values. Given the same password and salt, this
      * method will (re)generate the same key.
-     * <p/>
+     *
      * Note that this method may or may not handle blank passwords. This seems to be related to the
      * implementation of the {@value #SYMMETRIC_PASSWORD_ALGORITHM} algorithm in different Java
      * and/or BouncyCastle provider versions.
@@ -232,7 +232,7 @@ public class Keys {
      * This method generates a new public-private (or asymmetric) key pair, using the
      * {@value #ASYMMETRIC_ALGORITHM} algorithm and a key size of {@value #ASYMMETRIC_KEY_SIZE}
      * bits.
-     * <p/>
+     *
      * BouncyCastle will automatically generate a "Chinese Remainder Theorem" or CRT key, which
      * makes using a symmetric encryption significantly faster.
      *
@@ -269,7 +269,7 @@ public class Keys {
      * bit ( {@link #SYMMETRIC_KEY_SIZE_STANDARD}) but can be changed to
      * {@value #SYMMETRIC_KEY_SIZE_UNLIMITED} bit by setting this field using the
      * {@link #SYMMETRIC_KEY_SIZE_UNLIMITED} constant.
-     * <p/>
+     *
      * Note that whilst it's possible to generate a {@value #SYMMETRIC_KEY_SIZE_UNLIMITED} bit key
      * in any environment, you will need the
      * "Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files" installed in

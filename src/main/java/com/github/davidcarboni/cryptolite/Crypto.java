@@ -15,12 +15,12 @@ import java.security.NoSuchProviderException;
 
 /**
  * This class provides simple encryption and decryption of Strings and streams.
- * <p/>
+ *
  * This class uses the {@value #CIPHER_ALGORITHM} algorithm in
  * {@value #CIPHER_MODE} mode. This hides the complexity involved in selecting
  * types and values for these and allows the caller to simply request encryption
  * and decryption operations.
- * <p/>
+ *
  * Some effort has been invested in choosing these values so that they are
  * suitable for the needs of a web application:
  * <ul>
@@ -32,10 +32,10 @@ import java.security.NoSuchProviderException;
  * <li>Inline initialisation vector: this avoids the need to handle the IV as an
  * additional out-of-band parameter.</li>
  * </ul>
- * <p/>
+ *
  * Notes on background information used in selecting the cipher, mode and
  * padding:
- * <p/>
+ *
  * <ul>
  * <li>Wikipedia: http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</li>
  * </ul>
@@ -48,12 +48,12 @@ import java.security.NoSuchProviderException;
  * of Commerce. It is available in many different encryption packages. AES is
  * the first publicly accessible and open cipher approved by the NSA for top
  * secret information."
- * <p/>
+ *
  * <ul>
  * <li>Beginning Cryptography with Java</li>
  * </ul>
  * "CTR has been standardised by NIST in SP 800-38a and RFC 3686"
- * <p/>
+ *
  * <ul>
  * <li>
  * http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</li>
@@ -64,11 +64,11 @@ import java.security.NoSuchProviderException;
  * unpadding of partial blocks (or ciphertext stealing), and vastly reduces the
  * risk of side channel attacks thanks to the fact that the data being input to
  * AES is not sensitive."
- * <p/>
+ *
  * NOTE: CTR mode is "malleable", so if there is a requirement to assure the
  * integrity of the data, on top of encrypting it, this blog recommends adding
  * an HMAC (Hash-based Message Authentication Code).
- * <p/>
+ *
  * <ul>
  * <li>http://www.javamex.com/tutorials/cryptography/initialisation_vector.shtml
  * </li>
@@ -78,7 +78,7 @@ import java.security.NoSuchProviderException;
  * relatively small number of items will be encrypted, as compared to a stream
  * of messages which may contain tens of thousands of messages, this makes is a
  * good choice.
- * <p/>
+ *
  * <ul>
  * <li>Wikipedia: http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</li>
  * </ul>
@@ -92,7 +92,6 @@ import java.security.NoSuchProviderException;
  * the Internet, this seems a reasonable level of protection. It is not clear at
  * the time of writing what the performance impact of using longer keys will be
  * in practice, so this is not a factor in selection of the key size.
- * <p/>
  *
  * @author David Carboni
  */
@@ -162,7 +161,7 @@ public class Crypto {
      * String. Note that the base-64 String will be longer than the input String
      * due base-64 encoding, the inclusion of an initialisation vector and a
      * salt value for the key generated from the given password.
-     * <p/>
+     *
      * A fixed length database field can therefore hold less encrypted than
      * plain-text data.
      *
@@ -202,7 +201,7 @@ public class Crypto {
      * This method encrypts the given String, returning a base-64 encoded
      * String. Note that the base-64 String will be longer than the input String
      * due base-64 encoding and the inclusion of an initialisation vector.
-     * <p/>
+     *
      * A fixed length database field can therefore hold less encrypted than
      * plain-text data.
      *
@@ -236,11 +235,11 @@ public class Crypto {
     /**
      * This method encrypts a byte array. This is useful if you have raw binary
      * data you need to encrypt.
-     * <p/>
+     *
      * To keep the interface simple, this method is marked as protected. The
      * intention is that, if you need to encrypt byte arrays, you can subclass
      * {@link Crypto} to expose this method.
-     * <p/>
+     *
      * This is the bread-and-butter of most encryption operations, but
      * ultimately is a less common application-level use-case, because binary
      * data is usually stream-based and the rest of the time it tends to be
@@ -347,11 +346,11 @@ public class Crypto {
     /**
      * This method decrypts the given bytes and returns the plain text. This is
      * useful if you have raw binary data you need to decrypt.
-     * <p/>
+     *
      * To keep the interface simple, this method is marked as protected. The
      * intention is that, if you need to encrypt byte arrays, you can subclass
      * {@link Crypto} to expose this method.
-     * <p/>
+     *
      * This is the bread-and-butter of most encryption operations, but
      * ultimately is a less common application-level use-case, because binary
      * data is usually stream-based and the rest of the time it tends to be
@@ -404,13 +403,13 @@ public class Crypto {
     /**
      * This method wraps the destination {@link OutputStream} with a
      * {@link CipherOutputStream}.
-     * <p/>
+     *
      * Typical usage is when you have an InputStream for a source of unencrypted
      * data, such as a user-uploaded file, and an OutputStream to write the
      * input to disk. You would call this method to wrap the OutputStream and
      * use the returned {@link CipherOutputStream} instead to write the data to,
      * so that it is encrypted as it is written to disk.
-     * <p/>
+     *
      * Note that this method writes a salt value and an initialisation vector to
      * the destination OutputStream, so the destination parameter will have some
      * bytes written to it before this method returns. These bytes are necessary
@@ -452,13 +451,13 @@ public class Crypto {
     /**
      * This method wraps the destination {@link OutputStream} with a
      * {@link CipherOutputStream}.
-     * <p/>
+     *
      * Typical usage is when you have an InputStream for a source of unencrypted
      * data, such as a user-uploaded file, and an OutputStream to write the
      * input to disk. You would call this method to wrap the OutputStream and
      * use the returned {@link CipherOutputStream} instead to write the data to,
      * so that it is encrypted as it is written to disk.
-     * <p/>
+     *
      * Note that this method writes an initialisation vector to the destination
      * OutputStream, so the destination parameter will have some bytes written
      * to it before this method returns. These bytes are necessary for
@@ -504,13 +503,13 @@ public class Crypto {
     /**
      * This method wraps the source {@link InputStream} with a
      * {@link CipherInputStream}.
-     * <p/>
+     *
      * Typical usage is when you have an InputStream for a source of encrypted
      * data on disk, and an OutputStream to send the file to an HTTP response.
      * You would call this method to wrap the InputStream and use the returned
      * {@link CipherInputStream} to read the data from instead so that it is
      * decrypted as it is read and can be written to the response unencrypted.
-     * <p/>
+     *
      * Note that this method reads and discards the random initialisation vector
      * from the source InputStream, so the source parameter will have some bytes
      * read from it before this method returns. These bytes are necessary for
@@ -548,13 +547,13 @@ public class Crypto {
     /**
      * This method wraps the source {@link InputStream} with a
      * {@link CipherInputStream}.
-     * <p/>
+     *
      * Typical usage is when you have an InputStream for a source of encrypted
      * data on disk, and an OutputStream to send the file to an HTTP response.
      * You would call this method to wrap the InputStream and use the returned
      * {@link CipherInputStream} to read the data from instead so that it is
      * decrypted as it is read and can be written to the response unencrypted.
-     * <p/>
+     *
      * Note that this method reads and discards a salt value and the random
      * initialisation vector from the source InputStream, so the source
      * parameter will have some bytes read from it before this method returns.
@@ -592,13 +591,13 @@ public class Crypto {
     /**
      * This method wraps the source {@link InputStream} with a
      * {@link CipherInputStream}.
-     * <p/>
+     *
      * Typical usage is when you have an InputStream for a source of encrypted
      * data on disk, and an OutputStream to send the file to an HTTP response.
      * You would call this method to wrap the InputStream and use the returned
      * {@link CipherInputStream} to read the data from instead so that it is
      * decrypted as it is read and can be written to the response unencrypted.
-     * <p/>
+     *
      * Note that this method reads and discards the random initialisation vector
      * from the source InputStream, so the source parameter will have some bytes
      * read from it before this method returns. These bytes are necessary for
@@ -648,10 +647,10 @@ public class Crypto {
 
     /**
      * @return The initialization vector size, in bytes.
-     * <p/>
+     *
      * This is useful if you want to check whether the size of input
      * data is large enough to represent encrypted data.
-     * <p/>
+     *
      * Encrypted strings and streams will always start with and IV and
      * can only be decrypted if the input is at least this long.
      */
@@ -663,7 +662,7 @@ public class Crypto {
      * This method returns a {@link Cipher} instance, for
      * {@value #CIPHER_ALGORITHM} in {@value #CIPHER_MODE} mode, with padding
      * {@value #CIPHER_PADDING}.
-     * <p/>
+     *
      * It then initialises the {@link Cipher} in either
      * {@link Cipher#ENCRYPT_MODE} or {@link Cipher#DECRYPT_MODE}), as specified
      * by the mode parameter, with the given {@link SecretKey}.

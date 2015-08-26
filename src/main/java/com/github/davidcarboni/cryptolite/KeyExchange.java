@@ -7,14 +7,14 @@ import java.security.*;
 /**
  * This class provides for key exchange, using public-private key encryption (also known as
  * asymmetric encryption).
- * <p/>
+ *
  * The algorithm used is {@value #CIPHER_ALGORITHM}, with padding {@link #CIPHER_PADDING}, giving a
  * {@link Cipher} name of {@link #CIPHER_NAME}.
- * <p/>
+ *
  * This class allows you to encrypt a {@link SecretKey} so that it can be securely sent to another
  * user. This is done using the destination user's {@link PublicKey} so that the recipient can
  * decrypt it using their {@link PrivateKey}.
- * <p/>
+ *
  * Public-private key cryptography is not suitable for bulk encryption of data, (such as text and
  * documents) so if you need to send encrypted data from one user to another, the process for this
  * is slightly different, using both public-private and secret key encryption. If you wish to do
@@ -29,7 +29,7 @@ import java.security.*;
  * <li>The destination user can then use the recovered {@link SecretKey} to decrypt the data, using
  * the {@link Crypto} class.</li>
  * </ul>
- * <p/>
+ *
  * This solves the problem of securely exchanging a {@link SecretKey} so that two parties can use
  * the same key to encrypt and decrypt data. Another approach is to use "key agreement", but this is
  * currently beyond the scope of Cryptolite.
@@ -156,7 +156,7 @@ public class KeyExchange {
     /**
      * This method returns a {@link Cipher} instance, for {@value #CIPHER_ALGORITHM} in mode
      * {@value #CIPHER_MODE}, with padding {@value #CIPHER_PADDING}.
-     * <p/>
+     *
      * It then initialises it in {@link Cipher#ENCRYPT_MODE} with the given {@link PublicKey}.
      *
      * @param key The {@link PublicKey} to be used with the {@link Cipher}.
@@ -170,7 +170,7 @@ public class KeyExchange {
     /**
      * This method returns a {@link Cipher} instance, for {@value #CIPHER_ALGORITHM} in mode
      * {@value #CIPHER_MODE}, with padding {@value #CIPHER_PADDING}.
-     * <p/>
+     *
      * It then initialises it in {@link Cipher#DECRYPT_MODE} with the given {@link PrivateKey}.
      *
      * @param key The {@link PrivateKey} to be used with the {@link Cipher}.
@@ -184,7 +184,7 @@ public class KeyExchange {
     /**
      * This method returns a {@link Cipher} instance, for {@value #CIPHER_ALGORITHM} in mode
      * {@value #CIPHER_MODE}, with padding {@value #CIPHER_PADDING}.
-     * <p/>
+     *
      * It then initialises the {@link Cipher} in either {@link Cipher#ENCRYPT_MODE} or
      * {@link Cipher#DECRYPT_MODE}), as specified by the mode parameter, with the given
      * {@link SecretKey}.

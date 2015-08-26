@@ -34,7 +34,7 @@ public class HashMac {
 
     /**
      * This constructor allows you to use a {@link SecretKey} to generate an HMAC.
-     * <p/>
+     *
      * NB The {@link SecretKey#getEncoded()} method of the key should return a suitable byte array.
      * This is the case for keys generated/unwrapped using Cryptolite.
      *

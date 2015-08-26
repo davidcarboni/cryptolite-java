@@ -31,7 +31,7 @@ public class KeyWrapperTest {
 
     /**
      * Test for {@link KeyWrapper#KeyWrapper(String, String)}.
-     * <p/>
+     *
      * Checks that two instances initialised with the same password and salt
      * both generate the same key.
      */

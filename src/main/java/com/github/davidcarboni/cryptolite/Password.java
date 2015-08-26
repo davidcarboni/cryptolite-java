@@ -12,7 +12,7 @@ import java.util.Arrays;
  * verify a password, the plaintext password should be passed to
  * {@link #verify(String, String)} along with the stored value originally
  * produced by {@link #hash(String)}.
- * <p/>
+ *
  * This password hashing and verification is done in the same way as Jasypt, but
  * uses {@value #ALGORITHM}, rather than MD5.
  *
@@ -38,7 +38,7 @@ public class Password {
     /**
      * Produces a good hash of the given password, using {@value #ALGORITHM}, an
      * iteration count of {@value #ITERATION_COUNT} and a random salt value of
-     * {@value #SALT_SIZE} bytes. The returned value is a concatenation of the
+     * {@value Random#SALT_BYTES} bytes. The returned value is a concatenation of the
      * salt value and the password hash and this should be passed as returned to
      * {@link #verify(String, String)} along with the plaintext password.
      *
@@ -122,7 +122,7 @@ public class Password {
 
     /**
      * Converts the given password to a char array.
-     * <p/>
+     *
      * NB: an empty char array can cause errors when passed to
      * {@link javax.crypto.SecretKeyFactory#generateSecret(java.security.spec.KeySpec)}
      * in {@link Keys#generateSecretKey(char[], String, int)}, so if the
@@ -145,7 +145,7 @@ public class Password {
      * Retrieves the salt from the given value.
      *
      * @param value The overall password hash value.
-     * @return The salt, which is the first {@value #SALT_SIZE} bytes of the
+     * @return The salt, which is the first {@value Random#SALT_BYTES} bytes of the
      */
     private static String getSalt(byte[] value) {
 
@@ -158,7 +158,7 @@ public class Password {
      * Retrieves the hash from the given value.
      *
      * @param value The overall password hash value.
-     * @return The salt, which is the first {@value #SALT_SIZE} bytes of the
+     * @return The salt, which is the first {@value Random#SALT_BYTES} bytes of the
      */
     private static byte[] getHash(byte[] value) {
 

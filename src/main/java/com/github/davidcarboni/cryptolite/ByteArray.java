@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * This class provides the ability to convert Strings, Base-64 and hexadecimal
  * to a byte array and vice versa.
- * <p/>
+ *
  * Cryptography is mainly about manipulating byte arrays, so this class provides
  * the translations you need:
  * <ul>
@@ -39,7 +39,7 @@ public class ByteArray {
     /**
      * Renders the given byte array as a hex String. This is a convenience
      * method useful for checking values during development.
-     * <p/>
+     *
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Hex#encodeHexString(byte[])}.
      *
@@ -81,7 +81,7 @@ public class ByteArray {
 
     /**
      * Encodes the given byte array as a base-64 String.
-     * <p/>
+     *
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Base64#encodeBase64String(byte[])}.
      *
