@@ -2,6 +2,8 @@ package com.github.davidcarboni.cryptolite;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -38,7 +40,7 @@ public class Random {
 
     /**
      * Lazily-instantiated, cached {@link SecureRandom} instance.
-     * <p/>
+     *
      * SecureRandom is thread-safe: <a href=
      * "http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe"
      * >http
@@ -79,7 +81,7 @@ public class Random {
     }
 
     /**
-     * Convenience method to instiate and populate a byte array of the specified
+     * Convenience method to instantiate and populate a byte array of the specified
      * length.
      *
      * @param length The length of the array.
@@ -92,6 +94,27 @@ public class Random {
     }
 
     /**
+     * Convenience method to instantiate an {@link InputStream} of random data of the specified
+     * length.
+     *
+     * @param length The length of the stream.
+     * @return {@link SecureRandom#nextBytes(byte[])}
+     */
+    public static InputStream inputStream(final int length) {
+        return new InputStream() {
+            int count;
+            @Override
+            public int read() throws IOException {
+                if (count++ < length) {
+                    return Byte.toUnsignedInt(bytes(1)[0]);
+                } else {
+                    return -1;
+                }
+            }
+        };
+    }
+
+    /**
      * @return A 256-bit (32 byte) random ID as a hexadecimal string.
      */
     public static String id() {
@@ -101,13 +124,13 @@ public class Random {
 
     /**
      * Convenience method to generate a random password.
-     * <p/>
+     *
      * This method no longer uses Apache
      * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}
      * , because the implementation of that method calls
      * {@link java.util.Random#nextInt()}, which is not overridden by the
      * {@link SecureRandom} returned by {@link #getInstance()}.
-     * <p/>
+     *
      * That means passwords wouldn't be generated using cryptographically strong
      * pseudo random numbers, despite passing a {@link SecureRandom}.
      *

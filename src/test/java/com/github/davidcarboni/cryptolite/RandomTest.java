@@ -3,6 +3,8 @@ package com.github.davidcarboni.cryptolite;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.security.SecureRandom;
 
@@ -88,6 +90,23 @@ public class RandomTest {
 
         // Then
         assertEquals(Random.SALT_BYTES, ByteArray.fromBase64String(salt).length);
+    }
+
+    @Test
+    public void shouldGenerateRandomInputStream() throws IOException {
+
+        // Given
+        int length = 1025;
+        InputStream inputStream = Random.inputStream(length);
+
+        // When
+        int count = 0;
+        while (inputStream.read()!=-1) {
+            count++;
+        }
+
+        // Then
+        assertEquals(length, count);
     }
 
     /**
