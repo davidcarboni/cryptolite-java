@@ -139,7 +139,7 @@ public class Random {
      * lowercase letters and numbers.
      */
     public static String password(int length) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
 
         while (result.length() < length) {
             byte[] buffer = bytes(length);
