@@ -100,7 +100,7 @@ public class Random {
      * @param length The length of the stream.
      * @return {@link SecureRandom#nextBytes(byte[])}
      */
-    public static InputStream inputStream(final int length) {
+    public static InputStream inputStream(final long length) {
         return new InputStream() {
             int count;
             @Override
