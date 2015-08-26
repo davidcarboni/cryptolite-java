@@ -4,198 +4,182 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
+import java.security.*;
 
 /**
  * This class provides a public-private key digital signature capability. The signature algorithm
  * used is {@value #ALGORITHM}.
- * 
+ *
  * @author David Carboni
- * 
  */
 public class DigitalSignature {
 
-	/** The digital signature algorithm to use: {@value #ALGORITHM}. */
-	public static final String ALGORITHM = "SHA256withRSAandMGF1";
+    /**
+     * The digital signature algorithm to use: {@value #ALGORITHM}.
+     */
+    public static final String ALGORITHM = "SHA256withRSAandMGF1";
 
-	private String algorithm;
+    private String algorithm;
 
-	/**
-	 * The default constructor initialises the instance with the {@value #ALGORITHM} algorithm.
-	 */
-	public DigitalSignature() {
-		this(ALGORITHM);
-	}
+    /**
+     * The default constructor initialises the instance with the {@value #ALGORITHM} algorithm.
+     */
+    public DigitalSignature() {
+        this(ALGORITHM);
+    }
 
-	/**
-	 * This constructor is protected so that, should you need a different algorithm (e.g. if you're
-	 * integrating with a system that uses different crypto settings) it is possible to create a
-	 * subclass with different settings.
-	 * 
-	 * @param algorithm
-	 *            This should normally be {@value #ALGORITHM}.
-	 */
-	protected DigitalSignature(String algorithm) {
-		this.algorithm = algorithm;
-	}
+    /**
+     * This constructor is protected so that, should you need a different algorithm (e.g. if you're
+     * integrating with a system that uses different crypto settings) it is possible to create a
+     * subclass with different settings.
+     *
+     * @param algorithm This should normally be {@value #ALGORITHM}.
+     */
+    protected DigitalSignature(String algorithm) {
+        this.algorithm = algorithm;
+    }
 
-	/**
-	 * Generates a digital signature for the given string.
-	 * 
-	 * @param content
-	 *            The string to be digitally signed.
-	 * @param privateKey
-	 *            The {@link PrivateKey} with which the string is to be signed. This can be obtained
-	 *            via {@link Keys#newKeyPair()}.
-	 * @return The signature as a base64-encoded string. If the content is null, null is returned.
-	 */
-	public String sign(String content, PrivateKey privateKey) {
+    /**
+     * Generates a digital signature for the given string.
+     *
+     * @param content    The string to be digitally signed.
+     * @param privateKey The {@link PrivateKey} with which the string is to be signed. This can be obtained
+     *                   via {@link Keys#newKeyPair()}.
+     * @return The signature as a base64-encoded string. If the content is null, null is returned.
+     */
+    public String sign(String content, PrivateKey privateKey) {
 
-		if (content == null) {
-			return null;
-		}
+        if (content == null) {
+            return null;
+        }
 
-		try {
-			byte[] bytes = content.getBytes(ByteArray.ENCODING);
-			InputStream input = new ByteArrayInputStream(bytes);
-			return sign(input, privateKey);
-			// ByteArrayInputStream does not need to be closed.
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
-		}
-	}
+        try {
+            byte[] bytes = content.getBytes(ByteArray.ENCODING);
+            InputStream input = new ByteArrayInputStream(bytes);
+            return sign(input, privateKey);
+            // ByteArrayInputStream does not need to be closed.
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
+        }
+    }
 
-	/**
-	 * Generates a digital signature for the given {@link InputStream}.
-	 * 
-	 * @param content
-	 *            The input to be digitally signed.
-	 * @param privateKey
-	 *            The {@link PrivateKey} with which the input is to be signed. This can be obtained
-	 *            via {@link Keys#newKeyPair()}.
-	 * @return The signature as a base64-encoded string. If the content is null, null is returned.
-	 */
-	public String sign(InputStream content, PrivateKey privateKey) {
+    /**
+     * Generates a digital signature for the given {@link InputStream}.
+     *
+     * @param content    The input to be digitally signed.
+     * @param privateKey The {@link PrivateKey} with which the input is to be signed. This can be obtained
+     *                   via {@link Keys#newKeyPair()}.
+     * @return The signature as a base64-encoded string. If the content is null, null is returned.
+     */
+    public String sign(InputStream content, PrivateKey privateKey) {
 
-		if (content == null) {
-			return null;
-		}
+        if (content == null) {
+            return null;
+        }
 
-		Signature signer = getSignature();
-		try {
-			signer.initSign(privateKey, Random.getInstance());
-		} catch (InvalidKeyException e) {
-			throw new RuntimeException("Error initialising digital signature - invalid key", e);
-		}
+        Signature signer = getSignature();
+        try {
+            signer.initSign(privateKey, Random.getInstance());
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("Error initialising digital signature - invalid key", e);
+        }
 
-		try {
+        try {
 
-			// Read the content:
-			int b;
-			try {
-				while ((b = content.read()) != -1) {
-					signer.update((byte) b);
-				}
-			} catch (IOException e) {
-				throw new RuntimeException("Error reading input for digital signature creation", e);
-			}
+            // Read the content:
+            int b;
+            try {
+                while ((b = content.read()) != -1) {
+                    signer.update((byte) b);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading input for digital signature creation", e);
+            }
 
-			// Generate the signature:
-			byte[] signatureBytes = signer.sign();
-			return ByteArray.toBase64String(signatureBytes);
+            // Generate the signature:
+            byte[] signatureBytes = signer.sign();
+            return ByteArray.toBase64String(signatureBytes);
 
-		} catch (SignatureException e) {
-			throw new RuntimeException("Error generating digital signature", e);
-		}
-	}
+        } catch (SignatureException e) {
+            throw new RuntimeException("Error generating digital signature", e);
+        }
+    }
 
-	/**
-	 * Verifies whether the given content matches the given signature.
-	 * 
-	 * @param content
-	 *            The content to be verified.
-	 * @param publicKey
-	 *            The public key to use in the verification process.
-	 * @param signature
-	 *            The signature with which the content is to be verified. This can be obtained via
-	 *            {@link Keys#newKeyPair()}.
-	 * @return If the content matches the given signature, using the given key, true.
-	 */
-	public boolean verify(String content, PublicKey publicKey, String signature) {
+    /**
+     * Verifies whether the given content matches the given signature.
+     *
+     * @param content   The content to be verified.
+     * @param publicKey The public key to use in the verification process.
+     * @param signature The signature with which the content is to be verified. This can be obtained via
+     *                  {@link Keys#newKeyPair()}.
+     * @return If the content matches the given signature, using the given key, true.
+     */
+    public boolean verify(String content, PublicKey publicKey, String signature) {
 
-		byte[] bytes;
-		try {
-			bytes = content.getBytes(ByteArray.ENCODING);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
-		}
+        byte[] bytes;
+        try {
+            bytes = content.getBytes(ByteArray.ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
+        }
 
-		InputStream input = new ByteArrayInputStream(bytes);
-		return verify(input, publicKey, signature);
-		// ByteArrayInputStream does not need to be closed.
-	}
+        InputStream input = new ByteArrayInputStream(bytes);
+        return verify(input, publicKey, signature);
+        // ByteArrayInputStream does not need to be closed.
+    }
 
-	/**
-	 * @param input
-	 *            The content for which the signature is to be verified.
-	 * @param publicKey
-	 *            The {@link PublicKey} corresponding to the {@link PrivateKey} that was used to
-	 *            sign the content. This can be obtained via {@link Keys#newKeyPair()}.
-	 * @param signature
-	 *            The signature to be verified.
-	 * @return If the signature matches the input and key, true. Otherwise false.
-	 */
-	public boolean verify(InputStream input, PublicKey publicKey, String signature) {
+    /**
+     * @param input     The content for which the signature is to be verified.
+     * @param publicKey The {@link PublicKey} corresponding to the {@link PrivateKey} that was used to
+     *                  sign the content. This can be obtained via {@link Keys#newKeyPair()}.
+     * @param signature The signature to be verified.
+     * @return If the signature matches the input and key, true. Otherwise false.
+     */
+    public boolean verify(InputStream input, PublicKey publicKey, String signature) {
 
-		byte[] signatureBytes = ByteArray.fromBase64String(signature);
+        byte[] signatureBytes = ByteArray.fromBase64String(signature);
 
-		Signature signer = getSignature();
-		try {
-			signer.initVerify(publicKey);
-		} catch (InvalidKeyException e) {
-			throw new RuntimeException("Error initialising digital signature - invalid key", e);
-		}
+        Signature signer = getSignature();
+        try {
+            signer.initVerify(publicKey);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException("Error initialising digital signature - invalid key", e);
+        }
 
-		try {
+        try {
 
-			// Read the content:
-			int b;
-			try {
-				while ((b = input.read()) != -1) {
-					signer.update((byte) b);
-				}
-			} catch (IOException e) {
-				throw new RuntimeException("Error reading input for digital signature verification", e);
-			}
+            // Read the content:
+            int b;
+            try {
+                while ((b = input.read()) != -1) {
+                    signer.update((byte) b);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading input for digital signature verification", e);
+            }
 
-			// Verify the signature:
-			return signer.verify(signatureBytes);
+            // Verify the signature:
+            return signer.verify(signatureBytes);
 
-		} catch (SignatureException e) {
-			throw new RuntimeException("Error verifying digital signature", e);
-		}
+        } catch (SignatureException e) {
+            throw new RuntimeException("Error verifying digital signature", e);
+        }
 
-	}
+    }
 
-	/**
-	 * @return A new {@link Signature} instance.
-	 */
-	protected Signature getSignature() {
+    /**
+     * @return A new {@link Signature} instance.
+     */
+    protected Signature getSignature() {
 
-		try {
-			return Signature.getInstance(algorithm, SecurityProvider.getProviderName());
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("Unable to find algorithm " + algorithm + " for provider "
-					+ SecurityProvider.getProviderName(), e);
-		} catch (NoSuchProviderException e) {
-			throw new RuntimeException("Unable to find provider. Are the BouncyCastle libraries installed?", e);
-		}
-	}
+        try {
+            return Signature.getInstance(algorithm, SecurityProvider.getProviderName());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Unable to find algorithm " + algorithm + " for provider "
+                    + SecurityProvider.getProviderName(), e);
+        } catch (NoSuchProviderException e) {
+            throw new RuntimeException("Unable to find provider. Are the BouncyCastle libraries installed?", e);
+        }
+    }
 
 }
