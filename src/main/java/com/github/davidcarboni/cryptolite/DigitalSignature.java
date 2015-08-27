@@ -173,12 +173,13 @@ public class DigitalSignature {
     protected Signature getSignature() {
 
         try {
-            return Signature.getInstance(algorithm, SecurityProvider.getProviderName());
+            return Signature.getInstance(algorithm);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to find algorithm " + algorithm + " for provider "
-                    + SecurityProvider.getProviderName(), e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException("Unable to find provider. Are the BouncyCastle libraries installed?", e);
+            if (SecurityProvider.addProvider()) {
+                return getSignature();
+            } else {
+                throw new RuntimeException("Unable to find algorithm " + algorithm, e);
+            }
         }
     }
 

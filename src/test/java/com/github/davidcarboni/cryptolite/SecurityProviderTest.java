@@ -1,15 +1,12 @@
 package com.github.davidcarboni.cryptolite;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.security.Provider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for {@link SecurityProvider}.
@@ -32,41 +29,23 @@ public class SecurityProviderTest {
 
     /**
      * Test method for
-     * {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProvider()}
+     * {@link com.github.davidcarboni.cryptolite.SecurityProvider#addProvider()}
      * . Checks that the provider instance is cached after the first call.
      */
     @Test
-    public void testGetProvider() {
+    public void shouldAddProvider() {
 
         // Given
-        Provider firstCall;
-        Provider secondCall;
+        boolean firstCall;
+        boolean secondCall;
 
         // When
-        firstCall = SecurityProvider.getProvider();
-        secondCall = SecurityProvider.getProvider();
+        firstCall = SecurityProvider.addProvider();
+        secondCall = SecurityProvider.addProvider();
 
         // Then
-        assertSame(firstCall, secondCall);
-        assertEquals(BouncyCastleProvider.PROVIDER_NAME, firstCall.getName());
-    }
-
-    /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.SecurityProvider#getProviderName()}
-     * .
-     */
-    @Test
-    public void testGetProviderName() {
-
-        // Given
-        String expectedName = BouncyCastleProvider.PROVIDER_NAME;
-
-        // When
-        String providerName = SecurityProvider.getProviderName();
-
-        // Then
-        Assert.assertEquals(expectedName, providerName);
+        assertTrue(firstCall);
+        assertFalse(secondCall);
     }
 
 }

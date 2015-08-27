@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 /**
  * This class provides simple encryption and decryption of Strings and streams.
@@ -122,7 +121,7 @@ public class Crypto {
     /**
      * The {@link Cipher} for this instance.
      */
-    private final Cipher cipher;
+    private Cipher cipher;
 
     /**
      * Initialises the instance by getting and caching a {@link Cipher} instance
@@ -141,19 +140,27 @@ public class Crypto {
      * @param cipherName This should normally be {@value #CIPHER_NAME}.
      */
     protected Crypto(String cipherName) {
+        // Get a Cipher instance:
+        cipher = getCipher(cipherName);
+    }
 
+    private Cipher getCipher(String cipherName) {
+        Cipher cipher;
         try {
 
             // Get a Cipher instance:
-            cipher = Cipher.getInstance(cipherName, SecurityProvider.getProviderName());
+            cipher = Cipher.getInstance(cipherName);
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
+            if (SecurityProvider.addProvider()) {
+                cipher = getCipher(cipherName);
+            } else {
+                throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
+            }
         } catch (NoSuchPaddingException e) {
             throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
         }
+        return cipher;
     }
 
     /**

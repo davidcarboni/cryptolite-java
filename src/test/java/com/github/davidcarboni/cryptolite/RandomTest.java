@@ -101,7 +101,7 @@ public class RandomTest {
 
         // When
         int count = 0;
-        while (inputStream.read()!=-1) {
+        while (inputStream.read() != -1) {
             count++;
         }
 

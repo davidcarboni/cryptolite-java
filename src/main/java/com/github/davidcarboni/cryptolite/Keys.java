@@ -9,7 +9,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
@@ -127,12 +126,14 @@ public class Keys {
         // Get a key generator instance
         KeyGenerator keyGenerator;
         try {
-            keyGenerator = KeyGenerator.getInstance(SYMMETRIC_ALGORITHM, SecurityProvider.getProviderName());
+            keyGenerator = KeyGenerator.getInstance(SYMMETRIC_ALGORITHM);
             keyGenerator.init(symmetricKeySize, Random.getInstance());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_ALGORITHM, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
+            if (SecurityProvider.addProvider()) {
+                return newSecretKey(symmetricKeySize);
+            } else {
+                throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_ALGORITHM, e);
+            }
         }
 
         // Generate a key:
@@ -198,16 +199,13 @@ public class Keys {
         SecretKeyFactory factory;
         try {
             // TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
-            factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM, SecurityProvider.getProviderName());
+            factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            try {
-                // TODO: If PBKDF2 is not available from BouncyCastle, try to use a default provider (Sun provides PBKDF2 in JDK 1.5):
-                factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM);
-            } catch (NoSuchAlgorithmException e1) {
-                throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_PASSWORD_ALGORITHM, e1);
+            if (SecurityProvider.addProvider()) {
+                return generateSecretKey(password, salt, keySize);
+            } else {
+                throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_PASSWORD_ALGORITHM, e);
             }
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException("Unable to locate JCE provider. Are the BouncyCastle libraries installed?", e);
         }
 
         // Generate the key:
@@ -243,12 +241,14 @@ public class Keys {
         // Construct a key generator
         KeyPairGenerator keyPairGenerator;
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(ASYMMETRIC_ALGORITHM, SecurityProvider.getProviderName());
+            keyPairGenerator = KeyPairGenerator.getInstance(ASYMMETRIC_ALGORITHM);
             keyPairGenerator.initialize(ASYMMETRIC_KEY_SIZE, Random.getInstance());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm " + ASYMMETRIC_ALGORITHM, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
+            if (SecurityProvider.addProvider()) {
+                return newKeyPair();
+            } else {
+                throw new RuntimeException("Unable to locate algorithm " + ASYMMETRIC_ALGORITHM, e);
+            }
         }
 
         // Generate a key:

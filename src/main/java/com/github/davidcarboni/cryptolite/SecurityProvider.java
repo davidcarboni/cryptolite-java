@@ -10,21 +10,33 @@ import java.security.Security;
  */
 public class SecurityProvider {
 
+    /**
+     * The name of an additional security provider. Default is Bouncycastle.
+     */
+    public static String providerName = "bc";
+
+    /**
+     * The name of an additional security provider class. Default is Bouncycastle.
+     */
+    public static String providerClassName = "org.bouncycastle.jce.provider.BouncyCastleProvider";
+
     private static Provider provider;
 
     /**
-     * @return A {@link BouncyCastleProvider} instance. If there is already a Bouncy Castle provider
-     * installed, that instance will be returned, otherwise a new instance is created and
-     * returned. The returned instance is cached for future calls.
+     * Attempts to add the provider specified by {@link #providerClassName}.
+     *
+     * @return If the provider is not already installed and is successfully added, true.
+     * This enables methods to determine whether they should retry a failed operation if a new provider was successfully added.
      */
-    public static Provider getProvider() {
+    public static boolean addProvider() {
+        boolean result = false;
 
-        if (SecurityProvider.provider == null) {
+        if (provider == null) {
 
-            // Check whether BouncyCastle has already been installed:
-            Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+            // Check whether the provider has already been installed:
+            Provider provider = Security.getProvider(providerName);
 
-            // If not, install it:
+            // If not, attempt to install it:
             if (provider == null) {
                 provider = new BouncyCastleProvider();
                 Security.addProvider(provider);
@@ -32,16 +44,34 @@ public class SecurityProvider {
 
             // Now cache the provider:
             SecurityProvider.provider = provider;
+
+            result = provider != null;
         }
 
-        return provider;
+        return result;
     }
 
     /**
-     * @return The name of the cached provider, by calling {@link Provider#getName()} on the result
-     * of {@link #getProvider()}.
+     * @return A new instance of {@link #providerClassName} if the class can be found, instantiated and is an instance of {@link Provider}.
      */
-    public static String getProviderName() {
-        return getProvider().getName();
+    private Provider instantiate() {
+        Provider result;
+        try {
+            Class<?> providerClass = Class.forName(providerClassName);
+            result = (Provider) providerClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Unable to locate class " + providerClassName);
+            result = null;
+        } catch (InstantiationException e) {
+            System.out.println("Unable to instantiate class " + providerClassName);
+            result = null;
+        } catch (IllegalAccessException e) {
+            System.out.println("Unable to access class " + providerClassName);
+            result = null;
+        } catch (ClassCastException e) {
+            System.out.println("Unable to cast class " + providerClassName + " to " + Provider.class.getName());
+            result = null;
+        }
+        return result;
     }
 }

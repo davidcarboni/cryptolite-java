@@ -201,15 +201,13 @@ public class KeyWrapper implements Serializable {
         byte[] bytes = ByteArray.fromBase64String(encodedKey);
         KeyFactory keyFactory;
         try {
-            keyFactory = KeyFactory.getInstance(Keys.ASYMMETRIC_ALGORITHM,
-                    SecurityProvider.getProviderName());
+            keyFactory = KeyFactory.getInstance(Keys.ASYMMETRIC_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm "
-                    + Keys.SYMMETRIC_ALGORITHM, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException(
-                    "Unable to locate JCE provider. Are the BouncyCastle libraries installed?",
-                    e);
+            if (SecurityProvider.addProvider()) {
+                return decodePublicKey(encodedKey);
+            } else {
+                throw new RuntimeException("Unable to locate algorithm " + Keys.SYMMETRIC_ALGORITHM, e);
+            }
         }
         try {
             return keyFactory.generatePublic(new X509EncodedKeySpec(bytes));
@@ -233,19 +231,17 @@ public class KeyWrapper implements Serializable {
 
         try {
 
-            Cipher cipher = Cipher.getInstance(wrapAlgorithm,
-                    SecurityProvider.getProviderName());
+            Cipher cipher = Cipher.getInstance(wrapAlgorithm);
             cipher.init(Cipher.WRAP_MODE, wrapKey, Random.getInstance());
             byte[] wrappedKey = cipher.wrap(key);
             return ByteArray.toBase64String(wrappedKey);
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Could not locate algorithm "
-                    + wrapAlgorithm, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException(
-                    "Could not locate provider. Are the BouncyCastle libraries installed?",
-                    e);
+            if (SecurityProvider.addProvider()) {
+                return wrap(key, wrapAlgorithm);
+            } else {
+                throw new RuntimeException("Could not locate algorithm " + wrapAlgorithm, e);
+            }
         } catch (NoSuchPaddingException e) {
             throw new RuntimeException("Error setting up padding for AESWrap",
                     e);
@@ -276,19 +272,17 @@ public class KeyWrapper implements Serializable {
 
         try {
             byte[] wrapped = ByteArray.fromBase64String(wrappedKey);
-            Cipher cipher = Cipher.getInstance(wrapAlgorithm,
-                    SecurityProvider.getProviderName());
+            Cipher cipher = Cipher.getInstance(wrapAlgorithm);
             cipher.init(Cipher.UNWRAP_MODE, wrapKey, Random.getInstance());
             Key result = cipher.unwrap(wrapped, keyAlgorithm, keyType);
             return result;
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Could not locate algorithm algorithm "
-                    + wrapAlgorithm, e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException(
-                    "Could not locate JCE provider. Are the BouncyCastle libraries installed?",
-                    e);
+            if (SecurityProvider.addProvider()) {
+                return unwrap(wrappedKey, keyAlgorithm, keyType, wrapAlgorithm);
+            } else {
+                throw new RuntimeException("Could not locate algorithm " + wrapAlgorithm, e);
+            }
         } catch (NoSuchPaddingException e) {
             throw new RuntimeException(
                     "Error setting up padding for algorithm " + wrapAlgorithm,

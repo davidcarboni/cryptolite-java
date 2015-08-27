@@ -148,9 +148,7 @@ public class KeyExchange {
         }
 
         // Reconstruct the key:
-        SecretKeySpec key = new SecretKeySpec(decrypted, Crypto.CIPHER_ALGORITHM);
-
-        return key;
+        return new SecretKeySpec(decrypted, Crypto.CIPHER_ALGORITHM);
     }
 
     /**
@@ -201,12 +199,14 @@ public class KeyExchange {
             try {
 
                 // Get a Cipher instance:
-                cipher = Cipher.getInstance(cipherName, SecurityProvider.getProviderName());
+                cipher = Cipher.getInstance(cipherName);
 
             } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
-            } catch (NoSuchProviderException e) {
-                throw new RuntimeException("Unable to locate provider. Are the BouncyCastle libraries installed?", e);
+                if (SecurityProvider.addProvider()) {
+                    cipher = getCipher(mode, key);
+                } else {
+                    throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
+                }
             } catch (NoSuchPaddingException e) {
                 throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
             }
