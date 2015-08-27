@@ -50,7 +50,7 @@
 
     <dependencies>
 
-        <!-- BouncyCastle is currently required for digital signatures, key exchange and wrapping keys. It's not needed for AES encryption. -->
+        <!-- BouncyCastle is currently required for digital signatures, key exchange and wrapping Private keys. It's not needed for AES encryption and AES key wrapping. -->
         <!-- You can exclude this dependency if you're not using these features, or if you have set your own provider in the JVM or in the SecurityProvider class. -->
         <!-- Note that 1.5, 1.4, 1.3 and 1.2 versions are also available from Bouncy Castle. -->
         <dependency>
