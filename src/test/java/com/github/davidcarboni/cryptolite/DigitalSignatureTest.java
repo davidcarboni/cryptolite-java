@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -130,8 +130,8 @@ public class DigitalSignatureTest {
     public void testSignInputStreamPrivateKey() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
 
         // When
@@ -140,7 +140,7 @@ public class DigitalSignatureTest {
 
         // Then
         System.out.println("Signature: " + signature + " (" + signature.length() + ")");
-        content = new FileInputStream(file);
+        content = Files.newInputStream(file);
         assertTrue(digitalSignature.verify(content, keyPair.getPublic(), signature));
         content.close();
     }
@@ -156,8 +156,8 @@ public class DigitalSignatureTest {
     public void testSignInputStreamPrivateKeyException() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
 
         // When
@@ -179,9 +179,9 @@ public class DigitalSignatureTest {
     public void testSignInputStreamPrivateKeyFail() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        File fileChanged = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        Path fileChanged = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
 
         // When
@@ -190,7 +190,7 @@ public class DigitalSignatureTest {
 
         // Then
         System.out.println("Signature: " + signature + " (" + signature.length() + ")");
-        content = new FileInputStream(fileChanged);
+        content = Files.newInputStream(fileChanged);
         assertFalse(digitalSignature.verify(content, keyPair.getPublic(), signature));
         content.close();
     }
@@ -249,14 +249,14 @@ public class DigitalSignatureTest {
     public void testVerifyInputStreamPublicKeyString() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
         String signature = digitalSignature.sign(content, privateKey);
         content.close();
 
         // When
-        content = new FileInputStream(file);
+        content = Files.newInputStream(file);
         boolean result = digitalSignature.verify(content, keyPair.getPublic(), signature);
         content.close();
 
@@ -276,14 +276,14 @@ public class DigitalSignatureTest {
     public void testVerifyInputStreamPublicKeyStringException() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
         String signature = digitalSignature.sign(content, privateKey);
         content.close();
 
         // When
-        content = new FileInputStream(file);
+        content = Files.newInputStream(file);
         content.close();
         digitalSignature.verify(content, keyPair.getPublic(), signature);
 
@@ -302,15 +302,15 @@ public class DigitalSignatureTest {
     public void testVerifyInputStreamPublicKeyStringFail() throws IOException {
 
         // Given
-        File file = FileUtils.newFile();
-        File fileChanged = FileUtils.newFile();
-        InputStream content = new FileInputStream(file);
+        Path file = FileUtils.newFile();
+        Path fileChanged = FileUtils.newFile();
+        InputStream content = Files.newInputStream(file);
         PrivateKey privateKey = keyPair.getPrivate();
         String signature = digitalSignature.sign(content, privateKey);
         content.close();
 
         // When
-        content = new FileInputStream(fileChanged);
+        content = Files.newInputStream(fileChanged);
         boolean result = digitalSignature.verify(content, keyPair.getPublic(), signature);
         content.close();
 

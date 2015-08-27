@@ -1,7 +1,13 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Utility class to generate and compares random files to support the tests.
@@ -19,27 +25,20 @@ class FileUtils {
      * @return The created file.
      * @see org.apache.commons.io.FileUtils#writeByteArrayToFile(File, byte[])
      */
-    public static File newFile() {
+    public static Path newFile() throws IOException {
 
         final int filesize = 256;
 
         // Create a temp file:
-        File file;
+        Path file;
         try {
-            file = File.createTempFile(FileUtils.class.getSimpleName(), "testFile");
+            file = Files.createTempFile(FileUtils.class.getSimpleName(), "testFile");
         } catch (IOException e) {
             throw new RuntimeException("Error creating temp file.", e);
         }
-        file.deleteOnExit();
 
-        // Generate some content:
-        byte[] data = new byte[filesize];
-        Random.getInstance().nextBytes(data);
-
-        try {
-            org.apache.commons.io.FileUtils.writeByteArrayToFile(file, data);
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to create a temporary file: " + file.getPath(), e);
+        try (InputStream input = Random.inputStream(filesize); OutputStream output = Files.newOutputStream(file)) {
+            IOUtils.copy(input, output);
         }
 
         // Return the file:
