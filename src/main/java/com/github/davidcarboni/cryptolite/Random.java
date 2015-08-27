@@ -105,7 +105,8 @@ public class Random {
             @Override
             public int read() throws IOException {
                 if (count++ < length) {
-                    return Byte.toUnsignedInt(bytes(1)[0]);
+                    return ((int) bytes(1)[0]) & 0xff;
+                    // For Java 8: return Byte.toUnsignedInt(bytes(1)[0]);
                 } else {
                     return -1;
                 }
