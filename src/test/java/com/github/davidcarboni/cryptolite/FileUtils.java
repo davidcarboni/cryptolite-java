@@ -30,12 +30,7 @@ class FileUtils {
         final int filesize = 256;
 
         // Create a temp file:
-        Path file;
-        try {
-            file = Files.createTempFile(FileUtils.class.getSimpleName(), "testFile");
-        } catch (IOException e) {
-            throw new RuntimeException("Error creating temp file.", e);
-        }
+        Path file = Files.createTempFile(FileUtils.class.getSimpleName(), "testFile");
 
         try (InputStream input = Random.inputStream(filesize); OutputStream output = Files.newOutputStream(file)) {
             IOUtils.copy(input, output);
@@ -54,12 +49,8 @@ class FileUtils {
      * @return If the content of the two files is equal, true.
      * @see org.apache.commons.io.FileUtils#contentEquals(File, File)
      */
-    public static boolean sameFile(File f1, File f2) {
+    public static boolean sameFile(File f1, File f2) throws IOException {
 
-        try {
-            return org.apache.commons.io.FileUtils.contentEquals(f1, f2);
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to compare files " + f1.getPath() + " and " + f2.getPath(), e);
-        }
+        return org.apache.commons.io.FileUtils.contentEquals(f1, f2);
     }
 }
