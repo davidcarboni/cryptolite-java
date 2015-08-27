@@ -198,7 +198,6 @@ public class Keys {
         // Get a SecretKeyFactory for ALGORITHM:
         SecretKeyFactory factory;
         try {
-            // TODO: BouncyCastle only provides PBKDF2 in their JDK 1.6 releases, so try to use it, if available:
             factory = SecretKeyFactory.getInstance(SYMMETRIC_PASSWORD_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             if (SecurityProvider.addProvider()) {
