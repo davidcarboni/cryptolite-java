@@ -104,9 +104,7 @@ public class KeyWrapper implements Serializable {
      */
     public KeyWrapper(SecretKey wrapKey) {
         if (!StringUtils.equals(WRAP_KEY_ALGORITHM, wrapKey.getAlgorithm())) {
-            throw new IllegalArgumentException(
-                    "The wrapping key algorithm needs to be "
-                            + WRAP_KEY_ALGORITHM);
+            throw new IllegalArgumentException("The wrapping key algorithm needs to be " + WRAP_KEY_ALGORITHM);
         }
         this.wrapKey = wrapKey;
     }
@@ -206,14 +204,13 @@ public class KeyWrapper implements Serializable {
             if (SecurityProvider.addProvider()) {
                 return decodePublicKey(encodedKey);
             } else {
-                throw new RuntimeException("Unable to locate algorithm " + Keys.SYMMETRIC_ALGORITHM, e);
+                throw new IllegalStateException("Algorithm unavailable: " + Keys.SYMMETRIC_ALGORITHM, e);
             }
         }
         try {
             return keyFactory.generatePublic(new X509EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("Unable to convert key '" + encodedKey
-                    + "' to a valid public key.", e);
+            throw new IllegalArgumentException("Unable to convert key '" + encodedKey + "' to a valid public key.", e);
         }
     }
 
@@ -240,17 +237,14 @@ public class KeyWrapper implements Serializable {
             if (SecurityProvider.addProvider()) {
                 return wrap(key, wrapAlgorithm);
             } else {
-                throw new RuntimeException("Could not locate algorithm " + wrapAlgorithm, e);
+                throw new IllegalStateException("Algorithm unavailable: " + wrapAlgorithm, e);
             }
         } catch (NoSuchPaddingException e) {
-            throw new RuntimeException("Error setting up padding for AESWrap",
-                    e);
+            throw new IllegalStateException("Padding unavailable: " + wrapAlgorithm, e);
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Error in key for algorithm "
-                    + wrapAlgorithm, e);
+            throw new IllegalArgumentException("Invalid key for " + wrapAlgorithm, e);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException("Error in block size for algorithm "
-                    + wrapAlgorithm, e);
+            throw new IllegalStateException("Error in block size for algorithm " + wrapAlgorithm, e);
         }
     }
 
@@ -281,15 +275,12 @@ public class KeyWrapper implements Serializable {
             if (SecurityProvider.addProvider()) {
                 return unwrap(wrappedKey, keyAlgorithm, keyType, wrapAlgorithm);
             } else {
-                throw new RuntimeException("Could not locate algorithm " + wrapAlgorithm, e);
+                throw new IllegalStateException("Algorithm unavailable: " + wrapAlgorithm, e);
             }
         } catch (NoSuchPaddingException e) {
-            throw new RuntimeException(
-                    "Error setting up padding for algorithm " + wrapAlgorithm,
-                    e);
+            throw new IllegalStateException("Padding unavailable: " + wrapAlgorithm, e);
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Invalid key for algorithm "
-                    + wrapAlgorithm, e);
+            throw new IllegalArgumentException("Invalid key for algorithm " + wrapAlgorithm, e);
         }
     }
 

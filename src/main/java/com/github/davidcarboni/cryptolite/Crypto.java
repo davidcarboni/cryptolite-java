@@ -155,10 +155,10 @@ public class Crypto {
             if (SecurityProvider.addProvider()) {
                 cipher = getCipher(cipherName);
             } else {
-                throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
+                throw new IllegalStateException("Algorithm unavailable: " + cipherName, e);
             }
         } catch (NoSuchPaddingException e) {
-            throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
+            throw new IllegalStateException("Padding method unavailable: " + cipherName, e);
         }
         return cipher;
     }
@@ -179,11 +179,11 @@ public class Crypto {
      * @return The encrypted String, base-64 encoded, or null if the given
      * String is null. An empty string can be encrypted, but a null one
      * cannot.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #decrypt(String, String)
      */
-    public String encrypt(String string, String password) throws InvalidKeyException {
+    public String encrypt(String string, String password) {
 
         // Basic null check.
         // An empty string can be encrypted:
@@ -217,11 +217,11 @@ public class Crypto {
      * @return The encrypted String, base-64 encoded, or null if the given
      * String is null. An empty string can be encrypted, but a null one
      * cannot.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #decrypt(String, SecretKey)
      */
-    public String encrypt(String string, SecretKey key) throws InvalidKeyException {
+    public String encrypt(String string, SecretKey key) {
 
         // Basic null check.
         // An empty string can be encrypted:
@@ -256,11 +256,11 @@ public class Crypto {
      * @param key   The key to be used to encrypt the data.
      * @return The encrypted data, or null if the given byte array is null. An
      * empty array can be encrypted, but a null one cannot.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #decrypt(byte[], SecretKey)
      */
-    protected byte[] encrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
+    protected byte[] encrypt(byte[] bytes, SecretKey key) {
 
         // Basic null check.
         // An empty array can be encrypted:
@@ -279,9 +279,9 @@ public class Crypto {
         try {
             result = cipher.doFinal(bytes);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException("Block-size exception when completing encrypiton.", e);
+            throw new IllegalStateException("Block-size exception when completing encryption.", e);
         } catch (BadPaddingException e) {
-            throw new RuntimeException("Padding error detected when completing encrypiton.", e);
+            throw new IllegalStateException("Padding error detected when completing encryption.", e);
         }
 
         // Concatenate the iv and the encrypted data:
@@ -299,11 +299,11 @@ public class Crypto {
      *                  generate the correct key by calling
      *                  {@link Keys#generateSecretKey(String, String)}
      * @return The decrypted String, or null if the encrypted String is null.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(String, SecretKey)
      */
-    public String decrypt(String encrypted, String password) throws InvalidKeyException {
+    public String decrypt(String encrypted, String password) {
 
         // Basic null/empty check.
         // An empty string can be encrypted, but not decrypted:
@@ -334,11 +334,11 @@ public class Crypto {
      *                  {@link #encrypt(String, SecretKey)}.
      * @param key       The key to be used for decryption.
      * @return The decrypted String, or null if the encrypted String is null.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(String, SecretKey)
      */
-    public String decrypt(String encrypted, SecretKey key) throws InvalidKeyException {
+    public String decrypt(String encrypted, SecretKey key) {
 
         // Basic null/empty check.
         // An empty string can be encrypted, but not decrypted:
@@ -366,11 +366,11 @@ public class Crypto {
      * @param bytes The encrypted data.
      * @param key   The key to be used for decryption.
      * @return The decrypted String, or null if the encrypted String is null.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(byte[], SecretKey)
      */
-    protected byte[] decrypt(byte[] bytes, SecretKey key) throws InvalidKeyException {
+    protected byte[] decrypt(byte[] bytes, SecretKey key) {
 
         // Basic null/empty check.
         // An empty array can be encrypted, but not decrypted
@@ -399,9 +399,9 @@ public class Crypto {
         try {
             result = cipher.doFinal(data);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException("Block-size exception when completing String encrypiton.", e);
+            throw new IllegalStateException("Block-size exception when completing String encryption.", e);
         } catch (BadPaddingException e) {
-            throw new RuntimeException("Padding error detected when completing String encrypiton.", e);
+            throw new IllegalStateException("Padding error detected when completing String encryption.", e);
         }
 
         return result;
@@ -430,13 +430,13 @@ public class Crypto {
      *                    written to the returned {@link CipherOutputStream}.
      * @return A {@link CipherOutputStream}, which wraps the given
      * {@link OutputStream}.
-     * @throws IOException         If an error occurs in writing the initialisation vector to
-     *                             the destination stream.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IOException              If an error occurs in writing the initialisation vector to
+     *                                  the destination stream.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #decrypt(InputStream, String)
      */
-    public OutputStream encrypt(OutputStream destination, String password) throws IOException, InvalidKeyException {
+    public OutputStream encrypt(OutputStream destination, String password) throws IOException {
 
         // Basic null check.
         // An empty stream can be encrypted:
@@ -478,13 +478,13 @@ public class Crypto {
      *                    {@link CipherOutputStream}.
      * @return A {@link CipherOutputStream}, which wraps the given
      * {@link OutputStream}.
-     * @throws IOException         If an error occurs in writing the initialisation vector to
-     *                             the destination stream.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IOException              If an error occurs in writing the initialisation vector to
+     *                                  the destination stream.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #decrypt(InputStream, SecretKey)
      */
-    public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException, InvalidKeyException {
+    public OutputStream encrypt(OutputStream destination, SecretKey key) throws IOException {
 
         // Basic null check.
         // An empty stream can be encrypted:
@@ -527,13 +527,13 @@ public class Crypto {
      * @param key    The key to be used for decryption.
      * @return A {@link CipherInputStream}, which wraps the given source stream
      * and will decrypt the data as they are read.
-     * @throws IOException         If an error occurs in reading the initialisation vector from
-     *                             the source stream.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IOException              If an error occurs in reading the initialisation vector from
+     *                                  the source stream.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(OutputStream, SecretKey)
      */
-    public InputStream encrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
+    public InputStream encrypt(InputStream source, SecretKey key) throws IOException {
 
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
@@ -572,13 +572,13 @@ public class Crypto {
      * @param password The password to be used for decryption.
      * @return A {@link CipherInputStream}, which wraps the given source stream
      * and will decrypt the data as they are read.
-     * @throws IOException         If an error occurs in reading the initialisation vector from
-     *                             the source stream.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IOException              If an error occurs in reading the initialisation vector from
+     *                                  the source stream.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(OutputStream, String)
      */
-    public InputStream decrypt(InputStream source, String password) throws IOException, InvalidKeyException {
+    public InputStream decrypt(InputStream source, String password) throws IOException {
 
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
@@ -615,13 +615,13 @@ public class Crypto {
      * @param key    The key to be used for decryption.
      * @return A {@link CipherInputStream}, which wraps the given source stream
      * and will decrypt the data as they are read.
-     * @throws IOException         If an error occurs in reading the initialisation vector from
-     *                             the source stream.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IOException              If an error occurs in reading the initialisation vector from
+     *                                  the source stream.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      * @see #encrypt(OutputStream, SecretKey)
      */
-    public InputStream decrypt(InputStream source, SecretKey key) throws IOException, InvalidKeyException {
+    public InputStream decrypt(InputStream source, SecretKey key) throws IOException {
 
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
@@ -678,19 +678,19 @@ public class Crypto {
      *             {@link Cipher#DECRYPT_MODE}).
      * @param key  The {@link SecretKey} to be used with the {@link Cipher}.
      * @param iv   The initialisation vector to use.
-     * @throws InvalidKeyException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                             key.
+     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
+     *                                  key.
      */
-    private void initCipher(int mode, SecretKey key, byte[] iv) throws InvalidKeyException {
+    private void initCipher(int mode, SecretKey key, byte[] iv) {
 
+        // Initialise the cipher:
+        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
         try {
-
-            // Initialise the cipher:
-            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
             cipher.init(mode, key, ivParameterSpec);
-
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException("Invalid key for " + CIPHER_NAME, e);
         } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "Invalid parameter passed to initialise cipher for encryption: zero IvParameterSpec containing "
                             + cipher.getBlockSize() + " bytes.", e);
         }

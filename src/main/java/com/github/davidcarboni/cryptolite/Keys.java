@@ -132,7 +132,7 @@ public class Keys {
             if (SecurityProvider.addProvider()) {
                 return newSecretKey(symmetricKeySize);
             } else {
-                throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_ALGORITHM, e);
+                throw new IllegalStateException("Algorithm unavailable: " + SYMMETRIC_ALGORITHM, e);
             }
         }
 
@@ -204,7 +204,7 @@ public class Keys {
             if (SecurityProvider.addProvider()) {
                 return generateSecretKey(password, salt, keySize);
             } else {
-                throw new RuntimeException("Unable to locate algorithm " + SYMMETRIC_PASSWORD_ALGORITHM, e);
+                throw new IllegalStateException("Algorithm unavailable: " + SYMMETRIC_PASSWORD_ALGORITHM, e);
             }
         }
 
@@ -215,7 +215,7 @@ public class Keys {
         try {
             key = factory.generateSecret(pbeKeySpec);
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("Error generating password-based key.", e);
+            throw new IllegalStateException("Error generating password-based key.", e);
         }
 
         // NB: At this point, key.getAlgorithm() returns SYMMETRIC_PASSWORD_ALGORITHM,
@@ -247,7 +247,7 @@ public class Keys {
             if (SecurityProvider.addProvider()) {
                 return newKeyPair();
             } else {
-                throw new RuntimeException("Unable to locate algorithm " + ASYMMETRIC_ALGORITHM, e);
+                throw new IllegalStateException("Algorithm unavailable: " + ASYMMETRIC_ALGORITHM, e);
             }
         }
 
@@ -294,7 +294,7 @@ public class Keys {
             int maxKeyLen = Cipher.getMaxAllowedKeyLength(Crypto.CIPHER_ALGORITHM);
             return maxKeyLen >= SYMMETRIC_KEY_SIZE_UNLIMITED;
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm " + Crypto.CIPHER_ALGORITHM, e);
+            throw new IllegalStateException("Algorithm unavailable: " + Crypto.CIPHER_ALGORITHM, e);
         }
     }
 }

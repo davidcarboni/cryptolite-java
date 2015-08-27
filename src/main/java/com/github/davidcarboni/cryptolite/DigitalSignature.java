@@ -59,7 +59,7 @@ public class DigitalSignature {
             return sign(input, privateKey);
             // ByteArrayInputStream does not need to be closed.
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
+            throw new IllegalArgumentException("Unable to get bytes from string as " + ByteArray.ENCODING, e);
         }
     }
 
@@ -81,7 +81,7 @@ public class DigitalSignature {
         try {
             signer.initSign(privateKey, Random.getInstance());
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Error initialising digital signature - invalid key", e);
+            throw new IllegalArgumentException("Error initialising digital signature - invalid key", e);
         }
 
         try {
@@ -93,7 +93,7 @@ public class DigitalSignature {
                     signer.update((byte) b);
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Error reading input for digital signature creation", e);
+                throw new IllegalArgumentException("Error reading input for digital signature creation", e);
             }
 
             // Generate the signature:
@@ -101,7 +101,7 @@ public class DigitalSignature {
             return ByteArray.toBase64String(signatureBytes);
 
         } catch (SignatureException e) {
-            throw new RuntimeException("Error generating digital signature", e);
+            throw new IllegalStateException("Error generating digital signature", e);
         }
     }
 
@@ -120,7 +120,7 @@ public class DigitalSignature {
         try {
             bytes = content.getBytes(ByteArray.ENCODING);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unable to get bytes from sring as " + ByteArray.ENCODING, e);
+            throw new IllegalArgumentException("Unable to get bytes from string as " + ByteArray.ENCODING, e);
         }
 
         InputStream input = new ByteArrayInputStream(bytes);
@@ -143,7 +143,7 @@ public class DigitalSignature {
         try {
             signer.initVerify(publicKey);
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Error initialising digital signature - invalid key", e);
+            throw new IllegalArgumentException("Error initialising digital signature - invalid key", e);
         }
 
         try {
@@ -155,14 +155,14 @@ public class DigitalSignature {
                     signer.update((byte) b);
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Error reading input for digital signature verification", e);
+                throw new IllegalArgumentException("Error reading input for digital signature verification", e);
             }
 
             // Verify the signature:
             return signer.verify(signatureBytes);
 
         } catch (SignatureException e) {
-            throw new RuntimeException("Error verifying digital signature", e);
+            throw new IllegalStateException("Error verifying digital signature", e);
         }
 
     }
@@ -178,7 +178,7 @@ public class DigitalSignature {
             if (SecurityProvider.addProvider()) {
                 return getSignature();
             } else {
-                throw new RuntimeException("Unable to find algorithm " + algorithm, e);
+                throw new IllegalStateException("Algorithm unavailable: " + algorithm, e);
             }
         }
     }

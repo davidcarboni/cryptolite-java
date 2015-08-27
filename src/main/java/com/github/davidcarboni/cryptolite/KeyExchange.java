@@ -107,10 +107,9 @@ public class KeyExchange {
             Cipher cipher = getCipher(destinationPublicKey);
             encrypted = cipher.doFinal(bytes);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(
-                    "Error encrypting SecretKey: " + IllegalBlockSizeException.class.getSimpleName(), e);
+            throw new IllegalArgumentException("Error encrypting SecretKey: " + IllegalBlockSizeException.class.getSimpleName(), e);
         } catch (BadPaddingException e) {
-            throw new RuntimeException("Error encrypting SecretKey: " + BadPaddingException.class.getSimpleName(), e);
+            throw new IllegalArgumentException("Error encrypting SecretKey: " + BadPaddingException.class.getSimpleName(), e);
         }
 
         return ByteArray.toBase64String(encrypted);
@@ -141,10 +140,9 @@ public class KeyExchange {
             Cipher cipher = getCipher(privateKey);
             decrypted = cipher.doFinal(bytes);
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(
-                    "Error encrypting SecretKey: " + IllegalBlockSizeException.class.getSimpleName(), e);
+            throw new IllegalArgumentException("Error encrypting SecretKey: " + IllegalBlockSizeException.class.getSimpleName(), e);
         } catch (BadPaddingException e) {
-            throw new RuntimeException("Error decrypting SecretKey", e);
+            throw new IllegalArgumentException("Error decrypting SecretKey", e);
         }
 
         // Reconstruct the key:
@@ -205,10 +203,10 @@ public class KeyExchange {
                 if (SecurityProvider.addProvider()) {
                     cipher = getCipher(mode, key);
                 } else {
-                    throw new RuntimeException("Unable to locate algorithm for " + cipherName, e);
+                    throw new IllegalStateException("Algorithm unavailable: " + cipherName, e);
                 }
             } catch (NoSuchPaddingException e) {
-                throw new RuntimeException("Unable to locate padding method for " + cipherName, e);
+                throw new IllegalStateException("Padding method unavailable: " + cipherName, e);
             }
         }
 
@@ -216,7 +214,7 @@ public class KeyExchange {
         try {
             cipher.init(mode, key, Random.getInstance());
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Invalid key used to initialise cipher.", e);
+            throw new IllegalArgumentException("Invalid key used to initialise cipher.", e);
         }
 
         return cipher;

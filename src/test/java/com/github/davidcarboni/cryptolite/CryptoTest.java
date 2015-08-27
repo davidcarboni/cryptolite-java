@@ -12,7 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.security.InvalidKeyException;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -52,11 +51,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldNotEncryptNullStringWithKey() throws InvalidKeyException {
+    public void shouldNotEncryptNullStringWithKey() {
 
         // Given
         String plaintext = null;
@@ -73,11 +70,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldNotEncryptNullStringWithPassword() throws InvalidKeyException {
+    public void shouldNotEncryptNullStringWithPassword() {
 
         // Given
         String plaintext = null;
@@ -94,11 +89,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldEncryptEmptyStringWithPassword() throws InvalidKeyException {
+    public void shouldEncryptEmptyStringWithPassword() {
 
         // Given
         String plaintext = "";
@@ -117,11 +110,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldEncryptEmptyStringWithKey() throws InvalidKeyException {
+    public void shouldEncryptEmptyStringWithKey() {
 
         // Given
         String plaintext = "";
@@ -140,11 +131,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldEncryptSameStringDifferentlyWithPassword() throws InvalidKeyException {
+    public void shouldEncryptSameStringDifferentlyWithPassword() {
 
         // Given
         String plaintext = "The quick brown fox jumped over the lazy dog.";
@@ -176,11 +165,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldEncryptSameStringDifferentlyWithKey() throws InvalidKeyException {
+    public void shouldEncryptSameStringDifferentlyWithKey() {
 
         // Given
         String plaintext = "The quick brown fox jumped over the lazy dog.";
@@ -212,11 +199,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldNotDecryptNullStringWithPassword() throws InvalidKeyException {
+    public void shouldNotDecryptNullStringWithPassword() {
 
         // Given
         String ciphertext = null;
@@ -233,11 +218,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldNotDecryptNullStringWithKey() throws InvalidKeyException {
+    public void shouldNotDecryptNullStringWithKey() {
 
         // Given
         String ciphertext = null;
@@ -254,11 +237,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldDecryptEmptyStringWithPassword() throws InvalidKeyException {
+    public void shouldDecryptEmptyStringWithPassword() {
 
         // Given
         String ciphertext = "";
@@ -275,11 +256,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldDecryptEmptyStringWithKey() throws InvalidKeyException {
+    public void shouldDecryptEmptyStringWithKey() {
 
         // Given
         String ciphertext = "";
@@ -297,11 +276,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotDecryptTooShortStringWithPassword() throws InvalidKeyException {
+    public void shouldNotDecryptTooShortStringWithPassword() {
 
         // Given
         byte[] bytes = new byte[1];
@@ -322,11 +299,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test(expected = IllegalArgumentException.class)
-    public void shouldNotDecryptTooShortStringWithKey() throws InvalidKeyException {
+    public void shouldNotDecryptTooShortStringWithKey() {
 
         // Given
         byte[] bytes = new byte[1];
@@ -348,11 +323,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldDecryptDifferentStringsToSamePlaintextWithPassword() throws InvalidKeyException {
+    public void shouldDecryptDifferentStringsToSamePlaintextWithPassword() {
 
         // Given
         String input = "My love is like a red, red rose.";
@@ -379,11 +352,9 @@ public class CryptoTest {
      *
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
-     *
-     * @throws InvalidKeyException {@link InvalidKeyException}
      */
     @Test
-    public void shouldDecryptDifferentStringsToSamePlaintextWithKey() throws InvalidKeyException {
+    public void shouldDecryptDifferentStringsToSamePlaintextWithKey() {
 
         // Given
         String input = "My love is like a red, red rose.";
@@ -410,11 +381,10 @@ public class CryptoTest {
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldNotEncryptNullOutputStreamWithPassword() throws InvalidKeyException, IOException {
+    public void shouldNotEncryptNullOutputStreamWithPassword() throws IOException {
 
         // Given
         OutputStream destination = null;
@@ -433,11 +403,10 @@ public class CryptoTest {
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldNotEncryptNullOutputStreamWithKey() throws InvalidKeyException, IOException {
+    public void shouldNotEncryptNullOutputStreamWithKey() throws IOException {
 
         // Given
         OutputStream destination = null;
@@ -454,11 +423,10 @@ public class CryptoTest {
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldEncryptSameDataDifferentlyWithPassword() throws InvalidKeyException, IOException {
+    public void shouldEncryptSameDataDifferentlyWithPassword() throws IOException {
 
         // Given
         byte[] data = ("Three french hens, two turtle doves " + "and a partridge in a pear tree.").getBytes("UTF8");
@@ -492,11 +460,10 @@ public class CryptoTest {
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldEncryptSameDataDifferentlyWithKey() throws InvalidKeyException, IOException {
+    public void shouldEncryptSameDataDifferentlyWithKey() throws IOException {
 
         // Given
         byte[] data = ("Three french hens, two turtle doves " + "and a partridge in a pear tree.").getBytes("UTF8");
@@ -533,11 +500,10 @@ public class CryptoTest {
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldDecryptDifferentStreamsToSamePlaintextWithPassword() throws InvalidKeyException, IOException {
+    public void shouldDecryptDifferentStreamsToSamePlaintextWithPassword() throws IOException {
 
         // Given
         byte[] input = ("It's really important, you know, to take care of other peoples' stuff "
@@ -579,11 +545,10 @@ public class CryptoTest {
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
      *
-     * @throws IOException         {@link IOException}
-     * @throws InvalidKeyException {@link InvalidKeyException}
+     * @throws IOException {@link IOException}
      */
     @Test
-    public void shouldDecryptDifferentStreamsToSamePlaintextWithKey() throws InvalidKeyException, IOException {
+    public void shouldDecryptDifferentStreamsToSamePlaintextWithKey() throws IOException {
 
         // Given
         byte[] input = ("It's really important, you know, to take care of other peoples' stuff "

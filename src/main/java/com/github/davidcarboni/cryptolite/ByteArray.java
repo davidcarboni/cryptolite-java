@@ -127,7 +127,7 @@ public class ByteArray {
         try {
             return string.getBytes(ENCODING);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Error converting String to byte array using encoding " + ENCODING);
+            throw new IllegalArgumentException("Error converting String to byte array using encoding " + ENCODING);
         }
     }
 
@@ -146,7 +146,7 @@ public class ByteArray {
         try {
             return new String(bytes, ENCODING);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Error converting byte array to String using encoding " + ENCODING);
+            throw new IllegalArgumentException("Error converting byte array to String using encoding " + ENCODING);
         }
     }
 }

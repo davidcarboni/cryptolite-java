@@ -72,9 +72,9 @@ public class HashMac {
             byte[] digest = mac.doFinal(ByteArray.fromString(message));
             return ByteArray.toHexString(digest);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Unable to locate algorithm for " + algorithm, e);
+            throw new IllegalStateException("Algorithm unavailable: " + algorithm, e);
         } catch (InvalidKeyException e) {
-            throw new RuntimeException("Unable to construct key for " + algorithm
+            throw new IllegalArgumentException("Unable to construct key for " + algorithm
                     + ". Please check the value passed in when this class was initialised.", e);
         }
     }

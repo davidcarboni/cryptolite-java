@@ -71,9 +71,7 @@ public class Random {
             try {
                 secureRandom = SecureRandom.getInstance(ALGORITHM);
             } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException("Unable to find algorithm "
-                        + ALGORITHM + " for "
-                        + SecureRandom.class.getSimpleName());
+                throw new IllegalStateException("Algorithm unavailable: " + ALGORITHM, e);
             }
         }
 
@@ -103,6 +101,7 @@ public class Random {
     public static InputStream inputStream(final long length) {
         return new InputStream() {
             int count;
+
             @Override
             public int read() throws IOException {
                 if (count++ < length) {
