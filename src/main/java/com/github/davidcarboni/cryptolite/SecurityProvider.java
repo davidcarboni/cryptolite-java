@@ -1,51 +1,77 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.security.Provider;
 import java.security.Security;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
 /**
- * 
  * @author David Carboni
- * 
  */
 public class SecurityProvider {
 
-	private static Provider provider;
+    /**
+     * The name of an additional security provider. Default is Bouncycastle.
+     */
+    public static String providerName = "bc";
 
-	/**
-	 * 
-	 * @return A {@link BouncyCastleProvider} instance. If there is already a Bouncy Castle provider
-	 *         installed, that instance will be returned, otherwise a new instance is created and
-	 *         returned. The returned instance is cached for future calls.
-	 */
-	public static Provider getProvider() {
+    /**
+     * The name of an additional security provider class. Default is Bouncycastle.
+     */
+    public static String providerClassName = "org.bouncycastle.jce.provider.BouncyCastleProvider";
 
-		if (SecurityProvider.provider == null) {
+    private static Provider provider;
 
-			// Check whether BouncyCastle has already been installed:
-			Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
+    /**
+     * Attempts to add the provider specified by {@link #providerClassName}.
+     *
+     * @return If the provider is not already installed and is successfully added, true.
+     * This enables methods to determine whether they should retry a failed operation if a new provider was successfully added.
+     */
+    public static boolean addProvider() {
+        boolean result = false;
 
-			// If not, install it:
-			if (provider == null) {
-				provider = new BouncyCastleProvider();
-				Security.addProvider(provider);
-			}
+        if (provider == null) {
 
-			// Now cache the provider:
-			SecurityProvider.provider = provider;
-		}
+            // Check whether the provider has already been installed:
+            Provider provider = Security.getProvider(providerName);
 
-		return provider;
-	}
+            // If not, attempt to install it:
+            if (provider == null) {
+                provider = new BouncyCastleProvider();
+                Security.addProvider(provider);
+            }
 
-	/**
-	 * 
-	 * @return The name of the cached provider, by calling {@link Provider#getName()} on the result
-	 *         of {@link #getProvider()}.
-	 */
-	public static String getProviderName() {
-		return getProvider().getName();
-	}
+            // Now cache the provider:
+            SecurityProvider.provider = provider;
+
+            result = provider != null;
+        }
+
+        return result;
+    }
+
+    /**
+     * @return A new instance of {@link #providerClassName} if the class can be found, instantiated and is an instance of {@link Provider}.
+     */
+    private Provider instantiate() {
+        Provider result;
+        try {
+            Class<?> providerClass = Class.forName(providerClassName);
+            result = (Provider) providerClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Unable to locate class " + providerClassName);
+            result = null;
+        } catch (InstantiationException e) {
+            System.out.println("Unable to instantiate class " + providerClassName);
+            result = null;
+        } catch (IllegalAccessException e) {
+            System.out.println("Unable to access class " + providerClassName);
+            result = null;
+        } catch (ClassCastException e) {
+            System.out.println("Unable to cast class " + providerClassName + " to " + Provider.class.getName());
+            result = null;
+        }
+        return result;
+    }
 }
