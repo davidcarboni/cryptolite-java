@@ -1,7 +1,5 @@
 package com.github.davidcarboni.cryptolite;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
 import java.security.Provider;
 import java.security.Security;
 
@@ -38,8 +36,9 @@ public class SecurityProvider {
 
             // If not, attempt to install it:
             if (provider == null) {
-                provider = new BouncyCastleProvider();
-                Security.addProvider(provider);
+                if ((provider = instantiate()) != null) {
+                    Security.addProvider(provider);
+                }
             }
 
             // Now cache the provider:
@@ -54,7 +53,7 @@ public class SecurityProvider {
     /**
      * @return A new instance of {@link #providerClassName} if the class can be found, instantiated and is an instance of {@link Provider}.
      */
-    private Provider instantiate() {
+    private static Provider instantiate() {
         Provider result;
         try {
             Class<?> providerClass = Class.forName(providerClassName);
