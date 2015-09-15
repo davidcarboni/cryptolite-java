@@ -191,14 +191,20 @@ public class Crypto {
             return null;
         }
 
+        // Generate the encryption key:
         String salt = Random.salt();
         SecretKey key = Keys.generateSecretKey(password, salt);
 
         // Convert the input Sting to a byte array:
-        byte[] bytes = ByteArray.fromString(string);
+        byte[] iv = generateInitialisationVector();
+        byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
-        byte[] result = ArrayUtils.addAll(ByteArray.fromBase64String(salt), encrypt(bytes, key));
+        byte[] result = encrypt(iv, data, key);
+
+        // Prepend the salt and IV
+        byte[] saltBytes = ByteArray.fromBase64String(salt);
+        result = ArrayUtils.addAll(saltBytes, ArrayUtils.addAll(iv, result));
 
         // Return as a String:
         return ByteArray.toBase64String(result);
@@ -230,10 +236,14 @@ public class Crypto {
         }
 
         // Convert the input Sting to a byte array:
-        byte[] bytes = ByteArray.fromString(string);
+        byte[] iv = generateInitialisationVector();
+        byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
-        byte[] result = encrypt(bytes, key);
+        byte[] result = encrypt(iv, data, key);
+
+        // Prepend the IV
+        result = ArrayUtils.addAll(iv, result);
 
         // Return as a String:
         return ByteArray.toBase64String(result);
@@ -252,42 +262,39 @@ public class Crypto {
      * data is usually stream-based and the rest of the time it tends to be
      * Strings you need to deal with. This is why it isn't exposed by default.
      *
-     * @param bytes The input data.
-     * @param key   The key to be used to encrypt the data.
+     * @param iv   The initialisation vector.
+     * @param data The cleartext data.
+     * @param key  The key to be used to encrypt the data.
      * @return The encrypted data, or null if the given byte array is null. An
      * empty array can be encrypted, but a null one cannot.
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
-     * @see #decrypt(byte[], SecretKey)
+     * @see #decrypt(byte[], byte[], SecretKey)
      */
-    protected byte[] encrypt(byte[] bytes, SecretKey key) {
+    protected byte[] encrypt(byte[] iv, byte[] data, SecretKey key) {
 
         // Basic null check.
         // An empty array can be encrypted:
-        if (bytes == null) {
+        if (iv == null || data == null) {
             return null;
         }
 
-        // Generate an initialisation vector:
-        byte[] iv = generateInitialisationVector();
+        // Validate the initialisation vector:
+        if (iv.length != getIvSize()) {
+            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize() + " bytes but got " + iv.length + " bytes.");
+        }
 
         // Prepare a cipher instance:
         initCipher(Cipher.ENCRYPT_MODE, key, iv);
 
         // Encrypt the data:
-        byte[] result;
         try {
-            result = cipher.doFinal(bytes);
+            return cipher.doFinal(data);
         } catch (IllegalBlockSizeException e) {
             throw new IllegalStateException("Block-size exception when completing encryption.", e);
         } catch (BadPaddingException e) {
             throw new IllegalStateException("Padding error detected when completing encryption.", e);
         }
-
-        // Concatenate the iv and the encrypted data:
-        result = ArrayUtils.addAll(iv, result);
-
-        return result;
     }
 
     /**
@@ -301,7 +308,7 @@ public class Crypto {
      * @return The decrypted String, or null if the encrypted String is null.
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
-     * @see #encrypt(String, SecretKey)
+     * @see #encrypt(String, String)
      */
     public String decrypt(String encrypted, String password) {
 
@@ -313,18 +320,26 @@ public class Crypto {
 
         // Convert to a byte array:
         byte[] bytes = ByteArray.fromBase64String(encrypted);
-        if (bytes.length < Random.SALT_BYTES) {
+
+        // Validate the size of the encrypted data:
+        if (bytes.length < Random.SALT_BYTES + getIvSize()) {
             throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
-                    + ") is shorter than a salt value.");
+                    + ") is shorter than a salt plus initialisation vector value.");
         }
 
-        // Separate the salt from the data:
+        // Separate the salt and initialisation vector from the data:
         byte[] salt = ArrayUtils.subarray(bytes, 0, Random.SALT_BYTES);
-        byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES, bytes.length);
+        byte[] iv = ArrayUtils.subarray(bytes, Random.SALT_BYTES, Random.SALT_BYTES + getIvSize());
+        byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES + getIvSize(), bytes.length);
 
+        // Generate the encryption key:
         SecretKey key = Keys.generateSecretKey(password, ByteArray.toBase64String(salt));
 
-        return ByteArray.toString(decrypt(data, key));
+        // Decrypt the data:
+        byte[] result = decrypt(iv, data, key);
+
+        // Return as a String:
+        return ByteArray.toString(result);
     }
 
     /**
@@ -346,8 +361,16 @@ public class Crypto {
             return encrypted;
         }
 
+        // Separate the initialisation vector from the data:
         byte[] bytes = ByteArray.fromBase64String(encrypted);
-        return ByteArray.toString(decrypt(bytes, key));
+        byte[] iv = ArrayUtils.subarray(bytes, 0, getIvSize());
+        byte[] data = ArrayUtils.subarray(bytes, getIvSize(), bytes.length);
+
+        // Decrypt the data:
+        byte[] result = decrypt(iv, data, key);
+
+        // Return as a String:
+        return ByteArray.toString(result);
     }
 
     /**
@@ -363,48 +386,39 @@ public class Crypto {
      * data is usually stream-based and the rest of the time it tends to be
      * Strings you need to deal with. This is why it isn't exposed by default.
      *
-     * @param bytes The encrypted data.
-     * @param key   The key to be used for decryption.
+     * @param iv   The initialisation vector.
+     * @param data The encrypted data.
+     * @param key  The key to be used for decryption.
      * @return The decrypted String, or null if the encrypted String is null.
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
-     * @see #encrypt(byte[], SecretKey)
+     * @see #encrypt(byte[], byte[], SecretKey)
      */
-    protected byte[] decrypt(byte[] bytes, SecretKey key) {
+    protected byte[] decrypt(byte[] iv, byte[] data, SecretKey key) {
 
         // Basic null/empty check.
         // An empty array can be encrypted, but not decrypted
         // - it must at least contain an initialisation vector:
-        if (bytes == null) {
+        if (iv == null || data == null) {
             return null;
         }
 
-        int ivSize = cipher.getBlockSize();
-        if (bytes.length < ivSize) {
-            throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
-                    + ") is shorter than an initialisation vector.");
+        // Validate the initialisation vector:
+        if (iv.length != getIvSize()) {
+            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize() + " bytes but got " + iv.length + " bytes.");
         }
-        byte[] iv;
-        byte[] data;
-
-        // Separate the IV from the data:
-        iv = ArrayUtils.subarray(bytes, 0, ivSize);
-        data = ArrayUtils.subarray(bytes, ivSize, bytes.length);
 
         // Prepare a cipher instance with the IV:
         initCipher(Cipher.DECRYPT_MODE, key, iv);
 
         // Decrypt the data:
-        byte[] result;
         try {
-            result = cipher.doFinal(data);
+            return cipher.doFinal(data);
         } catch (IllegalBlockSizeException e) {
             throw new IllegalStateException("Block-size exception when completing String encryption.", e);
         } catch (BadPaddingException e) {
             throw new IllegalStateException("Padding error detected when completing String encryption.", e);
         }
-
-        return result;
     }
 
     /**
@@ -538,7 +552,7 @@ public class Crypto {
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
         // be done.
-        byte[] iv = new byte[cipher.getBlockSize()];
+        byte[] iv = new byte[getIvSize()];
 
         // The IV is stored unencrypted at the start of the stream:
         source.read(iv);
@@ -626,7 +640,7 @@ public class Crypto {
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
         // be done.
-        byte[] iv = new byte[cipher.getBlockSize()];
+        byte[] iv = new byte[getIvSize()];
 
         // The IV is stored unencrypted at the start of the stream:
         source.read(iv);
@@ -641,14 +655,14 @@ public class Crypto {
 
     /**
      * This method generates a random initialisation vector. The length of the
-     * IV is determined by calling {@link Cipher#getBlockSize()} on
+     * IV is determined by calling {@link #getIvSize()} on
      * {@link #cipher}.
      *
      * @return A byte array, of a size corresponding to the block size of the
      * given {@link Cipher}, containing random bytes.
      */
     byte[] generateInitialisationVector() {
-        byte[] bytes = Random.bytes(cipher.getBlockSize());
+        byte[] bytes = Random.bytes(getIvSize());
         return bytes;
     }
 
