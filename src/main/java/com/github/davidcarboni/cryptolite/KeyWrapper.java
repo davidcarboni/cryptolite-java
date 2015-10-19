@@ -191,7 +191,7 @@ public class KeyWrapper implements Serializable {
      * -key-from-a-byte- array
      *
      * @param encodedKey The public key, base-64 encoded, as returned by
-     *                   {@link #encodePublicKey(PublicKey)} .
+     *                   {@link #encodePublicKey(PublicKey)}.
      * @return The unwrapped {@link PublicKey}.
      */
     public static PublicKey decodePublicKey(String encodedKey) {
@@ -212,6 +212,22 @@ public class KeyWrapper implements Serializable {
         } catch (InvalidKeySpecException e) {
             throw new IllegalArgumentException("Unable to convert key '" + encodedKey + "' to a valid public key.", e);
         }
+    }
+
+    /**
+     * Convenience method to unwrap a public-private key pain in a single call.
+     *
+     * @param wrappedPrivateKey The wrapped key, base-64 encoded, as returned by
+     *                          {@link #wrapPrivateKey(PrivateKey)}.
+     * @param encodedPublicKey  The public key, base-64 encoded, as returned by
+     *                          {@link #encodePublicKey(PublicKey)}.
+     * @return A {@link KeyPair} containing the unwrapped {@link PrivateKey} and the decoded {@link PublicKey}.
+     */
+    public KeyPair unwrapKeyPair(String wrappedPrivateKey, String encodedPublicKey) {
+
+        PrivateKey privateKey = unwrapPrivateKey(wrappedPrivateKey);
+        PublicKey publicKey = decodePublicKey(encodedPublicKey);
+        return new KeyPair(publicKey, privateKey);
     }
 
     /**
