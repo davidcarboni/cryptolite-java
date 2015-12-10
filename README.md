@@ -42,7 +42,7 @@ Much of the inspiration for the algorithms, modes and parameters comes from http
 
 ### Licensing:
 
-This library is released under the Apache license, like many other libraries, which means you are free to use it in commercial products.
+This library is released under the MIT license, like many other libraries, which means you are free to use it in commercial products.
 
 If you have any questions, feel free to contact me via @davidcarboni or find me on GitHub at https://github.com/davidcarboni.
 
