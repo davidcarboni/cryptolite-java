@@ -145,7 +145,6 @@ public class Crypto {
     }
 
     private Cipher getCipher(String cipherName) {
-        Cipher cipher;
         try {
 
             // Get a Cipher instance:
@@ -160,6 +159,10 @@ public class Crypto {
         } catch (NoSuchPaddingException e) {
             throw new IllegalStateException("Padding method unavailable: " + cipherName, e);
         }
+        return cipher;
+    }
+
+    protected Cipher getCipher() {
         return cipher;
     }
 
@@ -695,7 +698,7 @@ public class Crypto {
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
      */
-    private void initCipher(int mode, SecretKey key, byte[] iv) {
+    protected void initCipher(int mode, SecretKey key, byte[] iv) {
 
         // Initialise the cipher:
         IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
