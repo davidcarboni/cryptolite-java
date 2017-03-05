@@ -18,39 +18,6 @@ import static org.junit.Assert.*;
 public class RandomTest {
 
     /**
-     * Clears the cached instance.
-     *
-     * @throws NoSuchFieldException   {@link NoSuchFieldException}.
-     * @throws IllegalAccessException {@link IllegalAccessException}.
-     */
-    @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field field = Random.class.getDeclaredField("secureRandom");
-        field.setAccessible(true);
-        field.set(Random.class, null);
-    }
-
-    /**
-     * Test method for {@link com.github.davidcarboni.cryptolite.Random#getInstance()}. Checks that
-     * {@link Random#getInstance()} returns the same instance on every call, avoiding initialising a
-     * new instance every time.
-     */
-    @Test
-    public void testGetInstance() {
-
-        // Given
-        SecureRandom firstCall;
-        SecureRandom secondCall;
-
-        // When
-        firstCall = Random.getInstance();
-        secondCall = Random.getInstance();
-
-        // Then
-        assertSame(firstCall, secondCall);
-    }
-
-    /**
      * Checks that generating a random byte array returns the expected number of bytes.
      */
     @Test
@@ -60,10 +27,10 @@ public class RandomTest {
         int length = 20;
 
         // When
-        byte[] data = Random.byteArray(length);
+        byte[] randomBytes = Random.byteArray(length);
 
         // Then
-        assertEquals(length, data.length);
+        assertEquals("Unexpected random byte lenth.", length, randomBytes.length);
     }
 
     /**
@@ -79,7 +46,7 @@ public class RandomTest {
         // Then
         // It should be of the expected length
         byte[] tokenBytes = ByteArray.fromHexString(token);
-        assertEquals(Random.TOKEN_BITS, tokenBytes.length * 8);
+        assertEquals("Unexpected token bit-length", Random.TOKEN_BITS, tokenBytes.length * 8);
     }
 
     /**
@@ -95,37 +62,15 @@ public class RandomTest {
 
         // Then
         // It should be of the expected length
-        byte[] salt_bytes = ByteArray.fromBase64String(salt);
-        assertEquals(Random.SALT_BYTES, salt_bytes.length);
+        byte[] saltBytes = ByteArray.fromBase64String(salt);
+        assertEquals("Unexpected salt byte-length", Random.SALT_BYTES, saltBytes.length);
     }
 
     /**
-     * Verifies that a random input stream provides the expected amout of input.
-     *
-     * @throws IOException .
+     * Checks the number of characters and the content of the returned password matches the expected content.
      */
     @Test
-    public void testInputStream() throws IOException {
-
-        // Given
-        int length = 1025;
-        InputStream inputStream = Random.inputStream(length);
-
-        // When
-        int count = 0;
-        while (inputStream.read() != -1) {
-            count++;
-        }
-
-        // Then
-        assertEquals(length, count);
-    }
-
-    /**
-     * Checks the number of characters in the returned password matches the specified length of the password.
-     */
-    @Test
-    public void testPasswordLength() {
+    public void testPassword() {
 
         // Given
         String password;
@@ -137,7 +82,8 @@ public class RandomTest {
             password = Random.password(length);
 
             // Then
-            assertEquals(length, password.length());
+            assertEquals("Unexpected password length", length, password.length());
+            assertTrue("Unexpected password content", password.matches("[A-Za-z0-9]+"));
         }
     }
 
@@ -153,11 +99,11 @@ public class RandomTest {
         for (int i = 0; i < iterations; i++) {
 
             // When
-            String id1 = Random.token();
-            String id2 = Random.token();
+            String token1 = Random.token();
+            String token2 = Random.token();
 
             // Then
-            assertNotEquals(id1, id2);
+            assertNotEquals("Got identical tokens.", token1, token2);
         }
     }
 
@@ -177,7 +123,7 @@ public class RandomTest {
             String salt2 = Random.salt();
 
             // Then
-            assertNotEquals(salt1, salt2);
+            assertNotEquals("Got identical salts.", salt1, salt2);
         }
     }
 
@@ -198,7 +144,7 @@ public class RandomTest {
             String password2 = Random.password(passwordSize);
 
             // Then
-            assertNotEquals(password1, password2);
+            assertNotEquals("Got identical passwords.", password1, password2);
         }
     }
 

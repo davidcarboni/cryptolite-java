@@ -33,32 +33,12 @@ public class ByteArrayTest {
 
         // When
         // We convert to hex and back again
-        String hexString = ByteArray.toHexString(data);
-        byte[] backAgain = ByteArray.fromHexString(hexString);
+        String hex = ByteArray.toHexString(data);
+        byte[] backAgain = ByteArray.fromHexString(hex);
 
         // Then
         // The end result should match the input
         assertArrayEquals(data, backAgain);
-    }
-
-    /**
-     * Verifies that a hex String with a 0x prefix can be correctly converted to
-     * bytes.
-     */
-    @Test
-    public void testHexPrefix() {
-
-        // Given
-        // A hex string with a 0x prefix
-        String hexString = "0x" + ByteArray.toHexString(data);
-
-        // When
-        // We attempt to convert to a byte array
-        byte[] actual = ByteArray.fromHexString(hexString);
-
-        // Then
-        // No error should occur
-        assertArrayEquals(data, actual);
     }
 
     /**
@@ -89,12 +69,12 @@ public class ByteArrayTest {
 
         // When
         // We convert to hex and back again
-        String base64String = ByteArray.toBase64String(data);
-        byte[] backAgain = ByteArray.fromBase64String(base64String);
+        String base64 = ByteArray.toBase64String(data);
+        byte[] backAgain = ByteArray.fromBase64String(base64);
 
         // Then
         // The end result should match the input
-        assertTrue(Arrays.equals(data, backAgain));
+        assertArrayEquals(data, backAgain);
     }
 
     /**

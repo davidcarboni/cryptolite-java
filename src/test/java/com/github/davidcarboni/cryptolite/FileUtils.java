@@ -32,12 +32,35 @@ class FileUtils {
         // Create a temp file:
         Path file = Files.createTempFile(FileUtils.class.getSimpleName(), "testFile");
 
-        try (InputStream input = Random.inputStream(filesize); OutputStream output = Files.newOutputStream(file)) {
+        try (InputStream input = inputStream(filesize); OutputStream output = Files.newOutputStream(file)) {
             IOUtils.copy(input, output);
         }
 
         // Return the file:
         return file;
+    }
+
+    /**
+     * Convenience method to instantiate an {@link InputStream} of random data of the specified
+     * length.
+     *
+     * @param length The length of the stream.
+     * @return An {@link InputStream} which will provide the specified number of random bytes.
+     */
+    public static InputStream inputStream(final long length) {
+        return new InputStream() {
+            int count;
+
+            @Override
+            public int read() throws IOException {
+                if (count++ < length) {
+                    return ((int) Random.byteArray(1)[0]) & 0xff;
+                    // For Java 8: return Byte.toUnsignedInt(bytes(1)[0]);
+                } else {
+                    return -1;
+                }
+            }
+        };
     }
 
     /**

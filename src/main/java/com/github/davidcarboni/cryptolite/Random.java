@@ -9,20 +9,19 @@ import java.security.SecureRandom;
 
 /**
  * This class provides random functions, such as Salt, token and password
- * generation. It also allows you to get a singleton {@link SecureRandom}
- * instance.
+ * generation.
  *
  * @author David Carboni
  */
 public class Random {
 
     /**
-     * The length of tokens.
+     * The length for tokens.
      */
     public static final int TOKEN_BITS = 256;
 
     /**
-     * The length of salt values.
+     * The length for salt values.
      */
     public static final int SALT_BYTES = 16;
 
@@ -49,6 +48,9 @@ public class Random {
     private static SecureRandom secureRandom;
 
     /**
+     * This method is protected so that, if you need to get a {@link SecureRandom} instance,
+     * you can create a subclass that exposes it.
+     *
      * @return A lazily-instantiated, cached {@link SecureRandom} instance for
      * the algorithm {@value #ALGORITHM}. This is a global instance and
      * is thread-safe. The only consideration is whether thread
@@ -56,7 +58,7 @@ public class Random {
      * http://stackoverflow.com/questions
      * /1461568/is-securerandom-thread-safe for more details.
      */
-    public static SecureRandom getInstance() {
+    protected static SecureRandom getInstance() {
 
         // Create if necessary:
         if (secureRandom == null) {
@@ -92,29 +94,6 @@ public class Random {
     }
 
     /**
-     * Convenience method to instantiate an {@link InputStream} of random data of the specified
-     * length.
-     *
-     * @param length The length of the stream.
-     * @return An {@link InputStream} which will provide the specified number of random bytes.
-     */
-    public static InputStream inputStream(final long length) {
-        return new InputStream() {
-            int count;
-
-            @Override
-            public int read() throws IOException {
-                if (count++ < length) {
-                    return ((int) byteArray(1)[0]) & 0xff;
-                    // For Java 8: return Byte.toUnsignedInt(bytes(1)[0]);
-                } else {
-                    return -1;
-                }
-            }
-        };
-    }
-
-    /**
      * Generates a random token.
      *
      * @return A 256-bit (32 byte) random token as a hexadecimal string.
@@ -125,7 +104,7 @@ public class Random {
     }
 
     /**
-     * Generate a random password.
+     * Generates a random password.
      * <p>
      * This method no longer uses Apache
      * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}

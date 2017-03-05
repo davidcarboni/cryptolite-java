@@ -26,6 +26,13 @@ import java.io.UnsupportedEncodingException;
  * hexadecimal to byte array is occasionally useful, but chances are you'll use
  * <code>byte[]</code> to hex most of the time.</li>
  * </ul>
+ * <p>
+ * The naming convention for methods is set up from the point of a byte array.
+ * For example, a byte array can go:
+ * {@code to_hex_string}
+ * and back:
+ * {@code from_hex_string}
+ * The same pattern is used for each pair of methods (hex, base64 and string).
  *
  * @author David Carboni
  */
@@ -43,14 +50,14 @@ public class ByteArray {
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Hex#encodeHexString(byte[])}.
      *
-     * @param byteArray The byte array to be rendered.
+     * @param bytes The byte array to be rendered.
      * @return A hex string representation of the byte array.
      */
-    public static String toHexString(byte[] byteArray) {
+    public static String toHexString(byte[] bytes) {
 
         String result = null;
-        if (byteArray != null) {
-            result = Hex.encodeHexString(byteArray);
+        if (bytes != null) {
+            result = Hex.encodeHexString(bytes);
         }
         return result;
     }
@@ -70,15 +77,11 @@ public class ByteArray {
     public static byte[] fromHexString(String hex) {
         byte[] result = null;
         if (hex != null) {
-            String data = hex;
-            if (hex.length() > 1 && (hex.charAt(1) == 'x' || hex.charAt(1) == 'X')) {
-                data = hex.substring(2);
-            }
-            int len = data.length();
+            int len = hex.length();
             result = new byte[len / 2];
             for (int i = 0; i < len; i += 2) {
-                result[i / 2] = (byte) ((Character.digit(data.charAt(i), 16) << 4) + Character
-                        .digit(data.charAt(i + 1), 16));
+                result[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character
+                        .digit(hex.charAt(i + 1), 16));
             }
         }
         return result;
@@ -90,14 +93,14 @@ public class ByteArray {
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Base64#encodeBase64String(byte[])}.
      *
-     * @param byteArray The byte array to be encoded.
+     * @param bytes The byte array to be encoded.
      * @return The byte array encoded using base-64.
      */
-    public static String toBase64String(byte[] byteArray) {
+    public static String toBase64String(byte[] bytes) {
 
         String result = null;
-        if (byteArray != null) {
-            result = Base64.encodeBase64String(byteArray);
+        if (bytes != null) {
+            result = Base64.encodeBase64String(bytes);
         }
         return result;
     }
@@ -118,38 +121,38 @@ public class ByteArray {
     }
 
     /**
-     * Converts the given String to a byte array using {@value #ENCODING}.
+     * Converts the given byte array to a String using {@value #ENCODING}.
      *
-     * @param string The String to be converted to a byte array.
-     * @return A byte array representing the String.
+     * @param bytes The byte array to be converted to a String.
+     * @return The String represented by the given bytes.
      */
-    public static byte[] fromString(String string) {
+    public static String toString(byte[] bytes) {
 
-        byte[] result = null;
-        if (string != null) {
+        String result = null;
+        if (bytes != null) {
             try {
-                result = string.getBytes(ENCODING);
+                result = new String(bytes, ENCODING);
             } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Error converting String to byte array using encoding " + ENCODING);
+                throw new IllegalArgumentException("Error converting byte array to String using encoding " + ENCODING);
             }
         }
         return result;
     }
 
     /**
-     * Converts the given byte array to a String using {@value #ENCODING}.
+     * Converts the given String to a byte array using {@value #ENCODING}.
      *
-     * @param byteArray The byte array to be converted to a String.
-     * @return The String represented by the given bytes.
+     * @param unicode The String to be converted to a byte array.
+     * @return A byte array representing the String.
      */
-    public static String toString(byte[] byteArray) {
+    public static byte[] fromString(String unicode) {
 
-        String result = null;
-        if (byteArray != null) {
+        byte[] result = null;
+        if (unicode != null) {
             try {
-                result = new String(byteArray, ENCODING);
+                result = unicode.getBytes(ENCODING);
             } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Error converting byte array to String using encoding " + ENCODING);
+                throw new IllegalArgumentException("Error converting String to byte array using encoding " + ENCODING);
             }
         }
         return result;
