@@ -1,7 +1,9 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -13,38 +15,30 @@ import static org.junit.Assert.*;
  */
 public class ByteArrayTest {
 
-    /**
-     * Verifies that a byte array can be corectly converted to a hex String
-     */
-    @Test
-    public void shouldConventBytesToHexString() {
+    static byte[] data;
 
-        // Given
-        final byte[] bytes = new byte[]{0x00, (byte) 0xff, 0x10, 0x08};
-        String expected = "00" + "ff" + "10" + "08";
-
-        // When
-        String actual = ByteArray.toHexString(bytes);
-
-        // Then
-        assertEquals(expected, actual);
+    @BeforeClass
+    public static void setup() throws UnsupportedEncodingException {
+        data = "Mary had a little Café".getBytes("UTF8");
     }
 
     /**
-     * Verifies that a hex String can be correctly converted to bytes.
+     * Verifies a byte array can be correctly converted to a hex String and back again.
      */
     @Test
-    public void shouldConvertHexStringToBytes() {
+    public void testHex() {
 
         // Given
-        final byte[] expected = new byte[]{0x00, (byte) 0xff, 0x10, 0x08};
-        String hexString = "00" + "ff" + "10" + "08";
+        // The byte array from setup
 
         // When
-        byte[] actual = ByteArray.fromHexString(hexString);
+        // We convert to hex and back again
+        String hexString = ByteArray.toHexString(data);
+        byte[] backAgain = ByteArray.fromHexString(hexString);
 
         // Then
-        assertTrue(Arrays.equals(expected, actual));
+        // The end result should match the input
+        assertArrayEquals(data, backAgain);
     }
 
     /**
@@ -52,121 +46,108 @@ public class ByteArrayTest {
      * bytes.
      */
     @Test
-    public void shouldConvertHexStringWithPrefixToBytes() {
+    public void testHexPrefix() {
 
         // Given
-        final byte[] expected = new byte[]{0x00, (byte) 0xff, 0x10, 0x08};
-        String hexString = "0x" + "00" + "ff" + "10" + "08";
+        // A hex string with a 0x prefix
+        String hexString = "0x" + ByteArray.toHexString(data);
 
         // When
+        // We attempt to convert to a byte array
         byte[] actual = ByteArray.fromHexString(hexString);
 
         // Then
-        assertTrue(Arrays.equals(expected, actual));
+        // No error should occur
+        assertArrayEquals(data, actual);
     }
 
     /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#toHexString(byte[])}
-     * where the parameter is null.
+     * Verifies that null is gracefully handled.
      */
     @Test
-    public void testToHexStringNull() {
-
-        // Given
-        byte[] bytes = null;
+    public void testHexNull() {
 
         // When
-        String string = ByteArray.toHexString(bytes);
+        // We attempt conversion
+        String s = ByteArray.toHexString(null);
+        byte[] b = ByteArray.fromHexString(null);
 
         // Then
-        assertNull(string);
+        // No error should occur and we should have null results
+        assertNull(s);
+        assertNull(b);
     }
 
     /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#toBase64String(byte[])}
-     * and
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#fromBase64String(String)}
-     * .
+     * Verifies a byte array can be correctly converted to base64 and back again.
      */
     @Test
-    public void testBase64String() {
+    public void testBase64() {
 
         // Given
-        final int size = 125;
-        byte[] byteArray = Random.bytes(size);
+        // The byte array from setup
 
         // When
-        String toBase64 = ByteArray.toBase64String(byteArray);
-        byte[] fromBase64 = ByteArray.fromBase64String(toBase64);
+        // We convert to hex and back again
+        String base64String = ByteArray.toBase64String(data);
+        byte[] backAgain = ByteArray.fromBase64String(base64String);
 
         // Then
-        assertTrue(Arrays.equals(byteArray, fromBase64));
+        // The end result should match the input
+        assertTrue(Arrays.equals(data, backAgain));
     }
 
     /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#toBase64String(byte[])}
-     * and
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#fromBase64String(String)}
-     * where the parameter is null.
+     * Verifies that null is gracefully handled.
      */
     @Test
-    public void testBase64StringNull() {
-
-        // Given
-        byte[] bytes = null;
-        String string = null;
+    public void testBase64Null() {
 
         // When
-        String toBase64 = ByteArray.toBase64String(bytes);
-        byte[] fromBase64 = ByteArray.fromBase64String(string);
+        // We attempt conversion
+        String s = ByteArray.toBase64String(null);
+        byte[] b = ByteArray.fromBase64String(null);
 
         // Then
-        assertNull(toBase64);
-        assertNull(fromBase64);
+        // No error should occur and we should have null results
+        assertNull(s);
+        assertNull(b);
     }
 
     /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#fromString(String)} and
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#toString(byte[])}.
+     * Verifies a byte array can be correctly converted to a string and back again.
      */
     @Test
-    public void testByteArray() {
+    public void testString() {
 
         // Given
-        String string = "£The quick brown & fox jumpéd over the Lazy dog.";
+        // The byte array from setup
 
         // When
-        byte[] toByteArray = ByteArray.fromString(string);
-        String fromByteArray = ByteArray.toString(toByteArray);
+        // We convert to string and back again
+        String string = ByteArray.toString(data);
+        byte[] backAgain = ByteArray.fromString(string);
 
         // Then
-        assertEquals(string, fromByteArray);
+        // The end result should match the input
+        assertArrayEquals(data, backAgain);
     }
 
     /**
-     * Test method for
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#fromString(String)} and
-     * {@link com.github.davidcarboni.cryptolite.ByteArray#toString(byte[])}
-     * where the parameter is null.
+     * Verifies that null is gracefully handled.
      */
     @Test
-    public void testByteArrayNull() {
-
-        // Given
-        String string = null;
-        byte[] bytes = null;
+    public void testStringNull() {
 
         // When
-        byte[] toByteArray = ByteArray.fromString(string);
-        String fromByteArray = ByteArray.toString(bytes);
+        // We attempt conversion
+        String s = ByteArray.toString(null);
+        byte[] b = ByteArray.fromString(null);
 
         // Then
-        assertNull(toByteArray);
-        assertNull(fromByteArray);
+        // No error should occur and we should have null results
+        assertNull(s);
+        assertNull(b);
     }
 
 }

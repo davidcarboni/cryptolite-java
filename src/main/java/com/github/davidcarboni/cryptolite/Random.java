@@ -85,7 +85,7 @@ public class Random {
      * @param length The length of the array.
      * @return {@link SecureRandom#nextBytes(byte[])}
      */
-    public static byte[] bytes(int length) {
+    public static byte[] byteArray(int length) {
         byte[] bytes = new byte[length];
         getInstance().nextBytes(bytes);
         return bytes;
@@ -96,7 +96,7 @@ public class Random {
      * length.
      *
      * @param length The length of the stream.
-     * @return {@link SecureRandom#nextBytes(byte[])}
+     * @return An {@link InputStream} which will provide the specified number of random bytes.
      */
     public static InputStream inputStream(final long length) {
         return new InputStream() {
@@ -105,7 +105,7 @@ public class Random {
             @Override
             public int read() throws IOException {
                 if (count++ < length) {
-                    return ((int) bytes(1)[0]) & 0xff;
+                    return ((int) byteArray(1)[0]) & 0xff;
                     // For Java 8: return Byte.toUnsignedInt(bytes(1)[0]);
                 } else {
                     return -1;
@@ -118,7 +118,7 @@ public class Random {
      * @return A 256-bit (32 byte) random ID as a hexadecimal string.
      */
     public static String id() {
-        byte[] idBytes = bytes(idLengthBytes);
+        byte[] idBytes = byteArray(idLengthBytes);
         return ByteArray.toHexString(idBytes);
     }
 
@@ -142,7 +142,7 @@ public class Random {
         StringBuilder result = new StringBuilder();
 
         while (result.length() < length) {
-            byte[] buffer = bytes(length);
+            byte[] buffer = byteArray(length);
             int i = 0;
             do {
                 // There are 62 possible password characters,
@@ -167,7 +167,7 @@ public class Random {
      * string (for easy storage).
      */
     public static String salt() {
-        byte[] salt = bytes(SALT_BYTES);
+        byte[] salt = byteArray(SALT_BYTES);
         return ByteArray.toBase64String(salt);
     }
 }
