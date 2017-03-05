@@ -40,7 +40,7 @@ public class Random {
 
     /**
      * Lazily-instantiated, cached {@link SecureRandom} instance.
-     *
+     * <p>
      * SecureRandom is thread-safe: <a href=
      * "http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe"
      * >http
@@ -125,20 +125,19 @@ public class Random {
     }
 
     /**
-     * Convenience method to generate a random password.
-     *
+     * Generate a random password.
+     * <p>
      * This method no longer uses Apache
      * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}
      * , because the implementation of that method calls
      * {@link java.util.Random#nextInt()}, which is not overridden by the
      * {@link SecureRandom} returned by {@link #getInstance()}.
-     *
+     * <p>
      * That means passwords wouldn't be generated using cryptographically strong
      * pseudo random numbers, despite passing a {@link SecureRandom}.
      *
      * @param length The length of the password to be returned.
-     * @return A String of the specified length, composed of uppercase letters,
-     * lowercase letters and numbers.
+     * @return A password of the specified length, selected from {@link #passwordCharacters}.
      */
     public static String password(int length) {
         StringBuilder result = new StringBuilder();
@@ -161,11 +160,13 @@ public class Random {
     }
 
     /**
-     * Generates a random salt value. If a salt value is needed by an API call,
-     * the JavaDoc of that method should reference this method. Other than than,
+     * Generates a random salt value.
+     * <p>
+     * If a salt value is needed by an API call,
+     * the documentation of that method should reference this method. Other than than,
      * it should not be necessary to call this in normal usage of this library.
      *
-     * @return A {@value #SALT_BYTES}-byte random salt value as a base64-encoded
+     * @return A random salt value of SALT_BYTES length, as a base64-encoded
      * string (for easy storage).
      */
     public static String salt() {
