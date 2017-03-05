@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * This class provides random functions, such as Salt, ID and password
+ * This class provides random functions, such as Salt, token and password
  * generation. It also allows you to get a singleton {@link SecureRandom}
  * instance.
  *
@@ -17,23 +17,23 @@ import java.security.SecureRandom;
 public class Random {
 
     /**
-     * The length of IDs: {@value #ID_BITS}.
+     * The length of tokens.
      */
-    public static final int ID_BITS = 256;
+    public static final int TOKEN_BITS = 256;
 
     /**
-     * The algorithm for the {@link SecureRandom} instance: {@value #ALGORITHM}.
-     */
-    public static final String ALGORITHM = "SHA1PRNG";
-
-    /**
-     * The length of salt values: {@value #SALT_BYTES}.
+     * The length of salt values.
      */
     public static final int SALT_BYTES = 16;
 
-    // Work out the right number of bytes for random IDs:
+    /**
+     * The algorithm for the {@link SecureRandom} instance.
+     */
+    public static final String ALGORITHM = "SHA1PRNG";
+
+    // Work out the right number of bytes for random tokens:
     private static final int bitsInAByte = 8;
-    private static final int idLengthBytes = ID_BITS / bitsInAByte;
+    private static final int tokenLengthBytes = TOKEN_BITS / bitsInAByte;
 
     // Characters for pasword generation:
     private static final String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -115,11 +115,13 @@ public class Random {
     }
 
     /**
-     * @return A 256-bit (32 byte) random ID as a hexadecimal string.
+     * Generates a random token.
+     *
+     * @return A 256-bit (32 byte) random token as a hexadecimal string.
      */
     public static String token() {
-        byte[] idBytes = byteArray(idLengthBytes);
-        return ByteArray.toHexString(idBytes);
+        byte[] tokenBytes = byteArray(tokenLengthBytes);
+        return ByteArray.toHexString(tokenBytes);
     }
 
     /**
