@@ -20,8 +20,8 @@ public class RandomTest {
     /**
      * Clears the cached instance.
      *
-     * @throws NoSuchFieldException   {@link NoSuchFieldException}
-     * @throws IllegalAccessException {@link IllegalAccessException}
+     * @throws NoSuchFieldException   {@link NoSuchFieldException}.
+     * @throws IllegalAccessException {@link IllegalAccessException}.
      */
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -51,49 +51,61 @@ public class RandomTest {
     }
 
     /**
-     * Test method for {@link com.github.davidcarboni.cryptolite.Random#id()}. This checks that the
-     * number of bits in the returned ID is the same as specified by {@link Random#ID_BITS}.
+     * Checks that generating a random byte array returns the expected number of bytes.
      */
     @Test
-    public void shouldGenerateIdOfExpectedLength() {
+    public void testByteArray() {
 
         // Given
-        String id;
-        // The number of bits expected in the random ID:
-        final int bits = Random.ID_BITS;
-        // The number of bits in a byte:
-        final int byteSize = 8;
-        // The number of characters needed in a hex string to represent a byte:
-        final int hexSize = 2;
-        final int stringLength = (bits / byteSize) * hexSize;
+        int length = 20;
 
         // When
-        id = Random.token();
+        byte[] data = Random.byteArray(length);
 
         // Then
-        assertEquals(stringLength, id.length());
+        assertEquals(length, data.length);
     }
 
     /**
-     * Test method for {@link com.github.davidcarboni.cryptolite.Random#salt()}. This checks that the
-     * number of bytes in the returned salt value matches the length specified in
+     * Checks that the number of bits in the returned ID is the same as specified by {@link Random#TOKEN_BITS}.
+     */
+    @Test
+    public void testTokenLength() {
+
+        // When
+        // We generate a token
+        String token = Random.token();
+
+        // Then
+        // It should be of the expected length
+        byte[] tokenBytes = ByteArray.fromHexString(token);
+        assertEquals(Random.TOKEN_BITS, tokenBytes.length * 8);
+    }
+
+    /**
+     * Checks that the number of bytes in a returned salt value matches the length specified in
      * {@link Random#SALT_BYTES}.
      */
     @Test
-    public void shouldGenerateSaltOfExpectedLength() {
-
-        // Given
-        String salt;
+    public void testSaltLength() {
 
         // When
-        salt = Random.salt();
+        // We generate a salt
+        String salt = Random.salt();
 
         // Then
-        assertEquals(Random.SALT_BYTES, ByteArray.fromBase64String(salt).length);
+        // It should be of the expected length
+        byte[] salt_bytes = ByteArray.fromBase64String(salt);
+        assertEquals(Random.SALT_BYTES, salt_bytes.length);
     }
 
+    /**
+     * Verifies that a random input stream provides the expected amout of input.
+     *
+     * @throws IOException .
+     */
     @Test
-    public void shouldGenerateRandomInputStream() throws IOException {
+    public void testInputStream() throws IOException {
 
         // Given
         int length = 1025;
@@ -110,93 +122,83 @@ public class RandomTest {
     }
 
     /**
-     * Test method for {@link com.github.davidcarboni.cryptolite.Random#password(int)}. This checks
-     * that the number of characters in the returned password matches the specified length of the
-     * password.
+     * Checks the number of characters in the returned password matches the specified length of the password.
      */
     @Test
-    public void shouldGeneratePasswordOfSpecifiedLength() {
+    public void testPasswordLength() {
 
         // Given
         String password;
-        final int maxSize = 100;
+        final int maxLength = 100;
 
-        for (int i = 1; i < maxSize; i++) {
+        for (int length = 1; length < maxLength; length++) {
+
             // When
-            password = Random.password(i);
+            password = Random.password(length);
 
             // Then
-            assertEquals(i, password.length());
+            assertEquals(length, password.length());
         }
     }
 
     /**
-     * Test the general randomness of ID generation. If this test fails, consider yourself
-     * astoundingly lucky.. or check the code is really producing random numbers.
+     * Test the general randomness of token generation.
+     * <p>
+     * If this test fails, consider yourself astoundingly lucky.. or check the code is really producing random numbers.
      */
     @Test
-    public void testRandomnessId() {
+    public void testRandomnessOfTokens() {
 
         final int iterations = 1000;
         for (int i = 0; i < iterations; i++) {
 
-            // Given
-            String id1;
-            String id2;
-
             // When
-            id1 = Random.token();
-            id2 = Random.token();
+            String id1 = Random.token();
+            String id2 = Random.token();
 
             // Then
-            assertFalse(id1.equals(id2));
+            assertNotEquals(id1, id2);
         }
     }
 
     /**
-     * Test the general randomness of salt generation. If this test fails, consider yourself
-     * astoundingly lucky.. or check the code is really producing random numbers.
+     * Test the general randomness of salt generation.
+     * <p>
+     * If this test fails, consider yourself astoundingly lucky.. or check the code is really producing random numbers.
      */
     @Test
-    public void testRandomnessSalt() {
+    public void testRandomnessOfSalt() {
 
         final int iterations = 1000;
         for (int i = 0; i < iterations; i++) {
 
-            // Given
-            String salt1;
-            String salt2;
-
             // When
-            salt1 = Random.salt();
-            salt2 = Random.salt();
+            String salt1 = Random.salt();
+            String salt2 = Random.salt();
 
             // Then
-            assertFalse(salt1.equals(salt2));
+            assertNotEquals(salt1, salt2);
         }
     }
 
     /**
-     * Test the general randomness of password generation. If this test fails, consider yourself
-     * astoundingly lucky.. or check the code is really producing random numbers.
+     * Test the general randomness of password generation.
+     * <p>
+     * If this test fails, consider yourself astoundingly lucky.. or check the code is really producing random numbers.
      */
     @Test
-    public void shouldProduceRandomPasswords() {
+    public void testRandomnessOfPasswords() {
 
         final int iterations = 1000;
         final int passwordSize = 8;
         for (int i = 0; i < iterations; i++) {
 
-            // Given
-            String password1;
-            String password2;
-
             // When
-            password1 = Random.password(passwordSize);
-            password2 = Random.password(passwordSize);
+            String password1 = Random.password(passwordSize);
+            String password2 = Random.password(passwordSize);
 
             // Then
-            assertFalse(password1.equals(password2));
+            assertNotEquals(password1, password2);
         }
     }
 
