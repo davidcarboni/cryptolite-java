@@ -665,7 +665,7 @@ public class Crypto {
      * given {@link Cipher}, containing random bytes.
      */
     byte[] generateInitialisationVector() {
-        byte[] bytes = Random.bytes(getIvSize());
+        byte[] bytes = Random.byteArray(getIvSize());
         return bytes;
     }
 
