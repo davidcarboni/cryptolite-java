@@ -96,7 +96,7 @@ func TestRandomnessOfTokens(t *testing.T) {
 		token2 := random.Token()
 
 		// Then
-		if token1 != token2 {
+		if token1 == token2 {
 			t.Error("Got identical tokens.")
 		}
 	}
@@ -114,7 +114,7 @@ func TestRandomnessOfSalt(t *testing.T) {
 		salt2 := random.Salt()
 
 		// Then
-		if salt1 != salt2 {
+		if salt1 == salt2 {
 			t.Error("Got identical salts.")
 		}
 	}
@@ -133,7 +133,7 @@ func TestRandomnessOfPasswords(t *testing.T) {
 		password2 := random.Password(passwordSize)
 
 		// Then
-		if password1 != password2 {
+		if password1 == password2 {
 			t.Error("Got identical passwords.")
 		}
 	}
