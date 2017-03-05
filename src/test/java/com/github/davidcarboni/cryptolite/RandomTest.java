@@ -68,7 +68,7 @@ public class RandomTest {
         final int stringLength = (bits / byteSize) * hexSize;
 
         // When
-        id = Random.id();
+        id = Random.token();
 
         // Then
         assertEquals(stringLength, id.length());
@@ -145,8 +145,8 @@ public class RandomTest {
             String id2;
 
             // When
-            id1 = Random.id();
-            id2 = Random.id();
+            id1 = Random.token();
+            id2 = Random.token();
 
             // Then
             assertFalse(id1.equals(id2));

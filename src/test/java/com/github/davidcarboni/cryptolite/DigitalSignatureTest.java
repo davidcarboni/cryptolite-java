@@ -68,7 +68,7 @@ public class DigitalSignatureTest {
     public void testSignStringPrivateKey() {
 
         // Given
-        String content = Random.id();
+        String content = Random.token();
         PrivateKey privateKey = keyPair.getPrivate();
 
         // When
@@ -88,7 +88,7 @@ public class DigitalSignatureTest {
     public void testSignStringPrivateKeyFail() {
 
         // Given
-        String content = Random.id();
+        String content = Random.token();
         String changedContent = content + "X";
         PrivateKey privateKey = keyPair.getPrivate();
 
@@ -204,7 +204,7 @@ public class DigitalSignatureTest {
     public void testVerifyStringPublicKeyString() {
 
         // Given
-        String content = Random.id();
+        String content = Random.token();
         PublicKey publicKey = keyPair.getPublic();
         String signature = digitalSignature.sign(content, keyPair.getPrivate());
 
@@ -225,7 +225,7 @@ public class DigitalSignatureTest {
     public void testVerifyStringPublicKeyStringFail() {
 
         // Given
-        String content = Random.id();
+        String content = Random.token();
         String changedContent = content + "X";
         PublicKey publicKey = keyPair.getPublic();
         String signature = digitalSignature.sign(content, keyPair.getPrivate());

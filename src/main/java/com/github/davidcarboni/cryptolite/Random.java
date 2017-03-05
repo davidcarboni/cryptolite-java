@@ -117,7 +117,7 @@ public class Random {
     /**
      * @return A 256-bit (32 byte) random ID as a hexadecimal string.
      */
-    public static String id() {
+    public static String token() {
         byte[] idBytes = byteArray(idLengthBytes);
         return ByteArray.toHexString(idBytes);
     }
