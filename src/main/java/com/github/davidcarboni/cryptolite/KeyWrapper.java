@@ -70,12 +70,6 @@ public class KeyWrapper implements Serializable {
     private static final String WRAP_ALGORITHM_ASYMMETRIC = "AES/ECB/PKCS7Padding";
 
     /**
-     * The number of iterations to perform when doing the password-based key
-     * derivation to generate the wrapping key: {@value #PBKD_ITERATIONS}.
-     */
-    public static final int PBKD_ITERATIONS = 1024;
-
-    /**
      * Start marker for encoding a public key
      */
     public static final String BEGIN = "-----BEGIN PUBLIC KEY-----";
@@ -218,6 +212,7 @@ public class KeyWrapper implements Serializable {
             base64 = StringUtils.substring(base64, beginIndex + BEGIN.length(), endIndex).trim();
         }
 
+        // Get a key factory
         byte[] bytes = ByteArray.fromBase64String(base64);
         KeyFactory keyFactory;
         try {
@@ -229,6 +224,8 @@ public class KeyWrapper implements Serializable {
                 throw new IllegalStateException("Algorithm unavailable: " + Keys.ASYMMETRIC_ALGORITHM, e);
             }
         }
+
+        // Decode the key
         try {
             return keyFactory.generatePublic(new X509EncodedKeySpec(bytes));
         } catch (InvalidKeySpecException e) {
