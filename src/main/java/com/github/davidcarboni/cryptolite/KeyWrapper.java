@@ -8,6 +8,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -156,8 +157,7 @@ public class KeyWrapper implements Serializable {
      */
     public static String encodePublicKey(PublicKey key) {
         byte[] bytes = key.getEncoded();
-        System.out.println("Encode: " + bytes.length + " bytes.");
-        return BEGIN + "\n" + org.apache.commons.codec.binary.StringUtils.newStringUtf8(Base64.encodeBase64Chunked(bytes)).trim() + "\n" + END;
+        return BEGIN + "\n" + new String(Base64.encodeBase64Chunked(bytes), StandardCharsets.UTF_8).trim() + "\n" + END;
     }
 
     /**
@@ -200,16 +200,35 @@ public class KeyWrapper implements Serializable {
      * @return The unwrapped {@link PublicKey}.
      */
     public static PublicKey decodePublicKey(String encodedKey) {
+        String base64 = encodedKey;
 
         // Strip begin and end markers if present.
         // Previous versions of Cryptolite did not add these markers.
-        String base64 = encodedKey;
         String BEGIN = "-----BEGIN PUBLIC KEY-----";
         String END = "-----END PUBLIC KEY-----";
         int beginIndex = StringUtils.indexOf(base64, BEGIN);
         int endIndex = StringUtils.indexOf(base64, END);
         if (beginIndex > -1 && endIndex > -1) {
             base64 = StringUtils.substring(base64, beginIndex + BEGIN.length(), endIndex).trim();
+        }
+
+        // Thinking about doing something for ssh public keys:
+        String openSshMarker = "ssh-rsa";
+        if (StringUtils.startsWith(base64, openSshMarker)) {
+
+            throw new RuntimeException("Cryptolite doesn't currently support OpenSSH key format. Feel free to open an issue if this is important to you.");
+            //Scanner scanner = new Scanner(base64);
+            //scanner.next(); // skip the marker
+            //base64 = scanner.next();
+            //System.out.println("base64 = " + base64);
+            //PemReader reader = new PemReader(new StringReader(base64));
+            //try {
+            //    PemObject pemObject = reader.readPemObject();
+            //    System.out.println("pemObject = " + pemObject);
+            //    return null; // We always seem to get null from the reader.
+            //} catch (IOException e) {
+            //    e.printStackTrace();
+            //}
         }
 
         // Get a key factory
