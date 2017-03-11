@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
  * <ul>
  * <li>Plain-text strings need to be converted to a byte array for encryption
  * and, after decryption, need to be converted from a byte array back to a
- * String. This is done using UTF-8 encoding.</li>
+ * String.</li>
  * <li>Encrypted byte arrays look like random bytes, which means they can't be
  * reliably represented as a String. The best way to represent arbitrary bytes
  * as a String is using Base-64. This class lets you convert a byte array of
