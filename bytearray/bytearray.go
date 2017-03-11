@@ -5,7 +5,7 @@
 //
 // - Plain-text strings need to be converted to a byte array for encryption
 //   and, after decryption, need to be converted from a byte array back to a
-//   String. This is done using {@value #ENCODING} encoding.
+//   String.
 // - Encrypted byte arrays look like random bytes, which means they can't be
 //   reliably represented as a String. The best way to represent arbitrary bytes
 //   as a String is using Base-64. This class lets you convert a byte array of
@@ -29,9 +29,6 @@ import (
 	b64 "encoding/base64"
 	h "encoding/hex"
 )
-
-// Encoding is used for string operations.
-var Encoding = "UTF8"
 
 // ToHexString renders the given byte array as a hex String.
 //
@@ -67,14 +64,14 @@ func FromBase64String(base64 string) ([]byte, error) {
 	return b64.StdEncoding.DecodeString(base64)
 }
 
-// ToString converts the given byte array to a String using :ENCODING:.
+// ToString converts the given byte array to a String.
 //
 // The bytes parameter is converted to the String represented by the given bytes.
 func ToString(bytes []byte) string {
 	return string(bytes)
 }
 
-// FromString converts the given String to a byte array using Encoding.
+// FromString converts the given String to a byte array.
 //
 // The string parameter is converted to a byte array.
 func FromString(unicode string) []byte {
