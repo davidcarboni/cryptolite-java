@@ -195,7 +195,7 @@ public class Crypto {
         }
 
         // Generate the encryption key:
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         SecretKey key = Keys.generateSecretKey(password, salt);
 
         // Convert the input Sting to a byte array:
@@ -325,15 +325,15 @@ public class Crypto {
         byte[] bytes = ByteArray.fromBase64String(encrypted);
 
         // Validate the size of the encrypted data:
-        if (bytes.length < Random.SALT_BYTES + getIvSize()) {
+        if (bytes.length < GenerateRandom.SALT_BYTES + getIvSize()) {
             throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
                     + ") is shorter than a salt plus initialisation vector value.");
         }
 
         // Separate the salt and initialisation vector from the data:
-        byte[] salt = ArrayUtils.subarray(bytes, 0, Random.SALT_BYTES);
-        byte[] iv = ArrayUtils.subarray(bytes, Random.SALT_BYTES, Random.SALT_BYTES + getIvSize());
-        byte[] data = ArrayUtils.subarray(bytes, Random.SALT_BYTES + getIvSize(), bytes.length);
+        byte[] salt = ArrayUtils.subarray(bytes, 0, GenerateRandom.SALT_BYTES);
+        byte[] iv = ArrayUtils.subarray(bytes, GenerateRandom.SALT_BYTES, GenerateRandom.SALT_BYTES + getIvSize());
+        byte[] data = ArrayUtils.subarray(bytes, GenerateRandom.SALT_BYTES + getIvSize(), bytes.length);
 
         // Generate the encryption key:
         SecretKey key = Keys.generateSecretKey(password, ByteArray.toBase64String(salt));
@@ -461,7 +461,7 @@ public class Crypto {
             return null;
         }
 
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         SecretKey key = Keys.generateSecretKey(password, salt);
 
         // Correct use is to store the IV unencrypted at the start of the
@@ -600,7 +600,7 @@ public class Crypto {
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
         // be done.
-        byte[] salt = new byte[Random.SALT_BYTES];
+        byte[] salt = new byte[GenerateRandom.SALT_BYTES];
 
         // The IV is stored unencrypted at the start of the stream:
         source.read(salt);
@@ -665,7 +665,7 @@ public class Crypto {
      * given {@link Cipher}, containing random bytes.
      */
     byte[] generateInitialisationVector() {
-        byte[] bytes = Random.byteArray(getIvSize());
+        byte[] bytes = GenerateRandom.byteArray(getIvSize());
         return bytes;
     }
 

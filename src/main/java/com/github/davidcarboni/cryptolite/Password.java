@@ -38,7 +38,7 @@ public class Password {
     /**
      * Produces a good hash of the given password, using {@value #ALGORITHM}, an
      * iteration count of {@value #ITERATION_COUNT} and a random salt value of
-     * {@value Random#SALT_BYTES} bytes. The returned value is a concatenation of the
+     * {@value GenerateRandom#SALT_BYTES} bytes. The returned value is a concatenation of the
      * salt value and the password hash and this should be passed as returned to
      * {@link #verify(String, String)} along with the plaintext password.
      *
@@ -53,7 +53,7 @@ public class Password {
         if (password != null) {
 
             // Generate a random salt:
-            String salt = Random.salt();
+            String salt = GenerateRandom.salt();
 
             // Hash the password:
             byte[] hash = hash(password, salt);
@@ -88,7 +88,7 @@ public class Password {
 
             // Check the size of the value to ensure it's at least as long as
             // the salt:
-            if (bytes.length >= Random.SALT_BYTES) {
+            if (bytes.length >= GenerateRandom.SALT_BYTES) {
 
                 // Extract the salt and password hash:
                 String salt = getSalt(bytes);
@@ -108,7 +108,7 @@ public class Password {
 
     /**
      * This method does the actual work of hashing a plaintext password string,
-     * using {@link Keys#generateSecretKey(char[], String, int)}.
+     * using {@link Keys#generateSecretKey(String, String)}.
      *
      * @param password The plaintext password.
      * @param salt     The salt value to use in the hash.
@@ -116,7 +116,7 @@ public class Password {
      */
     private static byte[] hash(String password, String salt) {
 
-        Key key = Keys.generateSecretKey(toCharArray(password), salt, HASH_SIZE);
+        Key key = Keys.generateSecretKey(password, salt);
         return key.getEncoded();
     }
 
@@ -125,7 +125,7 @@ public class Password {
      *
      * NB: an empty char array can cause errors when passed to
      * {@link javax.crypto.SecretKeyFactory#generateSecret(java.security.spec.KeySpec)}
-     * in {@link Keys#generateSecretKey(char[], String, int)}, so if the
+     * in {@link Keys#generateSecretKey(String, String)}, so if the
      * password is an empty String, the return value is a char array containing
      * a single element of value 0.
      *
@@ -145,11 +145,11 @@ public class Password {
      * Retrieves the salt from the given value.
      *
      * @param value The overall password hash value.
-     * @return The salt, which is the first {@value Random#SALT_BYTES} bytes of the
+     * @return The salt, which is the first {@value GenerateRandom#SALT_BYTES} bytes of the
      */
     private static String getSalt(byte[] value) {
 
-        byte[] salt = new byte[Random.SALT_BYTES];
+        byte[] salt = new byte[GenerateRandom.SALT_BYTES];
         System.arraycopy(value, 0, salt, 0, salt.length);
         return ByteArray.toBase64String(salt);
     }
@@ -158,12 +158,12 @@ public class Password {
      * Retrieves the hash from the given value.
      *
      * @param value The overall password hash value.
-     * @return The salt, which is the first {@value Random#SALT_BYTES} bytes of the
+     * @return The salt, which is the first {@value GenerateRandom#SALT_BYTES} bytes of the
      */
     private static byte[] getHash(byte[] value) {
 
-        byte[] hash = new byte[value.length - Random.SALT_BYTES];
-        System.arraycopy(value, Random.SALT_BYTES, hash, 0, hash.length);
+        byte[] hash = new byte[value.length - GenerateRandom.SALT_BYTES];
+        System.arraycopy(value, GenerateRandom.SALT_BYTES, hash, 0, hash.length);
         return hash;
     }
 

@@ -1,6 +1,5 @@
 package com.github.davidcarboni.cryptolite;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,7 +42,7 @@ public class KeyWrapperTest {
 
         // Given
         String password = "testKeyWrapperStringString";
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
 
         // When
         KeyWrapper keyWrapper = new KeyWrapper(password, salt);
@@ -81,7 +80,7 @@ public class KeyWrapperTest {
 
         // Given
         String password = "testWrapSecretKey";
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         SecretKey key = Keys.newSecretKey();
         KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
@@ -101,7 +100,7 @@ public class KeyWrapperTest {
 
         // Given
         String password = "testWrapPrivateKey";
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         PrivateKey key = keyPair.getPrivate();
         KeyWrapper keyWrapper = new KeyWrapper(password, salt);
 
@@ -138,7 +137,7 @@ public class KeyWrapperTest {
 
         // Given
         String password = "testUnwrapSecretKey";
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         SecretKey key = Keys.newSecretKey();
         KeyWrapper keyWrapper = new KeyWrapper(password, salt);
         String wrappedKey = keyWrapper.wrapSecretKey(key);
@@ -158,7 +157,7 @@ public class KeyWrapperTest {
 
         // Given
         String password = "testWrapPrivateKey";
-        String salt = Random.salt();
+        String salt = GenerateRandom.salt();
         PrivateKey key = keyPair.getPrivate();
         KeyWrapper keyWrapper = new KeyWrapper(password, salt);
         String wrappedKey = keyWrapper.wrapPrivateKey(key);

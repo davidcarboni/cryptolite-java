@@ -13,7 +13,7 @@ import java.security.SecureRandom;
  *
  * @author David Carboni
  */
-public class Random {
+public class GenerateRandom {
 
     /**
      * The length for tokens.

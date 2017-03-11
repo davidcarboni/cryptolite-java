@@ -24,8 +24,8 @@ public class HashMacTest {
     public void shouldDigest() {
 
         // Given
-        String key = Random.password(keyLength);
-        String message = Random.token();
+        String key = GenerateRandom.password(keyLength);
+        String message = GenerateRandom.token();
         HashMac hashMac = new HashMac(key);
 
         // When
@@ -44,8 +44,8 @@ public class HashMacTest {
     public void shouldVerifyWithStringKey() {
 
         // Given
-        String key = Random.password(keyLength);
-        String message = Random.token();
+        String key = GenerateRandom.password(keyLength);
+        String message = GenerateRandom.token();
         HashMac sender = new HashMac(key);
         HashMac recipient = new HashMac(key);
 
@@ -65,7 +65,7 @@ public class HashMacTest {
 
         // Given
         SecretKey key = Keys.newSecretKey();
-        String message = Random.token();
+        String message = GenerateRandom.token();
         HashMac sender = new HashMac(key);
         HashMac recipient = new HashMac(key);
 
