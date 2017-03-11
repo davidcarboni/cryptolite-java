@@ -3,7 +3,7 @@ package com.github.davidcarboni.cryptolite;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class provides the ability to convert Strings, Base-64 and hexadecimal
@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
  * <ul>
  * <li>Plain-text strings need to be converted to a byte array for encryption
  * and, after decryption, need to be converted from a byte array back to a
- * String. This is done using {@value #ENCODING} encoding.</li>
+ * String. This is done using UTF-8 encoding.</li>
  * <li>Encrypted byte arrays look like random bytes, which means they can't be
  * reliably represented as a String. The best way to represent arbitrary bytes
  * as a String is using Base-64. This class lets you convert a byte array of
@@ -37,11 +37,6 @@ import java.io.UnsupportedEncodingException;
  * @author David Carboni
  */
 public class ByteArray {
-
-    /**
-     * The encoding to use for string operations.
-     */
-    public static final String ENCODING = "UTF8";
 
     /**
      * Renders the given byte array as a hex String. This is a convenience
@@ -121,7 +116,7 @@ public class ByteArray {
     }
 
     /**
-     * Converts the given byte array to a String using {@value #ENCODING}.
+     * Converts the given byte array to a String.
      *
      * @param bytes The byte array to be converted to a String.
      * @return The String represented by the given bytes.
@@ -130,17 +125,13 @@ public class ByteArray {
 
         String result = null;
         if (bytes != null) {
-            try {
-                result = new String(bytes, ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Error converting byte array to String using encoding " + ENCODING);
-            }
+            result = new String(bytes, StandardCharsets.UTF_8);
         }
         return result;
     }
 
     /**
-     * Converts the given String to a byte array using {@value #ENCODING}.
+     * Converts the given String to a byte array.
      *
      * @param unicode The String to be converted to a byte array.
      * @return A byte array representing the String.
@@ -149,11 +140,7 @@ public class ByteArray {
 
         byte[] result = null;
         if (unicode != null) {
-            try {
-                result = unicode.getBytes(ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalArgumentException("Error converting String to byte array using encoding " + ENCODING);
-            }
+            result = unicode.getBytes(StandardCharsets.UTF_8);
         }
         return result;
     }

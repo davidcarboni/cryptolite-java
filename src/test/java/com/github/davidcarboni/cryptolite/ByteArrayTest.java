@@ -3,8 +3,7 @@ package com.github.davidcarboni.cryptolite;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
@@ -18,8 +17,8 @@ public class ByteArrayTest {
     static byte[] data;
 
     @BeforeClass
-    public static void setup() throws UnsupportedEncodingException {
-        data = "Mary had a little Café".getBytes("UTF8");
+    public static void setup() {
+        data = "Mary had a little Café".getBytes(StandardCharsets.UTF_8);
     }
 
     /**

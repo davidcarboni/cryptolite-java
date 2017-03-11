@@ -3,7 +3,7 @@ package com.github.davidcarboni.cryptolite;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 
 /**
@@ -53,14 +53,10 @@ public class DigitalSignature {
             return null;
         }
 
-        try {
-            byte[] bytes = content.getBytes(ByteArray.ENCODING);
-            InputStream input = new ByteArrayInputStream(bytes);
-            return sign(input, privateKey);
-            // ByteArrayInputStream does not need to be closed.
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Unable to get bytes from string as " + ByteArray.ENCODING, e);
-        }
+        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+        InputStream input = new ByteArrayInputStream(bytes);
+        return sign(input, privateKey);
+        // ByteArrayInputStream does not need to be closed.
     }
 
     /**
@@ -116,12 +112,7 @@ public class DigitalSignature {
      */
     public boolean verify(String content, PublicKey publicKey, String signature) {
 
-        byte[] bytes;
-        try {
-            bytes = content.getBytes(ByteArray.ENCODING);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("Unable to get bytes from string as " + ByteArray.ENCODING, e);
-        }
+        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
 
         InputStream input = new ByteArrayInputStream(bytes);
         return verify(input, publicKey, signature);
