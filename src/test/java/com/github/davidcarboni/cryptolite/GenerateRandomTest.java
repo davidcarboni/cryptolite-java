@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  *
  * @author David Carboni
  */
-public class RandomTest {
+public class GenerateRandomTest {
 
     /**
      * Checks that generating a random byte array returns the expected number of bytes.
