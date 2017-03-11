@@ -1,5 +1,6 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -19,13 +20,15 @@ import static org.junit.Assert.fail;
  */
 public class KeyWrapperTest {
 
-    private static KeyPair keyPair;
+    static KeyPair keyPair;
 
     /**
      * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
      */
     @BeforeClass
     public static void setUpBeforeClass() {
+        // Use standard keys to make sure tests run in any environment:
+        Keys.useStandardKeys();
         keyPair = Keys.newKeyPair();
     }
 

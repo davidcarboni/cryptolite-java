@@ -3,6 +3,8 @@ package com.github.davidcarboni.cryptolite;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.crypto.Cipher;
@@ -12,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.security.KeyPair;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
@@ -23,9 +26,23 @@ import static org.junit.Assert.*;
  */
 public class CryptoTest {
 
-    private static final Crypto crypto = new Crypto();
-    private static final SecretKey key = Keys.newSecretKey();
-    private static final String password = "password";
+    static final Crypto crypto = new Crypto();
+    SecretKey key;
+    static final String password = "password";
+
+    /**
+     * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        // Use standard keys to make sure tests run in any environment:
+        Keys.useStandardKeys();
+    }
+
+    @Before
+    public void setup() {
+        key = Keys.newSecretKey();
+    }
 
     /**
      * Takes a peek inside the {@link Crypto} instance to verify that the {@link Cipher} is indeed
