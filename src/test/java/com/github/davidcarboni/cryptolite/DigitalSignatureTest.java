@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
  */
 public class DigitalSignatureTest {
 
-    private DigitalSignature digitalSignature;
-    private static KeyPair keyPair;
+    DigitalSignature digitalSignature;
+    static KeyPair keyPair;
 
     /**
      * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.

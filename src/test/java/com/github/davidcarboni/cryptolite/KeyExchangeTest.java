@@ -19,8 +19,9 @@ import static org.junit.Assert.assertTrue;
  * @author David Carboni
  */
 public class KeyExchangeTest {
-    private KeyExchange keyExchange = new KeyExchange();
-    private static KeyPair keyPair;
+
+    KeyExchange keyExchange = new KeyExchange();
+    static KeyPair keyPair;
 
     /**
      * Generates a {@link KeyPair} and instantiates a {@link DigitalSignature}.

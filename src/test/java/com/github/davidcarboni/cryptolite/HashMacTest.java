@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class HashMacTest {
 
-    private static final int keyLength = 8;
+    static final int keyLength = 8;
 
     /**
      * Basic check to ensure it's actually doing something.
