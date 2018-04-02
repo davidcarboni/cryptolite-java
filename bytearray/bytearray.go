@@ -1,33 +1,36 @@
-// Package Cryptolite provides the ability to convert Strings, Base-64 and hexadecimal to a byte array and vice versa.
+//Package bytearray provides the ability to convert byte arrays to
+// Strings, Base-64 and hexadecimal and vice-versa.
 //
 // Cryptography is mainly about manipulating byte arrays, so this package provides
-// the translations you need:
+// the different translations you need:
 //
 // - Plain-text strings need to be converted to a byte array for encryption
-//   and, after decryption, need to be converted from a byte array back to a
-//   String.
-// - Encrypted byte arrays look like random bytes, which means they can't be
-//   reliably represented as a String. The best way to represent arbitrary bytes
-//   as a String is using Base-64. This class lets you convert a byte array of
-//   encrypted data to Base-64 so it can be easily stored and back again so it can
-//   be decrypted
-// - Finally, this class also allows you to transform a byte array to a
-//   hexadecimal String and back again. This is most useful in development when
-//   you need to print out values to see what's going on. Conversion from
-//   hexadecimal to byte array is occasionally useful, but chances are you'll use
-//   byte[] to hex most of the time.
+// and, after decryption, need to be converted from a byte array back to a
+// String.
 //
-// The naming convention for functions is set up from the point of a byte array.
-// For example, a byte array can go:
-//  to_hex_string
+// - Encrypted byte arrays look like random bytes, which means they can't be
+// reliably represented as a String. The simplest way to represent arbitrary bytes
+// as a String is using Base-64. This class lets you convert a byte array of
+// encrypted data to Base-64 so it can be easily stored and back again so it can
+// be decrypted.
+//
+// - Finally, this class also allows you to transform a byte array to a
+// hexadecimal String and back again. This is most useful in development when
+// you need to print out values to see what's going on. Conversion from
+// hexadecimal to byte array is occasionally useful, but chances are you'll use
+// byte[] to hex most of the time.
+//
+// The naming convention for functions is set up from the point of view of
+// a byte array. For example, a byte array can go:
+//  ToHexString
 // and back:
-//  from_hex_string
-// The same pattern is usef for each pair of methods (hex, base64 and string).
+//  FromHexString
+// The same pattern is usef for each pair of methods (to/from hex, base64 and string).
 package bytearray
 
 import (
 	b64 "encoding/base64"
-	h "encoding/hex"
+	hx "encoding/hex"
 )
 
 // ToHexString renders the given byte array as a hex String.
@@ -38,14 +41,14 @@ import (
 //
 // The bytes parameter is encoded as a hex string representation.
 func ToHexString(bytes []byte) string {
-	return h.EncodeToString(bytes)
+	return hx.EncodeToString(bytes)
 }
 
 // FromHexString converts the given hex string to a byte array.
 //
 // The hex parameter is parsed to bytes.
 func FromHexString(hex string) ([]byte, error) {
-	return h.DecodeString(hex)
+	return hx.DecodeString(hex)
 }
 
 // ToBase64String encodes the given byte array as a base-64 String.
