@@ -31,11 +31,11 @@ import java.nio.charset.StandardCharsets;
  * a byte array. For example, a byte array can go:
  *
  * <pre>{@code toHexString}</pre>
- *
+ * <p>
  * and back:
  *
  * <pre>{@code fromHexString}</pre>
- *
+ * <p>
  * The same pattern is used for each pair of methods (to/from hex, base64 and string).
  *
  * @author David Carboni
@@ -43,20 +43,21 @@ import java.nio.charset.StandardCharsets;
 public class ByteArray {
 
     /**
-     * Renders the given byte array as a hex String. This is a convenience
-     * method useful for checking values during development.
+     * Renders the given byte array as a hex String.
+     * <p>
+     * This is a convenience method useful for checking values during development.
      * <p>
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Hex#encodeHexString(byte[])}.
      *
-     * @param bytes The byte array to be rendered.
+     * @param byteArray The byte array to be rendered.
      * @return A hex string representation of the byte array.
      */
-    public static String toHexString(byte[] bytes) {
+    public static String toHexString(byte[] byteArray) {
 
         String result = null;
-        if (bytes != null) {
-            result = Hex.encodeHexString(bytes);
+        if (byteArray != null) {
+            result = Hex.encodeHexString(byteArray);
         }
         return result;
     }
@@ -92,14 +93,14 @@ public class ByteArray {
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Base64#encodeBase64String(byte[])}.
      *
-     * @param bytes The byte array to be encoded.
+     * @param byteArray The byte array to be encoded.
      * @return The byte array encoded using base-64.
      */
-    public static String toBase64String(byte[] bytes) {
+    public static String toBase64String(byte[] byteArray) {
 
         String result = null;
-        if (bytes != null) {
-            result = Base64.encodeBase64String(bytes);
+        if (byteArray != null) {
+            result = Base64.encodeBase64String(byteArray);
         }
         return result;
     }
@@ -122,14 +123,14 @@ public class ByteArray {
     /**
      * Converts the given byte array to a String.
      *
-     * @param bytes The byte array to be converted to a String.
+     * @param byteArray The byte array to be converted to a String.
      * @return The String represented by the given bytes.
      */
-    public static String toString(byte[] bytes) {
+    public static String toString(byte[] byteArray) {
 
         String result = null;
-        if (bytes != null) {
-            result = new String(bytes, StandardCharsets.UTF_8);
+        if (byteArray != null) {
+            result = new String(byteArray, StandardCharsets.UTF_8);
         }
         return result;
     }
