@@ -67,11 +67,6 @@ public class ByteArray {
      * Converts the given hex string to a byte array.
      * <p>
      * This is a convenience method useful for testing values during development.
-     * <p>
-     * With thanks to StackOverflow: <a href=
-     * "http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java"
-     * >Convert a string representation of a hex dump to a byte array using
-     * Java?</a>
      *
      * @param hex The hex String to parse to bytes.
      * @return A byte array, as parsed from the given String
@@ -80,6 +75,8 @@ public class ByteArray {
         byte[] result = null;
         if (hex != null) {
             try {
+                // With thanks to StackOverflow:
+                // http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java
                 result = Hex.decodeHex(hex.toCharArray());
             } catch (DecoderException e) {
                 throw new IllegalArgumentException("Could not parse this value as hex: " + hex);
