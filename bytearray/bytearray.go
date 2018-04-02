@@ -39,9 +39,12 @@ import (
 //
 // Internally, this checks for null and then calls hex.EncodeToString.
 //
-// The bytes parameter is encoded as a hex string representation.
-func ToHexString(bytes []byte) string {
-	return hx.EncodeToString(bytes)
+//   The byteArray parameter : The byte array to be encoded.
+//   :return: A hex string representation of the byte array.
+//
+// The byteArray parameter is encoded as a hex string representation.
+func ToHexString(byteArray []byte) string {
+	return hx.EncodeToString(byteArray)
 }
 
 // FromHexString converts the given hex string to a byte array.
