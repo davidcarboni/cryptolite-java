@@ -82,7 +82,7 @@ public class ByteArray {
             try {
                 result = Hex.decodeHex(hex.toCharArray());
             } catch (DecoderException e) {
-                throw new IllegalArgumentException("Could not parse this value as hex: " + hex)
+                throw new IllegalArgumentException("Could not parse this value as hex: " + hex);
             }
         }
         return result;
