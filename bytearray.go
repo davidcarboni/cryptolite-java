@@ -26,7 +26,7 @@
 // and back:
 //  FromHexString
 // The same pattern is usef for each pair of methods (to/from hex, base64 and string).
-package bytearray
+package cryptolite
 
 import (
 	b64 "encoding/base64"

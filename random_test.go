@@ -1,11 +1,8 @@
-package test
+package cryptolite
 
 import (
 	"regexp"
 	"testing"
-
-	"github.com/davidcarboni/cryptolite/bytearray"
-	"github.com/davidcarboni/cryptolite/random"
 )
 
 // Checks that generating a random byte array returns the expected number of bytes.
@@ -16,7 +13,7 @@ func TestByteArray(t *testing.T) {
 
 	// When
 	// Some random bytes
-	randomBytes := random.ByteArray(length)
+	randomBytes := ByteArray(length)
 
 	// Then
 	// Check we got what we expected
@@ -25,38 +22,38 @@ func TestByteArray(t *testing.T) {
 	}
 }
 
-// Checks that the number of bits in the returned ID is the same as specified by random.TokenBits.
+// Checks that the number of bits in the returned ID is the same as specified by TokenBits.
 func testTokenLength(t *testing.T) {
 
 	// When
 	// We generate a token
-	token := random.Token()
+	token := Token()
 
 	// Then
 	// It should be of the expected length
-	tokenBytes, err := bytearray.FromHexString(token)
+	tokenBytes, err := FromHexString(token)
 	if err != nil {
 		t.Error(err)
 	}
-	if random.TokenBits != len(tokenBytes)*8 {
+	if TokenBits != len(tokenBytes)*8 {
 		t.Error("Unexpected token bit-length")
 	}
 }
 
-// Checks that the number of bytes in a returned salt value matches the length specified in random.SaltBytes.
+// Checks that the number of bytes in a returned salt value matches the length specified in SaltBytes.
 func TestSaltLength(t *testing.T) {
 
 	// When
 	// We generate a salt
-	salt := random.Salt()
+	salt := Salt()
 
 	// Then
 	// It should be of the expected length
-	saltBytes, err := bytearray.FromBase64String(salt)
+	saltBytes, err := FromBase64String(salt)
 	if err != nil {
 		t.Error(err)
 	}
-	if random.SaltBytes != len(saltBytes) {
+	if SaltBytes != len(saltBytes) {
 		t.Error("Unexpected salt byte-length")
 	}
 }
@@ -71,7 +68,7 @@ func TestPassword(t *testing.T) {
 	for length := 1; length < maxLength; length++ {
 
 		// When
-		password = random.Password(length)
+		password = Password(length)
 
 		// Then
 		if length != len(password) {
@@ -92,8 +89,8 @@ func TestRandomnessOfTokens(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		token1 := random.Token()
-		token2 := random.Token()
+		token1 := Token()
+		token2 := Token()
 
 		// Then
 		if token1 == token2 {
@@ -110,8 +107,8 @@ func TestRandomnessOfSalt(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		salt1 := random.Salt()
-		salt2 := random.Salt()
+		salt1 := Salt()
+		salt2 := Salt()
 
 		// Then
 		if salt1 == salt2 {
@@ -129,8 +126,8 @@ func TestRandomnessOfPasswords(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		password1 := random.Password(passwordSize)
-		password2 := random.Password(passwordSize)
+		password1 := Password(passwordSize)
+		password2 := Password(passwordSize)
 
 		// Then
 		if password1 == password2 {
