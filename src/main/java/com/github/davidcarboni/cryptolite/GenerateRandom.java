@@ -31,8 +31,7 @@ public class GenerateRandom {
     public static final String ALGORITHM = "SHA1PRNG";
 
     // Work out the right number of bytes for random tokens:
-    private static final int bitsInAByte = 8;
-    private static final int tokenLengthBytes = TOKEN_BITS / bitsInAByte;
+    private static final int tokenLengthBytes = TOKEN_BITS / 8;
 
     // Characters for pasword generation:
     private static final String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
