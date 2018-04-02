@@ -47,9 +47,6 @@ public class ByteArray {
      * Renders the given byte array as a hex String.
      * <p>
      * This is a convenience method useful for testing values during development.
-     * <p>
-     * Internally, this checks for null and then calls the Apache commons-codec
-     * method {@link Hex#encodeHexString(byte[])}.
      *
      * @param byteArray The byte array to be rendered.
      * @return A hex string representation of the byte array.
