@@ -1,4 +1,4 @@
-package cryptolite
+package bytearray
 
 import (
 	"reflect"
