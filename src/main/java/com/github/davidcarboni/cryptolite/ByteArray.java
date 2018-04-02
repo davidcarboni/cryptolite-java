@@ -6,20 +6,20 @@ import org.apache.commons.codec.binary.Hex;
 import java.nio.charset.StandardCharsets;
 
 /**
- * This class provides the ability to convert Strings, Base-64 and hexadecimal
- * to a byte array and vice versa.
+ * The ByteArray class provides the ability to convert byte arrays to
+ * Strings, Base-64 and hexadecimal and vice versa.
  * <p>
  * Cryptography is mainly about manipulating byte arrays, so this class provides
- * the translations you need:
+ * the different translations you need:
  * <ul>
  * <li>Plain-text strings need to be converted to a byte array for encryption
  * and, after decryption, need to be converted from a byte array back to a
  * String.</li>
  * <li>Encrypted byte arrays look like random bytes, which means they can't be
- * reliably represented as a String. The best way to represent arbitrary bytes
+ * reliably represented as a String. The simplest way to represent arbitrary bytes
  * as a String is using Base-64. This class lets you convert a byte array of
  * encrypted data to Base-64 so it can be easily stored and back again so it can
- * be decrypted</li>
+ * be decrypted.</li>
  * <li>Finally, this class also allows you to transform a byte array to a
  * hexadecimal String and back again. This is most useful in development when
  * you need to print out values to see what's going on. Conversion from
@@ -27,12 +27,16 @@ import java.nio.charset.StandardCharsets;
  * <code>byte[]</code> to hex most of the time.</li>
  * </ul>
  * <p>
- * The naming convention for methods is set up from the point of a byte array.
- * For example, a byte array can go:
- * {@code to_hex_string}
+ * The naming convention for methods is set up from the point of view of
+ * a byte array. For example, a byte array can go:
+ *
+ * <pre>{@code toHexString}</pre>
+ *
  * and back:
- * {@code from_hex_string}
- * The same pattern is used for each pair of methods (hex, base64 and string).
+ *
+ * <pre>{@code fromHexString}</pre>
+ *
+ * The same pattern is used for each pair of methods (to/from hex, base64 and string).
  *
  * @author David Carboni
  */
