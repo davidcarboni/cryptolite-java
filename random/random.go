@@ -1,7 +1,5 @@
 // Package random provides random functions, such as Salt, token and password
-// generation. It also allows you to get a singleton {@link SecureRandom}
-// instance.
-
+// generation.
 package random
 
 import (
