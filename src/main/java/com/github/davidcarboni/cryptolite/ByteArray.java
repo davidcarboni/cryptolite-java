@@ -1,5 +1,6 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
@@ -45,7 +46,7 @@ public class ByteArray {
     /**
      * Renders the given byte array as a hex String.
      * <p>
-     * This is a convenience method useful for checking values during development.
+     * This is a convenience method useful for testing values during development.
      * <p>
      * Internally, this checks for null and then calls the Apache commons-codec
      * method {@link Hex#encodeHexString(byte[])}.
@@ -65,23 +66,23 @@ public class ByteArray {
     /**
      * Converts the given hex string to a byte array.
      * <p>
+     * This is a convenience method useful for testing values during development.
+     * <p>
      * With thanks to StackOverflow: <a href=
      * "http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java"
      * >Convert a string representation of a hex dump to a byte array using
      * Java?</a>
      *
-     * @param hex The hex String to parse. If it starts with 0x, this will be
-     *            ignored automatically.
+     * @param hex The hex String to parse to bytes.
      * @return A byte array, as parsed from the given String
      */
     public static byte[] fromHexString(String hex) {
         byte[] result = null;
         if (hex != null) {
-            int len = hex.length();
-            result = new byte[len / 2];
-            for (int i = 0; i < len; i += 2) {
-                result[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4) + Character
-                        .digit(hex.charAt(i + 1), 16));
+            try {
+                result = Hex.decodeHex(hex.toCharArray());
+            } catch (DecoderException e) {
+                throw new IllegalArgumentException("Could not parse this value as hex: " + hex)
             }
         }
         return result;
