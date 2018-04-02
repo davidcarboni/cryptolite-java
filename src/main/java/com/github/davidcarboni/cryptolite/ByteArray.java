@@ -48,7 +48,7 @@ public class ByteArray {
      * <p>
      * This is a convenience method useful for testing values during development.
      *
-     * @param byteArray The byte array to be rendered.
+     * @param byteArray The byte array to be represented in hex.
      * @return A hex string representation of the byte array.
      */
     public static String toHexString(byte[] byteArray) {
@@ -84,9 +84,6 @@ public class ByteArray {
 
     /**
      * Encodes the given byte array as a base-64 String.
-     * <p>
-     * Internally, this checks for null and then calls the Apache commons-codec
-     * method {@link Base64#encodeBase64String(byte[])}.
      *
      * @param byteArray The byte array to be encoded.
      * @return The byte array encoded using base-64.
@@ -101,7 +98,7 @@ public class ByteArray {
     }
 
     /**
-     * Decodes the given base-64 string into a byte array.
+     * Decodes the given base-64 string to a byte array.
      *
      * @param base64 A base-64 encoded string.
      * @return The decoded byte array.
