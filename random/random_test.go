@@ -1,8 +1,10 @@
-package cryptolite
+package random
 
 import (
 	"regexp"
 	"testing"
+
+	"github.com/davidcarboni/cryptolite/bytearray"
 )
 
 // Checks that generating a random byte array returns the expected number of bytes.
@@ -31,7 +33,7 @@ func testTokenLength(t *testing.T) {
 
 	// Then
 	// It should be of the expected length
-	tokenBytes, err := FromHexString(token)
+	tokenBytes, err := bytearray.FromHexString(token)
 	if err != nil {
 		t.Error(err)
 	}
@@ -49,7 +51,7 @@ func TestSaltLength(t *testing.T) {
 
 	// Then
 	// It should be of the expected length
-	saltBytes, err := FromBase64String(salt)
+	saltBytes, err := bytearray.FromBase64String(salt)
 	if err != nil {
 		t.Error(err)
 	}
