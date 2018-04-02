@@ -1,10 +1,8 @@
-package test
+package bytearray
 
 import (
 	"reflect"
 	"testing"
-
-	"github.com/davidcarboni/cryptolite/bytearray"
 )
 
 var data = []byte("Mary had a little Café")
@@ -17,8 +15,8 @@ func TestHex(t *testing.T) {
 
 	// When
 	// We convert to hex and back again
-	hexString := bytearray.ToHexString(data)
-	backAgain, err := bytearray.FromHexString(hexString)
+	hexString := ToHexString(data)
+	backAgain, err := FromHexString(hexString)
 
 	// Then
 	// The end result should match the input
@@ -38,8 +36,8 @@ func TestBase64(t *testing.T) {
 
 	// When
 	// We convert to base64 and back again
-	base64 := bytearray.ToBase64String(data)
-	backAgain, err := bytearray.FromBase64String(base64)
+	base64 := ToBase64String(data)
+	backAgain, err := FromBase64String(base64)
 
 	// Then
 	// The end result should match the input
@@ -60,8 +58,8 @@ func TestString(t *testing.T) {
 
 	// When
 	// We convert to string and back again
-	unicode := bytearray.ToString(data)
-	backAgain := bytearray.FromString(unicode)
+	unicode := ToString(data)
+	backAgain := FromString(unicode)
 
 	// Then
 	// The end result should match the input

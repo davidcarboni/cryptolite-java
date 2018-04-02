@@ -1,11 +1,10 @@
-package test
+package random
 
 import (
 	"regexp"
 	"testing"
 
 	"github.com/davidcarboni/cryptolite/bytearray"
-	"github.com/davidcarboni/cryptolite/random"
 )
 
 // Checks that generating a random byte array returns the expected number of bytes.
@@ -16,7 +15,7 @@ func TestByteArray(t *testing.T) {
 
 	// When
 	// Some random bytes
-	randomBytes := random.ByteArray(length)
+	randomBytes := ByteArray(length)
 
 	// Then
 	// Check we got what we expected
@@ -30,7 +29,7 @@ func testTokenLength(t *testing.T) {
 
 	// When
 	// We generate a token
-	token := random.Token()
+	token := Token()
 
 	// Then
 	// It should be of the expected length
@@ -38,7 +37,7 @@ func testTokenLength(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if random.TokenBits != len(tokenBytes)*8 {
+	if TokenBits != len(tokenBytes)*8 {
 		t.Error("Unexpected token bit-length")
 	}
 }
@@ -48,7 +47,7 @@ func TestSaltLength(t *testing.T) {
 
 	// When
 	// We generate a salt
-	salt := random.Salt()
+	salt := Salt()
 
 	// Then
 	// It should be of the expected length
@@ -56,7 +55,7 @@ func TestSaltLength(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if random.SaltBytes != len(saltBytes) {
+	if SaltBytes != len(saltBytes) {
 		t.Error("Unexpected salt byte-length")
 	}
 }
@@ -71,7 +70,7 @@ func TestPassword(t *testing.T) {
 	for length := 1; length < maxLength; length++ {
 
 		// When
-		password = random.Password(length)
+		password = Password(length)
 
 		// Then
 		if length != len(password) {
@@ -92,8 +91,8 @@ func TestRandomnessOfTokens(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		token1 := random.Token()
-		token2 := random.Token()
+		token1 := Token()
+		token2 := Token()
 
 		// Then
 		if token1 == token2 {
@@ -110,8 +109,8 @@ func TestRandomnessOfSalt(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		salt1 := random.Salt()
-		salt2 := random.Salt()
+		salt1 := Salt()
+		salt2 := Salt()
 
 		// Then
 		if salt1 == salt2 {
@@ -129,8 +128,8 @@ func TestRandomnessOfPasswords(t *testing.T) {
 	for i := 0; i < iterations; i++ {
 
 		// When
-		password1 := random.Password(passwordSize)
-		password2 := random.Password(passwordSize)
+		password1 := Password(passwordSize)
+		password2 := Password(passwordSize)
 
 		// Then
 		if password1 == password2 {
