@@ -35,12 +35,7 @@ import (
 
 // ToHexString renders the given byte array as a hex String.
 //
-// This is a convenience method useful for checking values during development.
-//
-// Internally, this checks for null and then calls hex.EncodeToString.
-//
-//   The byteArray parameter : The byte array to be encoded.
-//   :return: A hex string representation of the byte array.
+// This is a convenience method useful for testing values during development.
 //
 // The byteArray parameter is encoded as a hex string representation.
 func ToHexString(byteArray []byte) string {
@@ -49,7 +44,9 @@ func ToHexString(byteArray []byte) string {
 
 // FromHexString converts the given hex string to a byte array.
 //
-// The hex parameter is parsed to bytes.
+// This is a convenience method useful for testing values during development.
+//
+// The hex parameter is parsed to a byte array.
 func FromHexString(hex string) ([]byte, error) {
 	return hx.DecodeString(hex)
 }
@@ -58,9 +55,9 @@ func FromHexString(hex string) ([]byte, error) {
 //
 // Internally, this checks for null and then calls the Apache commons-codec
 // method base64.b64encode(bytetarray).
-// The bytes parameter is returned encoded using base-64.
-func ToBase64String(bytes []byte) string {
-	return b64.StdEncoding.EncodeToString(bytes)
+// The byteArray parameter is returned encoded using base-64.
+func ToBase64String(byteArray []byte) string {
+	return b64.StdEncoding.EncodeToString(byteArray)
 }
 
 // FromBase64String decodes the given base-64 string into a byte array.
@@ -72,9 +69,9 @@ func FromBase64String(base64 string) ([]byte, error) {
 
 // ToString converts the given byte array to a String.
 //
-// The bytes parameter is converted to the String represented by the given bytes.
-func ToString(bytes []byte) string {
-	return string(bytes)
+// The byteArray parameter is converted to the String represented by the given bytes.
+func ToString(byteArray []byte) string {
+	return string(byteArray)
 }
 
 // FromString converts the given String to a byte array.
