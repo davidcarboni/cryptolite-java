@@ -1,6 +1,10 @@
 package com.github.davidcarboni.cryptolite;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +14,13 @@ import static org.junit.Assert.*;
  * @author David Carboni
  */
 public class PasswordTest {
+
+    static SecureRandom secureRandom;
+
+    @BeforeClass
+    public static void setup() throws NoSuchAlgorithmException {
+        secureRandom = SecureRandom.getInstance(Generate.ALGORITHM);
+    }
 
     /**
      * Verifies that
@@ -121,7 +132,7 @@ public class PasswordTest {
         // Given
         String password = "password";
         byte[] hashBytes = new byte[Generate.SALT_BYTES - 1];
-        Generate.getInstance().nextBytes(hashBytes);
+        secureRandom.nextBytes(hashBytes);
         String hash = ByteArray.toBase64(hashBytes);
 
         // When

@@ -35,46 +35,29 @@ public class Generate {
     private static final String passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     /**
-     * Lazily-instantiated, cached {@link SecureRandom} instance.
+     * A {@link SecureRandom} instance for the algorithm {@value #ALGORITHM}.
      * <p>
-     * SecureRandom is thread-safe: <a href=
-     * "http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe"
-     * >http
-     * ://stackoverflow.com/questions/1461568/is-securerandom-thread-safe</a>
+     * This is a global instance and is thread-safe.
+     * <p>
+     * The only consideration is whether thread contention could be an issue.
+     *
+     * @see <a href="http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe">http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe</a>
      */
     private static SecureRandom secureRandom;
-
-    /**
-     * This method is protected so that, if you need to get a {@link SecureRandom} instance,
-     * you can create a subclass that exposes it.
-     *
-     * @return A lazily-instantiated, cached {@link SecureRandom} instance for
-     * the algorithm {@value #ALGORITHM}. This is a global instance and
-     * is thread-safe. The only consideration is whether thread
-     * contention could be an issue. See
-     * http://stackoverflow.com/questions
-     * /1461568/is-securerandom-thread-safe for more details.
-     */
-    protected static SecureRandom getInstance() {
-
-        // Create if necessary:
-        if (secureRandom == null) {
-            // NB according to the javadoc, getInstance produces an appropriate
-            // SecureRandom, which will be seeded on the first call to
-            // nextBytes():
-            // "Note that the returned instance of SecureRandom has not been
-            // seeded. A call to the setSeed method will seed the SecureRandom
-            // object.
-            // If a call is not made to setSeed, the first call to the nextBytes
-            // method will force the SecureRandom object to seed itself."
-            try {
-                secureRandom = SecureRandom.getInstance(ALGORITHM);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalStateException("Algorithm unavailable: " + ALGORITHM, e);
-            }
+    static {
+        // NB according to the javadoc, getInstance produces an appropriate
+        // SecureRandom, which will be seeded on the first call to
+        // nextBytes():
+        // "Note that the returned instance of SecureRandom has not been
+        // seeded. A call to the setSeed method will seed the SecureRandom
+        // object.
+        // If a call is not made to setSeed, the first call to the nextBytes
+        // method will force the SecureRandom object to seed itself."
+        try {
+            secureRandom = SecureRandom.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Algorithm unavailable: " + ALGORITHM, e);
         }
-
-        return secureRandom;
     }
 
     /**
@@ -86,7 +69,7 @@ public class Generate {
      */
     public static byte[] byteArray(int length) {
         byte[] bytes = new byte[length];
-        getInstance().nextBytes(bytes);
+        secureRandom.nextBytes(bytes);
         return bytes;
     }
 
@@ -107,7 +90,7 @@ public class Generate {
      * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}
      * , because the implementation of that method calls
      * {@link java.util.Random#nextInt()}, which is not overridden by the
-     * {@link SecureRandom} returned by {@link #getInstance()}.
+     * {@link SecureRandom} returned by {@link #secureRandom}.
      * <p>
      * That means passwords wouldn't be generated using cryptographically strong
      * pseudo random numbers, despite passing a {@link SecureRandom}.
@@ -149,4 +132,6 @@ public class Generate {
         byte[] salt = byteArray(SALT_BYTES);
         return ByteArray.toBase64(salt);
     }
+
+
 }

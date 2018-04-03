@@ -113,7 +113,7 @@ public class Keys {
         }
 
         // Generate a key:
-        keyGenerator.init(SYMMETRIC_KEY_SIZE, Generate.getInstance());
+        keyGenerator.init(SYMMETRIC_KEY_SIZE);
         return keyGenerator.generateKey();
     }
 
@@ -190,7 +190,7 @@ public class Keys {
         KeyPairGenerator keyPairGenerator;
         try {
             keyPairGenerator = KeyPairGenerator.getInstance(ASYMMETRIC_ALGORITHM);
-            keyPairGenerator.initialize(ASYMMETRIC_KEY_SIZE, Generate.getInstance());
+            keyPairGenerator.initialize(ASYMMETRIC_KEY_SIZE);
         } catch (NoSuchAlgorithmException e) {
             if (SecurityProvider.addProvider()) {
                 return newKeyPair();

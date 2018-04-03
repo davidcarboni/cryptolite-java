@@ -283,7 +283,7 @@ public class KeyWrapper implements Serializable {
         try {
 
             Cipher cipher = Cipher.getInstance(wrapAlgorithm);
-            cipher.init(Cipher.WRAP_MODE, wrapKey, Generate.getInstance());
+            cipher.init(Cipher.WRAP_MODE, wrapKey);
             byte[] wrappedKey = cipher.wrap(key);
             return ByteArray.toBase64(wrappedKey);
 
@@ -321,7 +321,7 @@ public class KeyWrapper implements Serializable {
         try {
             byte[] wrapped = ByteArray.fromBase64(wrappedKey);
             Cipher cipher = Cipher.getInstance(wrapAlgorithm);
-            cipher.init(Cipher.UNWRAP_MODE, wrapKey, Generate.getInstance());
+            cipher.init(Cipher.UNWRAP_MODE, wrapKey);
             Key result = cipher.unwrap(wrapped, keyAlgorithm, keyType);
             return result;
 
