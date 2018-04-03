@@ -5,11 +5,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Test for {@link GenerateRandom}.
+ * Test for {@link Generate}.
  *
  * @author David Carboni
  */
-public class GenerateRandomTest {
+public class GenerateTest {
 
     /**
      * Checks that generating a random byte array returns the expected number of bytes.
@@ -21,43 +21,43 @@ public class GenerateRandomTest {
         int length = 20;
 
         // When
-        byte[] randomBytes = GenerateRandom.byteArray(length);
+        byte[] randomBytes = Generate.byteArray(length);
 
         // Then
         assertEquals("Unexpected random byte lenth.", length, randomBytes.length);
     }
 
     /**
-     * Checks that the number of bits in the returned ID is the same as specified by {@link GenerateRandom#TOKEN_BITS}.
+     * Checks that the number of bits in the returned ID is the same as specified by {@link Generate#TOKEN_BITS}.
      */
     @Test
     public void testTokenLength() {
 
         // When
         // We generate a token
-        String token = GenerateRandom.token();
+        String token = Generate.token();
 
         // Then
         // It should be of the expected length
         byte[] tokenBytes = ByteArray.fromHex(token);
-        assertEquals("Unexpected token bit-length", GenerateRandom.TOKEN_BITS, tokenBytes.length * 8);
+        assertEquals("Unexpected token bit-length", Generate.TOKEN_BITS, tokenBytes.length * 8);
     }
 
     /**
      * Checks that the number of bytes in a returned salt value matches the length specified in
-     * {@link GenerateRandom#SALT_BYTES}.
+     * {@link Generate#SALT_BYTES}.
      */
     @Test
     public void testSaltLength() {
 
         // When
         // We generate a salt
-        String salt = GenerateRandom.salt();
+        String salt = Generate.salt();
 
         // Then
         // It should be of the expected length
         byte[] saltBytes = ByteArray.fromBase64(salt);
-        assertEquals("Unexpected salt byte-length", GenerateRandom.SALT_BYTES, saltBytes.length);
+        assertEquals("Unexpected salt byte-length", Generate.SALT_BYTES, saltBytes.length);
     }
 
     /**
@@ -73,7 +73,7 @@ public class GenerateRandomTest {
         for (int length = 1; length < maxLength; length++) {
 
             // When
-            password = GenerateRandom.password(length);
+            password = Generate.password(length);
 
             // Then
             assertEquals("Unexpected password length", length, password.length());
@@ -93,8 +93,8 @@ public class GenerateRandomTest {
         for (int i = 0; i < iterations; i++) {
 
             // When
-            String token1 = GenerateRandom.token();
-            String token2 = GenerateRandom.token();
+            String token1 = Generate.token();
+            String token2 = Generate.token();
 
             // Then
             assertNotEquals("Got identical tokens.", token1, token2);
@@ -113,8 +113,8 @@ public class GenerateRandomTest {
         for (int i = 0; i < iterations; i++) {
 
             // When
-            String salt1 = GenerateRandom.salt();
-            String salt2 = GenerateRandom.salt();
+            String salt1 = Generate.salt();
+            String salt2 = Generate.salt();
 
             // Then
             assertNotEquals("Got identical salts.", salt1, salt2);
@@ -134,8 +134,8 @@ public class GenerateRandomTest {
         for (int i = 0; i < iterations; i++) {
 
             // When
-            String password1 = GenerateRandom.password(passwordSize);
-            String password2 = GenerateRandom.password(passwordSize);
+            String password1 = Generate.password(passwordSize);
+            String password2 = Generate.password(passwordSize);
 
             // Then
             assertNotEquals("Got identical passwords.", password1, password2);

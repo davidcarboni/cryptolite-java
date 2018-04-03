@@ -54,7 +54,7 @@ class FileUtils {
             @Override
             public int read() throws IOException {
                 if (count++ < length) {
-                    return ((int) GenerateRandom.byteArray(1)[0]) & 0xff;
+                    return ((int) Generate.byteArray(1)[0]) & 0xff;
                     // For Java 8: return Byte.toUnsignedInt(bytes(1)[0]);
                 } else {
                     return -1;

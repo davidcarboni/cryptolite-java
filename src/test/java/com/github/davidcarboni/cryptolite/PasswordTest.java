@@ -120,8 +120,8 @@ public class PasswordTest {
 
         // Given
         String password = "password";
-        byte[] hashBytes = new byte[GenerateRandom.SALT_BYTES - 1];
-        GenerateRandom.getInstance().nextBytes(hashBytes);
+        byte[] hashBytes = new byte[Generate.SALT_BYTES - 1];
+        Generate.getInstance().nextBytes(hashBytes);
         String hash = ByteArray.toBase64(hashBytes);
 
         // When
@@ -143,7 +143,7 @@ public class PasswordTest {
 
         // Given
         String password = "password";
-        String hash = GenerateRandom.salt();
+        String hash = Generate.salt();
 
         // When
         boolean result = Password.verify(password, hash);

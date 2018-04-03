@@ -11,7 +11,7 @@ import java.security.SecureRandom;
  *
  * @author David Carboni
  */
-public class GenerateRandom {
+public class Generate {
 
     /**
      * The length for tokens.

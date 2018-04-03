@@ -212,7 +212,7 @@ public class KeyExchange {
 
         // Initialise the Cipher
         try {
-            cipher.init(mode, key, GenerateRandom.getInstance());
+            cipher.init(mode, key, Generate.getInstance());
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Invalid key used to initialise cipher.", e);
         }

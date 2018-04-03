@@ -75,7 +75,7 @@ public class DigitalSignature {
 
         Signature signer = getSignature();
         try {
-            signer.initSign(privateKey, GenerateRandom.getInstance());
+            signer.initSign(privateKey, Generate.getInstance());
         } catch (InvalidKeyException e) {
             throw new IllegalArgumentException("Error initialising digital signature - invalid key", e);
         }
