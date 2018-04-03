@@ -70,7 +70,7 @@ public class HashMac {
             SecretKeySpec macKey = new SecretKeySpec(key, algorithm);
             mac.init(macKey);
             byte[] digest = mac.doFinal(ByteArray.fromString(message));
-            return ByteArray.toHexString(digest);
+            return ByteArray.toHex(digest);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Algorithm unavailable: " + algorithm, e);
         } catch (InvalidKeyException e) {

@@ -94,7 +94,7 @@ public class DigitalSignature {
 
             // Generate the signature:
             byte[] signatureBytes = signer.sign();
-            return ByteArray.toBase64String(signatureBytes);
+            return ByteArray.toBase64(signatureBytes);
 
         } catch (SignatureException e) {
             throw new IllegalStateException("Error generating digital signature", e);
@@ -128,7 +128,7 @@ public class DigitalSignature {
      */
     public boolean verify(InputStream input, PublicKey publicKey, String signature) {
 
-        byte[] signatureBytes = ByteArray.fromBase64String(signature);
+        byte[] signatureBytes = ByteArray.fromBase64(signature);
 
         Signature signer = getSignature();
         try {

@@ -112,7 +112,7 @@ public class KeyExchange {
             throw new IllegalArgumentException("Error encrypting SecretKey: " + BadPaddingException.class.getSimpleName(), e);
         }
 
-        return ByteArray.toBase64String(encrypted);
+        return ByteArray.toBase64(encrypted);
     }
 
     /**
@@ -132,7 +132,7 @@ public class KeyExchange {
         }
 
         // Convert the encryptedKey key String back to a byte array:
-        byte[] bytes = ByteArray.fromBase64String(encryptedKey);
+        byte[] bytes = ByteArray.fromBase64(encryptedKey);
 
         // Decrypt the bytes:
         byte[] decrypted;

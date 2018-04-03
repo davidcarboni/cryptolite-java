@@ -39,7 +39,7 @@ public class GenerateRandomTest {
 
         // Then
         // It should be of the expected length
-        byte[] tokenBytes = ByteArray.fromHexString(token);
+        byte[] tokenBytes = ByteArray.fromHex(token);
         assertEquals("Unexpected token bit-length", GenerateRandom.TOKEN_BITS, tokenBytes.length * 8);
     }
 
@@ -56,7 +56,7 @@ public class GenerateRandomTest {
 
         // Then
         // It should be of the expected length
-        byte[] saltBytes = ByteArray.fromBase64String(salt);
+        byte[] saltBytes = ByteArray.fromBase64(salt);
         assertEquals("Unexpected salt byte-length", GenerateRandom.SALT_BYTES, saltBytes.length);
     }
 

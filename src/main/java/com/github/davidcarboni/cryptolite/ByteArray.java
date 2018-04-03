@@ -31,11 +31,11 @@ import java.nio.charset.StandardCharsets;
  * The naming convention for methods is set up from the point of view of
  * a byte array. For example, a byte array can go:
  *
- * <pre>{@code toHexString}</pre>
+ * <pre>{@link #toHex(byte[])}</pre>
  * <p>
  * and back:
  *
- * <pre>{@code fromHexString}</pre>
+ * <pre>{@link #fromHex(String)}</pre>
  * <p>
  * The same pattern is used for each pair of methods (to/from hex, base64 and string).
  *
@@ -51,7 +51,7 @@ public class ByteArray {
      * @param byteArray The byte array to be represented in hex.
      * @return A hex string representation of the byte array.
      */
-    public static String toHexString(byte[] byteArray) {
+    public static String toHex(byte[] byteArray) {
 
         String result = null;
         if (byteArray != null) {
@@ -65,18 +65,18 @@ public class ByteArray {
      * <p>
      * This is a convenience method useful for testing values during development.
      *
-     * @param hex The hex String to parse to bytes.
+     * @param hexString The hex String to parse to bytes.
      * @return A byte array, as parsed from the given String
      */
-    public static byte[] fromHexString(String hex) {
+    public static byte[] fromHex(String hexString) {
         byte[] result = null;
-        if (hex != null) {
+        if (hexString != null) {
             try {
                 // With thanks to StackOverflow:
                 // http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java
-                result = Hex.decodeHex(hex.toCharArray());
+                result = Hex.decodeHex(hexString.toCharArray());
             } catch (DecoderException e) {
-                throw new IllegalArgumentException("Could not parse this value as hex: " + hex);
+                throw new IllegalArgumentException("Could not parse this value as hex: " + hexString);
             }
         }
         return result;
@@ -88,7 +88,7 @@ public class ByteArray {
      * @param byteArray The byte array to be encoded.
      * @return The byte array encoded using base-64.
      */
-    public static String toBase64String(byte[] byteArray) {
+    public static String toBase64(byte[] byteArray) {
 
         String result = null;
         if (byteArray != null) {
@@ -100,14 +100,14 @@ public class ByteArray {
     /**
      * Decodes the given base-64 string to a byte array.
      *
-     * @param base64 A base-64 encoded string.
+     * @param base64String A base-64 encoded string.
      * @return The decoded byte array.
      */
-    public static byte[] fromBase64String(String base64) {
+    public static byte[] fromBase64(String base64String) {
 
         byte[] result = null;
-        if (base64 != null) {
-            result = Base64.decodeBase64(base64);
+        if (base64String != null) {
+            result = Base64.decodeBase64(base64String);
         }
         return result;
     }
@@ -130,14 +130,14 @@ public class ByteArray {
     /**
      * Converts the given String to a byte array.
      *
-     * @param unicode The String to be converted to a byte array.
+     * @param unicodeString The String to be converted to a byte array.
      * @return A byte array representing the String.
      */
-    public static byte[] fromString(String unicode) {
+    public static byte[] fromString(String unicodeString) {
 
         byte[] result = null;
-        if (unicode != null) {
-            result = unicode.getBytes(StandardCharsets.UTF_8);
+        if (unicodeString != null) {
+            result = unicodeString.getBytes(StandardCharsets.UTF_8);
         }
         return result;
     }

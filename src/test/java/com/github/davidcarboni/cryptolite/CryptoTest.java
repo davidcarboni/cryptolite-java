@@ -299,7 +299,7 @@ public class CryptoTest {
 
         // Given
         byte[] bytes = new byte[1];
-        String ciphertext = ByteArray.toBase64String(bytes);
+        String ciphertext = ByteArray.toBase64(bytes);
 
         // When
         crypto.decrypt(ciphertext, password);
@@ -322,7 +322,7 @@ public class CryptoTest {
 
         // Given
         byte[] bytes = new byte[1];
-        String ciphertext = ByteArray.toBase64String(bytes);
+        String ciphertext = ByteArray.toBase64(bytes);
 
         // When
         crypto.decrypt(ciphertext, key);

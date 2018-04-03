@@ -157,7 +157,7 @@ public class Keys {
         }
 
         // Generate the key:
-        byte[] saltBytes = ByteArray.fromBase64String(salt);
+        byte[] saltBytes = ByteArray.fromBase64(salt);
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), saltBytes, SYMMETRIC_PASSWORD_ITERATIONS, SYMMETRIC_KEY_SIZE);
         SecretKey key;
         try {

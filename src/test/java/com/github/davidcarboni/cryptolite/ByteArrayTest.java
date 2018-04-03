@@ -33,8 +33,8 @@ public class ByteArrayTest {
 
         // When
         // We convert to hex and back again
-        String hex = ByteArray.toHexString(data);
-        byte[] backAgain = ByteArray.fromHexString(hex);
+        String hex = ByteArray.toHex(data);
+        byte[] backAgain = ByteArray.fromHex(hex);
 
         // Then
         // The end result should match the input
@@ -49,8 +49,8 @@ public class ByteArrayTest {
 
         // When
         // We attempt conversion
-        String s = ByteArray.toHexString(null);
-        byte[] b = ByteArray.fromHexString(null);
+        String s = ByteArray.toHex(null);
+        byte[] b = ByteArray.fromHex(null);
 
         // Then
         // No error should occur and we should have null results
@@ -69,8 +69,8 @@ public class ByteArrayTest {
 
         // When
         // We convert to hex and back again
-        String base64 = ByteArray.toBase64String(data);
-        byte[] backAgain = ByteArray.fromBase64String(base64);
+        String base64 = ByteArray.toBase64(data);
+        byte[] backAgain = ByteArray.fromBase64(base64);
 
         // Then
         // The end result should match the input
@@ -85,8 +85,8 @@ public class ByteArrayTest {
 
         // When
         // We attempt conversion
-        String s = ByteArray.toBase64String(null);
-        byte[] b = ByteArray.fromBase64String(null);
+        String s = ByteArray.toBase64(null);
+        byte[] b = ByteArray.fromBase64(null);
 
         // Then
         // No error should occur and we should have null results

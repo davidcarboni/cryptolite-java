@@ -59,10 +59,10 @@ public class Password {
             byte[] hash = hash(password, salt);
 
             // Concatenate the salt and hash:
-            byte[] concatenated = ArrayUtils.addAll(ByteArray.fromBase64String(salt), hash);
+            byte[] concatenated = ArrayUtils.addAll(ByteArray.fromBase64(salt), hash);
 
             // Base-64 encode the result:
-            result = ByteArray.toBase64String(concatenated);
+            result = ByteArray.toBase64(concatenated);
         }
 
         return result;
@@ -84,7 +84,7 @@ public class Password {
 
         if (StringUtils.isNotBlank(hash) && password != null) {
             // Get the salt and hash from the input string:
-            byte[] bytes = ByteArray.fromBase64String(hash);
+            byte[] bytes = ByteArray.fromBase64(hash);
 
             // Check the size of the value to ensure it's at least as long as
             // the salt:
@@ -151,7 +151,7 @@ public class Password {
 
         byte[] salt = new byte[GenerateRandom.SALT_BYTES];
         System.arraycopy(value, 0, salt, 0, salt.length);
-        return ByteArray.toBase64String(salt);
+        return ByteArray.toBase64(salt);
     }
 
     /**

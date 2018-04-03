@@ -148,7 +148,7 @@ public class KeyWrapper implements Serializable {
      * public key is public, this is a convenience method provided to convert it
      * to a String for unprotected storage.
      * <p>
-     * This method internally calls {@link ByteArray#toBase64String(byte[])},
+     * This method internally calls {@link ByteArray#toBase64(byte[])},
      * passing the value of {@link PublicKey#getEncoded()}.
      *
      * @param key The {@link PublicKey} to be encoded.
@@ -232,7 +232,7 @@ public class KeyWrapper implements Serializable {
         }
 
         // Get a key factory
-        byte[] bytes = ByteArray.fromBase64String(base64);
+        byte[] bytes = ByteArray.fromBase64(base64);
         KeyFactory keyFactory;
         try {
             keyFactory = KeyFactory.getInstance(Keys.ASYMMETRIC_ALGORITHM);
@@ -285,7 +285,7 @@ public class KeyWrapper implements Serializable {
             Cipher cipher = Cipher.getInstance(wrapAlgorithm);
             cipher.init(Cipher.WRAP_MODE, wrapKey, GenerateRandom.getInstance());
             byte[] wrappedKey = cipher.wrap(key);
-            return ByteArray.toBase64String(wrappedKey);
+            return ByteArray.toBase64(wrappedKey);
 
         } catch (NoSuchAlgorithmException e) {
             if (SecurityProvider.addProvider()) {
@@ -319,7 +319,7 @@ public class KeyWrapper implements Serializable {
                        String wrapAlgorithm) {
 
         try {
-            byte[] wrapped = ByteArray.fromBase64String(wrappedKey);
+            byte[] wrapped = ByteArray.fromBase64(wrappedKey);
             Cipher cipher = Cipher.getInstance(wrapAlgorithm);
             cipher.init(Cipher.UNWRAP_MODE, wrapKey, GenerateRandom.getInstance());
             Key result = cipher.unwrap(wrapped, keyAlgorithm, keyType);

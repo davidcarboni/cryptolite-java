@@ -97,7 +97,7 @@ public class GenerateRandom {
      */
     public static String token() {
         byte[] tokenBytes = byteArray(tokenLengthBytes);
-        return ByteArray.toHexString(tokenBytes);
+        return ByteArray.toHex(tokenBytes);
     }
 
     /**
@@ -147,6 +147,6 @@ public class GenerateRandom {
      */
     public static String salt() {
         byte[] salt = byteArray(SALT_BYTES);
-        return ByteArray.toBase64String(salt);
+        return ByteArray.toBase64(salt);
     }
 }
