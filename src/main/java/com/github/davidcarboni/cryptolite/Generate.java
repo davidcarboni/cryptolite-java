@@ -41,9 +41,11 @@ public class Generate {
      * <p>
      * The only consideration is whether thread contention could be an issue.
      *
-     * @see <a href="http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe">http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe</a>
+     * @see <a href="http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe">
+     * http://stackoverflow.com/questions/1461568/is-securerandom-thread-safe</a>
      */
     private static SecureRandom secureRandom;
+
     static {
         // NB according to the javadoc, getInstance produces an appropriate
         // SecureRandom, which will be seeded on the first call to

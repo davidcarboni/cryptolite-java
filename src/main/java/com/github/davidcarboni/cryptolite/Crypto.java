@@ -34,7 +34,7 @@ import java.security.NoSuchAlgorithmException;
  * <p>
  * Notes on background information used in selecting the cipher, mode and
  * padding:
- * <p>
+ *
  * <ul>
  * <li>Wikipedia: http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</li>
  * </ul>
@@ -47,12 +47,12 @@ import java.security.NoSuchAlgorithmException;
  * of Commerce. It is available in many different encryption packages. AES is
  * the first publicly accessible and open cipher approved by the NSA for top
  * secret information."
- * <p>
+ *
  * <ul>
  * <li>Beginning Cryptography with Java</li>
  * </ul>
  * "CTR has been standardised by NIST in SP 800-38a and RFC 3686"
- * <p>
+ *
  * <ul>
  * <li>
  * http://www.daemonology.net/blog/2009-06-11-cryptographic-right-answers.html</li>
@@ -67,7 +67,7 @@ import java.security.NoSuchAlgorithmException;
  * NOTE: CTR mode is "malleable", so if there is a requirement to assure the
  * integrity of the data, on top of encrypting it, this blog recommends adding
  * an HMAC (Hash-based Message Authentication Code).
- * <p>
+ *
  * <ul>
  * <li>http://www.javamex.com/tutorials/cryptography/initialisation_vector.shtml
  * </li>
@@ -77,7 +77,7 @@ import java.security.NoSuchAlgorithmException;
  * relatively small number of items will be encrypted, as compared to a stream
  * of messages which may contain tens of thousands of messages, this makes is a
  * good choice.
- * <p>
+ *
  * <ul>
  * <li>Wikipedia: http://en.wikipedia.org/wiki/Advanced_Encryption_Standard</li>
  * </ul>

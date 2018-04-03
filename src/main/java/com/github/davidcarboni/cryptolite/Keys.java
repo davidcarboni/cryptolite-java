@@ -20,7 +20,7 @@ import java.security.spec.InvalidKeySpecException;
  * <li>Generate symmetric/secret 256-bit AES keys</li>
  * <li>Asymmetric 3072-bit RSA key pairs</li>
  * </ul>
- * <p>
+ *
  * <em>Deterministic keys:</em> these are the easiest to manage as they don't need to be stored. So
  * long as you pass in the same password each time, the same key will be generated every time. The
  * drawback is that if you want to generate more than one key you'll need more than one password.
@@ -30,7 +30,7 @@ import java.security.spec.InvalidKeySpecException;
  * in mind however that if the user changes (or resets) their password this will result in a
  * different key, so you'll need a plan for recovering data encrypted with the old key and
  * re-encrypting it with the new one.
- * <p>
+ *
  * <em>Generate keys:</em> these are simple to generate, but need to be stored because it's
  * effectively impossible to regenerate the key. To store a key you should use
  * {@link KeyWrapper#wrapSecretKey(SecretKey)}. This produces an encrypted version of the key which
@@ -176,9 +176,9 @@ public class Keys {
 
     /**
      * Generates a new public-private (or asymmetric) key pair for use with {@value #ASYMMETRIC_ALGORITHM}.
-     *
+     * <p>
      * The key size will be {@value #ASYMMETRIC_KEY_SIZE} bits.
-     *
+     * <p>
      * BouncyCastle will automatically generate a "Chinese Remainder Theorem" or CRT key, which
      * makes using a symmetric encryption significantly faster.
      *

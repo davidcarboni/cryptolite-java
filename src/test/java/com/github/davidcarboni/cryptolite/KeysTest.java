@@ -18,7 +18,7 @@ public class KeysTest {
 
     /**
      * Test method for {@link com.github.davidcarboni.cryptolite.Keys#newSecretKey()}.
-     *
+     * <p>
      * This is a cursory test to check that subsequent generated keys are different. Whilst it's
      * technically possible for this test to fail, consider yourself intergalactically lucky if it
      * does - and check the code.
@@ -42,7 +42,7 @@ public class KeysTest {
 
     /**
      * Test method for {@link com.github.davidcarboni.cryptolite.Keys#newKeyPair()}.
-     *
+     * <p>
      * This is a cursory test to check that subsequent generated keys are different. Whilst it's
      * technically possible for this test to fail, consider yourself intergalactically lucky if it
      * does - and check the code.

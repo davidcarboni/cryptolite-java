@@ -65,7 +65,7 @@ public class CryptoTest {
 
     /**
      * Verifies that null is returned for null encryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -84,7 +84,7 @@ public class CryptoTest {
 
     /**
      * Verifies that null is returned for null encryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -103,7 +103,7 @@ public class CryptoTest {
 
     /**
      * Verifies that an empty String gets encrypted.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -124,7 +124,7 @@ public class CryptoTest {
 
     /**
      * Verifies that an empty String gets encrypted.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -145,7 +145,7 @@ public class CryptoTest {
 
     /**
      * Verifies that the same String gets encrypted differently every time.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -179,7 +179,7 @@ public class CryptoTest {
 
     /**
      * Verifies that the same String gets encrypted differently every time.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -213,7 +213,7 @@ public class CryptoTest {
 
     /**
      * Verifies that null is returned for null decryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -232,7 +232,7 @@ public class CryptoTest {
 
     /**
      * Verifies that null is returned for null decryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -251,7 +251,7 @@ public class CryptoTest {
 
     /**
      * Verifies that an empty string is returned for empty decryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -270,7 +270,7 @@ public class CryptoTest {
 
     /**
      * Verifies that an empty string is returned for empty decryption input.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -290,7 +290,7 @@ public class CryptoTest {
     /**
      * Verifies that decryption input which is too short to contain an initialisation vector throws
      * an exception.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -313,7 +313,7 @@ public class CryptoTest {
     /**
      * Verifies that decryption input which is too short to contain an initialisation vector throws
      * an exception.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -337,7 +337,7 @@ public class CryptoTest {
      * Verifies that decryption is successful and consistent, even for different ciphertext Strings
      * - ie if you encrypt something twice, the encrypted data should be different each time, but
      * should decrypt back to the same thing.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -366,7 +366,7 @@ public class CryptoTest {
      * Verifies that decryption is successful and consistent, even for different ciphertext Strings
      * - ie if you encrypt something twice, the encrypted data should be different each time, but
      * should decrypt back to the same thing.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.lang.String, javax.crypto.SecretKey)}.
      */
@@ -393,7 +393,7 @@ public class CryptoTest {
 
     /**
      * Verifies that attempting to encrypt a null output stream just returns null.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
@@ -415,7 +415,7 @@ public class CryptoTest {
 
     /**
      * Verifies that attempting to encrypt a null output stream just returns null.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#encrypt(java.io.OutputStream, javax.crypto.SecretKey)}
      * .
@@ -513,7 +513,7 @@ public class CryptoTest {
      * Verifies that decryption of differing ciphertext streams result in the same plaintext - ie if
      * you encrypt something twice, the encrypted data should be different each time, but should
      * decrypt back to the same thing.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
      *
@@ -558,7 +558,7 @@ public class CryptoTest {
      * Verifies that decryption of differing ciphertext streams result in the same plaintext - ie if
      * you encrypt something twice, the encrypted data should be different each time, but should
      * decrypt back to the same thing.
-     *
+     * <p>
      * Test method for
      * {@link com.github.davidcarboni.cryptolite.Crypto#decrypt(java.io.InputStream, javax.crypto.SecretKey)} .
      *
