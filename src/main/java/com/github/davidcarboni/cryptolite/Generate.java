@@ -87,15 +87,6 @@ public class Generate {
 
     /**
      * Generates a random password.
-     * <p>
-     * This method no longer uses Apache
-     * {@link RandomStringUtils#random(int, int, int, boolean, boolean, char[], java.util.Random)}
-     * , because the implementation of that method calls
-     * {@link java.util.Random#nextInt()}, which is not overridden by the
-     * {@link SecureRandom} returned by {@link #secureRandom}.
-     * <p>
-     * That means passwords wouldn't be generated using cryptographically strong
-     * pseudo random numbers, despite passing a {@link SecureRandom}.
      *
      * @param length The length of the password to be returned.
      * @return A password of the specified length, selected from {@link #passwordCharacters}.
