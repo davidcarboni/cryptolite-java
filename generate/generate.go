@@ -4,7 +4,6 @@ package generate
 
 import (
 	"crypto/rand"
-	"math/big"
 
 	"github.com/davidcarboni/cryptolite/bytearray"
 )
@@ -16,8 +15,7 @@ var TokenBits = 256
 var SaltBytes = 16
 
 // Work out the right number of bytes for random tokens:
-var bitsInAByte = 8
-var tokenLengthBytes = TokenBits / bitsInAByte
+var tokenLengthBytes = TokenBits / 8
 
 // Characters for pasword generation:
 var passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -27,9 +25,13 @@ var passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01
 //The length parameter sets the length of the returned slice.
 func ByteArray(length int) []byte {
 	byteArray := make([]byte, length)
-	_, err := rand.Read(byteArray)
-	if err != nil {
-		panic(err)
+	bytes := 0
+	for bytes < 8 {
+		read, err := rand.Read(byteArray)
+		if err != nil {
+			panic(err)
+		}
+		bytes += read
 	}
 	return byteArray
 }
@@ -43,17 +45,25 @@ func Token() string {
 }
 
 // Password generates a random password.
+//
 // The length parameter specifies the length of the password to be returned.
 // Returns A password of the specified length, selected from passwordCharacters.
 func Password(length int) string {
-	var password string
-	max := big.NewInt(int64(len(passwordCharacters)))
-	for i := 0; i < length; i++ {
-		r, _ := rand.Int(rand.Reader, max)
-		index := int(r.Int64())
-		password += passwordCharacters[index : index+1]
+
+	result := ""
+	values := byte_array(length)
+	// We use a modulus of an increasing index rather than of the byte values
+	// to avoid certain characters coming up more often.
+	index := 0
+
+	for i = 0; i < length; i++ {
+		index += values[i]
+		// We're not using any double-byte characters, so byte length is fine:
+		index = index % len(passwordCharacters)
+		result += passwordCharacters[index]
 	}
-	return password
+
+	return result
 }
 
 // Salt generates a random salt value.
