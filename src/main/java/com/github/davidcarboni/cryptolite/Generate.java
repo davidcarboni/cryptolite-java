@@ -61,8 +61,7 @@ public class Generate {
     }
 
     /**
-     * Convenience method to instantiate and populate a byte array of the specified
-     * length.
+     * Instantiates and populates a byte array of the specified length.
      *
      * @param length The length of the array.
      * @return {@link SecureRandom#nextBytes(byte[])}
