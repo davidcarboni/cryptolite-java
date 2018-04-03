@@ -2,14 +2,12 @@ package com.github.davidcarboni.cryptolite;
 
 import org.apache.commons.lang.RandomStringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * This class provides random functions, such as Salt, token and password
- * generation.
+ * Provides the ability to generate things that need to be random,
+ * including salt, token and password values.
  *
  * @author David Carboni
  */
