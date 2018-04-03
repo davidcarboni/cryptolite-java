@@ -1,7 +1,5 @@
 package com.github.davidcarboni.cryptolite;
 
-import org.apache.commons.lang.RandomStringUtils;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
@@ -94,18 +92,15 @@ public class Generate {
     public static String password(int length) {
         StringBuilder result = new StringBuilder();
 
-        while (result.length() < length) {
-            byte[] buffer = byteArray(length);
-            int i = 0;
-            do {
-                // There are 62 possible password characters,
-                // So we mask out the leftmost 2 bits to get a value between 0
-                // and 63. That way most indices correspond to a character:
-                int index = buffer[i++] & 0x3F;
-                if (index < passwordCharacters.length()) {
-                    result.append(passwordCharacters.charAt(index));
-                }
-            } while (result.length() < length && i < buffer.length);
+        byte[] values = byteArray(length);
+        // We use a modulus of an increasing index rather than of the byte values
+        // to avoid certain characters coming up more often.
+        int index = 0;
+
+        for (int i = 0; i < length; i++) {
+            index += (values[i] & 0xff);
+            index = index % passwordCharacters.length();
+            result.append(passwordCharacters.charAt(index));
         }
 
         return result.toString();
