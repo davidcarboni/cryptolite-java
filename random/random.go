@@ -1,5 +1,5 @@
-// Package random provides random functions, such as Salt, token and password
-// generation.
+// Package generate provides the ability to generate things that need to be random,
+// including salt, token and password values.
 package random
 
 import (
