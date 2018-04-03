@@ -33,7 +33,7 @@ func testTokenLength(t *testing.T) {
 
 	// Then
 	// It should be of the expected length
-	tokenBytes, err := bytearray.FromHexString(token)
+	tokenBytes, err := bytearray.FromHex(token)
 	if err != nil {
 		t.Error(err)
 	}
@@ -51,7 +51,7 @@ func TestSaltLength(t *testing.T) {
 
 	// Then
 	// It should be of the expected length
-	saltBytes, err := bytearray.FromBase64String(salt)
+	saltBytes, err := bytearray.FromBase64(salt)
 	if err != nil {
 		t.Error(err)
 	}

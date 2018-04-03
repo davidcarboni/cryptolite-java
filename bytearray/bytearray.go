@@ -22,9 +22,9 @@
 //
 // The naming convention for functions is set up from the point of view of
 // a byte array. For example, a byte array can go:
-//  ToHexString
+//  ToHex
 // and back:
-//  FromHexString
+//  FromHex
 // The same pattern is usef for each pair of methods (to/from hex, base64 and string).
 package bytearray
 
@@ -33,38 +33,38 @@ import (
 	hx "encoding/hex"
 )
 
-// ToHexString renders the given byte array as a hex String.
+// ToHex renders the given byte array as a hex String.
 //
 // This is a convenience method useful for testing values during development.
 //
 // The byteArray parameter is encoded as a hex string representation.
-func ToHexString(byteArray []byte) string {
+func ToHex(byteArray []byte) string {
 	return hx.EncodeToString(byteArray)
 }
 
-// FromHexString converts the given hex string to a byte array.
+// FromHex converts the given hex string to a byte array.
 //
 // This is a convenience method useful for testing values during development.
 //
-// The hex parameter is parsed to a byte array.
-func FromHexString(hex string) ([]byte, error) {
-	return hx.DecodeString(hex)
+// The hexString parameter is parsed to a byte array.
+func FromHex(hexString string) ([]byte, error) {
+	return hx.DecodeString(hexString)
 }
 
-// ToBase64String encodes the given byte array as a base-64 String.
+// ToBase64 encodes the given byte array as a base-64 String.
 //
 // Internally, this checks for null and then calls the Apache commons-codec
 // method base64.b64encode(bytetarray).
 // The byteArray parameter is returned encoded using base-64.
-func ToBase64String(byteArray []byte) string {
+func ToBase64(byteArray []byte) string {
 	return b64.StdEncoding.EncodeToString(byteArray)
 }
 
-// FromBase64String decodes the given base-64 string into a byte array.
+// FromBase64 decodes the given base-64 string into a byte array.
 //
-// The base64 parameter is decoded to a byte slice.
-func FromBase64String(base64 string) ([]byte, error) {
-	return b64.StdEncoding.DecodeString(base64)
+// The base64String parameter is decoded to a byte slice.
+func FromBase64(base64String string) ([]byte, error) {
+	return b64.StdEncoding.DecodeString(base64String)
 }
 
 // ToString converts the given byte array to a String.
@@ -76,7 +76,7 @@ func ToString(byteArray []byte) string {
 
 // FromString converts the given String to a byte array.
 //
-// The string parameter is converted to a byte array.
-func FromString(unicode string) []byte {
-	return []byte(unicode)
+// The unicodeString parameter is converted to a byte array.
+func FromString(unicodeString string) []byte {
+	return []byte(unicodeString)
 }

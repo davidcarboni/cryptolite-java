@@ -15,8 +15,8 @@ func TestHex(t *testing.T) {
 
 	// When
 	// We convert to hex and back again
-	hexString := ToHexString(data)
-	backAgain, err := FromHexString(hexString)
+	hexString := ToHex(data)
+	backAgain, err := FromHex(hexString)
 
 	// Then
 	// The end result should match the input
@@ -36,8 +36,8 @@ func TestBase64(t *testing.T) {
 
 	// When
 	// We convert to base64 and back again
-	base64 := ToBase64String(data)
-	backAgain, err := FromBase64String(base64)
+	base64 := ToBase64(data)
+	backAgain, err := FromBase64(base64)
 
 	// Then
 	// The end result should match the input

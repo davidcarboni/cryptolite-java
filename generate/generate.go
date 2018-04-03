@@ -38,7 +38,7 @@ func ByteArray(length int) []byte {
 // Returns A 256-bit (32 byte) random token as a hexadecimal string.
 func Token() string {
 	tokenBytes := ByteArray(tokenLengthBytes)
-	token := bytearray.ToHexString(tokenBytes)
+	token := bytearray.ToHex(tokenBytes)
 	return token
 }
 
@@ -65,5 +65,5 @@ func Password(length int) string {
 // string (for easy storage).
 func Salt() string {
 	salt := ByteArray(SaltBytes)
-	return bytearray.ToBase64String(salt)
+	return bytearray.ToBase64(salt)
 }
