@@ -1,6 +1,6 @@
 // Package generate provides the ability to generate things that need to be random,
 // including salt, token and password values.
-package random
+package generate
 
 import (
 	"crypto/rand"
