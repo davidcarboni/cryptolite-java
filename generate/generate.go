@@ -18,11 +18,11 @@ var SaltBytes = 16
 var tokenLengthBytes = TokenBits / 8
 
 // Characters for pasword generation:
-var passwordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+var passwordCharacters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
 
-// ByteArray is a convenience method to instantiate and populate a byte array of the specified length.
+// ByteArray instantiates and populates a byte array of the specified length.
 //
-//The length parameter sets the length of the returned slice.
+// The length parameter sets the length of the returned slice.
 func ByteArray(length int) []byte {
 	byteArray := make([]byte, length)
 	bytes := 0
@@ -51,16 +51,16 @@ func Token() string {
 func Password(length int) string {
 
 	result := ""
-	values := byte_array(length)
+	values := ByteArray(length)
 	// We use a modulus of an increasing index rather than of the byte values
 	// to avoid certain characters coming up more often.
 	index := 0
 
-	for i = 0; i < length; i++ {
-		index += values[i]
-		// We're not using any double-byte characters, so byte length is fine:
+	for i := 0; i < length; i++ {
+		index += int(values[i])
+		// We're not using any complex characters, so glyph length is fine:
 		index = index % len(passwordCharacters)
-		result += passwordCharacters[index]
+		result += string(passwordCharacters[index])
 	}
 
 	return result
