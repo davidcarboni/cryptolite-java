@@ -4,7 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * Provides the ability to generate things that need to be random,
+ * Generates things that need to be random,
  * including salt, token and password values.
  *
  * @author David Carboni
