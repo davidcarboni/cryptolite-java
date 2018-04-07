@@ -12,54 +12,89 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * This class generates cryptographic keys.
- * <p>
- * The following key types are available:
+ * Generates cryptographic keys.
+ *
+ * <h2>Key types</h2>
  * <ul>
- * <li>Deterministic symmetric/secret 256-bit AES keys, based on a password</li>
- * <li>Generate symmetric/secret 256-bit AES keys</li>
- * <li>Asymmetric 3072-bit RSA key pairs</li>
+ * <li>Secret keys (either randomly generated or deterministic, based on a password).</li>
+ * <li>Public-Private key pairs.</li>
  * </ul>
  *
- * <em>Deterministic keys:</em> these are the easiest to manage as they don't need to be stored. So
- * long as you pass in the same password each time, the same key will be generated every time. The
- * drawback is that if you want to generate more than one key you'll need more than one password.
- * However, if you do only need one key, this approach can be ideal as you can use the user's
- * plaintext password to generate the key. Since you never store a user's plaintext password (see
- * {@link Password#hash(String)}) the key can only be regenerated using the correct password. Bear
- * in mind however that if the user changes (or resets) their password this will result in a
+ * <h2>How to use keys</h2>
+ * <ul>
+ * <li>Secret keys are used for encryption (see {@link Crypto}).
+ * <li>Secret keys are also used to secure other secret keys and private keys (see {@link KeyWrapper})
+ * <li>Public-Private keys are used for digital signatures (see {@link DigitalSignature}).
+ * <li>Public-Private keys are also used for key exchange (see {@link KeyExchange}).
+ * </ul>
+ *
+ * <h2>Managing encryption keys</h2>
+ * <p>
+ * A good applied cryptography design is all about how you manage secrets: keys and passwords.
+ * <p>
+ * Assuming you're using primitives correctly (that's what Cryptolite does for you)
+ * then it'll be all about your key management design.
+ * <p>
+ * Here are some examples, based on using secret keys to encrypt user data,
+ * to give you a primer on the things you'll want to consider when designing with encryption.
+ * In these examples, we're choosing between random and deterministic (password-based) keys.
+ *
+ * <h2>Deterministic key design</h2>
+ * Deterministic keys are the easiest to manage as you don't need to store the key itself.
+ * Providing the password used to generate the key is properly managed and is available
+ * when you need access to the key, the key can be reliably regenerated each time.
+ * <p>
+ * The drawback is that if you want to generate more than one key you'll need more than one password.
+ * However, if you do only need one key, this approach can be ideal as you could use, say, the user's
+ * plaintext password to generate the key. You never store a user's plaintext password (see
+ * {@link Password#hash(String)}) so the right key can only be generated when the user logs in.
+ * <p>
+ * Bear in mind however that if the user changes (or resets) their password this will generate a
  * different key, so you'll need a plan for recovering data encrypted with the old key and
  * re-encrypting it with the new one.
  *
- * <em>Generate keys:</em> these are simple to generate, but need to be stored because it's
- * effectively impossible to regenerate the key. To store a key you should use
- * {@link KeyWrapper#wrapSecretKey(SecretKey)}. This produces an encrypted version of the key which
- * can safely be stored in, for example, a database or configuration value. The benefit of the
- * {@link KeyWrapper} approach is that when a user changes their password you'll only need to
- * re-encrypt the stored keys using a {@link KeyWrapper} initialised with the new password, rather
- * than have to re-encrypt all data encrypted with the key.
+ * <h2>Random key design</h2>
+ * Random keys are simple to generate, but need to be stored because there's no way
+ * to regenerate the same key.
  * <p>
- * In both cases when a user changes their password you will have the old and the new plaintext
- * passwords, meaning you can decrypt with the old an re-encrypt with the new. The difficulty comes
- * when you need to reset a password, because it's not possible to recover the old password. In this
- * case you either need a secondary password, such as a security question, or you need to be clear
- * that data cannot be recovered. Whatever your solution, remember that storing someone's password
- * in any recoverable form is not OK, so you'll need to put some thought into the recovery process.
+ * To store a key you can use {@link KeyWrapper#wrapSecretKey(SecretKey)}.
+ * This encrypts the key which means it can be safely stored in, for example,
+ * a database or configuration value.
+ * <p>
+ * The benefit of the {@link KeyWrapper} approach is that
+ * when a user changes their password you'll only need to re-encrypt the stored keys using a new
+ * {@link KeyWrapper} initialised with the new password, rather than have to re-encrypt all
+ * data that was encrypted with a key generated based on the user's password
+ * (as in a deterministic design).
+ *
+ * <h2>Password recovery and reset</h2>
+ * In both designs, when a user changes their password you will have the old and the new plaintext
+ * passwords, meaning you can decrypt with the old an re-encrypt with the new.
+ * <p>
+ * The difficulty comes when you need to reset a password, because it's not possible to recover
+ * the old password, so you can't recover the encryption key either. In this case you'll either
+ * need a backup way to recover the encryption key, or you'll need to be clear that data cannot
+ * be recovered at all.
+ * <p>
+ * Whatever your solution, remember that storing someone's password in any recoverable form is not OK,
+ * so you'll need to put some thought into the recovery process.
  *
  * @author David Carboni
  */
 public class Keys {
 
     /**
-     * The symmetric key algorithm.
+     * The secret key algorithm.
      */
     public static final String SYMMETRIC_ALGORITHM = "AES";
 
     /**
-     * The key size for symmetric keys.
+     * The key size for secret keys.
      * <p>
      * This defaults to 256-bit ("strong"), but can be changed to 128-bit ("standard")
-     * by calling {@link #useStandardKeys()}.
+     * by calling {@link #useStandardKeys()} if your JVM does not have the
+     * 'Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files' installed.
+     * @see Crypto#initCipher(int, SecretKey, byte[])
      */
     public static int SYMMETRIC_KEY_SIZE = 256;
 
@@ -69,22 +104,22 @@ public class Keys {
     public static final String SYMMETRIC_PASSWORD_ALGORITHM = "PBKDF2WithHmacSHA256";
 
     /**
-     * The number of iterations to use for password-based key derivation.
+     * The number of iteration rounds to use for password-based secret keys.
      */
     public static final int SYMMETRIC_PASSWORD_ITERATIONS = 1024;
 
     /**
-     * The asymmetric key algorithm.
+     * The public-private key pair algorithm.
      */
     public static final String ASYMMETRIC_ALGORITHM = "RSA";
 
     /**
-     * The key size for asymmetric keys.
+     * The key size for public-private key pairs.
      */
     public static final int ASYMMETRIC_KEY_SIZE = 3072;
 
     /**
-     * Generates a new secret (or symmetric) key for use with {@value #SYMMETRIC_ALGORITHM}.
+     * Generates a new secret (also known as symmetric) key for use with {@value #SYMMETRIC_ALGORITHM}.
      * <p>
      * The key size is determined by {@link #SYMMETRIC_KEY_SIZE}.
      *
@@ -92,8 +127,7 @@ public class Keys {
      */
     public static SecretKey newSecretKey() {
 
-        // FYI, see the source of: org.bouncycastle.crypto.CipherKeyGenerator.generateKey()
-        // AES keys are just random bytes from a strong source of randomness.
+        // FYI: AES keys are just random bytes from a strong source of randomness.
 
         // Get a key generator instance
         KeyGenerator keyGenerator;
