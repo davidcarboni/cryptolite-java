@@ -83,6 +83,11 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class Keys {
 
+    // Please treat the following values as constants.
+    // They are implemented as variables just in case you do need to alter them.
+    // These are the settings that provide "right" cryptography so you'll need to
+    // know what you're doing if you want to alter them.
+
     /**
      * The secret key algorithm.
      */
