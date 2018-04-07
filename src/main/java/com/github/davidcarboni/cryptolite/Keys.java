@@ -116,7 +116,7 @@ public class Keys {
     /**
      * The key size for public-private key pairs.
      */
-    public static final int ASYMMETRIC_KEY_SIZE = 3072;
+    public static final int ASYMMETRIC_KEY_SIZE = 4096;
 
     /**
      * Generates a new secret (also known as symmetric) key for use with {@value #SYMMETRIC_ALGORITHM}.
