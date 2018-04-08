@@ -25,13 +25,10 @@ var passwordCharacters = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstu
 // The length parameter sets the length of the returned slice.
 func ByteArray(length int) []byte {
 	byteArray := make([]byte, length)
-	bytes := 0
-	for bytes < 8 {
-		read, err := rand.Read(byteArray)
-		if err != nil {
-			panic(err)
-		}
-		bytes += read
+	// rand.Read uses io.ReadFull so the slice will be fully populated if err is nil:
+	_, err := rand.Read(byteArray)
+	if err != nil {
+		panic(err)
 	}
 	return byteArray
 }
