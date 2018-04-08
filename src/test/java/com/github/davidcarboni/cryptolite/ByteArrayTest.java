@@ -9,18 +9,11 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Test for {@link ByteArray}.
+ * Tests for byte array conversions.
  *
  * @author David Carboni
  */
 public class ByteArrayTest {
-
-    static byte[] data;
-
-    @BeforeClass
-    public static void setup() {
-        data = "Mary had a little Café".getBytes(StandardCharsets.UTF_8);
-    }
 
     /**
      * Verifies a byte array can be correctly converted to a hex String and back again.
@@ -29,7 +22,7 @@ public class ByteArrayTest {
     public void testHex() {
 
         // Given
-        // The byte array from setup
+        byte[] data = Generate.byteArray(100);
 
         // When
         // We convert to hex and back again
@@ -65,9 +58,9 @@ public class ByteArrayTest {
     public void testBase64() {
 
         // Given
-        // The byte array from setup
+        byte[] data = Generate.byteArray(100);
 
-        // When
+                // When
         // We convert to hex and back again
         String base64 = ByteArray.toBase64(data);
         byte[] backAgain = ByteArray.fromBase64(base64);
@@ -101,7 +94,7 @@ public class ByteArrayTest {
     public void testString() {
 
         // Given
-        // The byte array from setup
+        byte[] data = "Mary had a little Café".getBytes(StandardCharsets.UTF_8);
 
         // When
         // We convert to string and back again
