@@ -1,9 +1,8 @@
 
-[Java](https://github.com/davidcarboni/cryptolite/tree/java "Java branch"): [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=java)](https://travis-ci.org/davidcarboni/cryptolite)
+| [Java](https://github.com/davidcarboni/cryptolite/tree/java "Java branch")                                                      | [Python](https://github.com/davidcarboni/cryptolite/tree/python "Python branch")                                                  | [Go](https://github.com/davidcarboni/cryptolite/tree/golang "Go branch")                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=java)](https://travis-ci.org/davidcarboni/cryptolite) | [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=python)](https://travis-ci.org/davidcarboni/cryptolite) | [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=go)](https://travis-ci.org/davidcarboni/cryptolite) |
 
-[Python](https://github.com/davidcarboni/cryptolite/tree/python "Python branch"): [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=python)](https://travis-ci.org/davidcarboni/cryptolite)
-
-[Go](https://github.com/davidcarboni/cryptolite/tree/golang "Go branch"): [![Build Status](https://travis-ci.org/davidcarboni/cryptolite.svg?branch=go)](https://travis-ci.org/davidcarboni/cryptolite)
 
 Cryptolite
 ----------
