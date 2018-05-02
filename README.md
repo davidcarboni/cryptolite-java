@@ -22,20 +22,9 @@ No options means under the covers it just does what's most appropriate - and if 
 If you'd like to see a showcase app I put together with Cryptolite, have a look at https://cryptonite.herokuapp.com (it may take a while to load - it's a Heroku thing). Cryptonite also provides Encryption-as-a-service: https://cryptonite.herokuapp.com/api
 
 
-### Maven usage
-
-To use Cryptolite in your project:
-
-		<dependency>
-			<groupId>com.github.davidcarboni</groupId>
-			<artifactId>cryptolite</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-
-
 ### Why release it?
 
-To share what I believe to be a valuable by-product of my last startup, Workdocx with the community, (inspired by 37signals: http://37signals.com/svn/posts/1620-sell-your-by-products).
+To share what I believe to be a valuable by-product of my first startup, Workdocx with the community, (inspired by 37signals: http://37signals.com/svn/posts/1620-sell-your-by-products).
 
 The Cryptolite library was developed to provide security for the Workdocx service and is the result of many hours of research and coding work I did to keep our users safe online.
 
@@ -53,5 +42,14 @@ This library is released under the MIT license, like many other libraries, which
 
 If you have any questions, feel free to contact me via Twitter [@davidcarboni](https://twitter.com/davidcarboni) or find me on Medium as [davidcarboni](https://medium.com/@davidcarboni).
 
-David Carboni
+
+### Maven usage
+
+To use Cryptolite in your project:
+
+		<dependency>
+			<groupId>com.github.davidcarboni</groupId>
+			<artifactId>cryptolite</artifactId>
+			<version>1.3.2</version>
+		</dependency>
 
