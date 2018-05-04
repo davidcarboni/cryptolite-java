@@ -418,9 +418,9 @@ public class Crypto {
         try {
             return cipher.doFinal(data);
         } catch (IllegalBlockSizeException e) {
-            throw new IllegalStateException("Block-size exception when completing String encryption.", e);
+            throw new IllegalStateException("Block-size exception when completing byte decryption.", e);
         } catch (BadPaddingException e) {
-            throw new IllegalStateException("Padding error detected when completing String encryption.", e);
+            throw new IllegalStateException("Padding error detected when completing byte decryption.", e);
         }
     }
 
