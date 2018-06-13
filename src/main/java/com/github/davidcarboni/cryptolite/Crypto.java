@@ -13,12 +13,11 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * This class provides simple encryption and decryption of Strings and streams.
+ * This class provides encryption and decryption of Strings and streams.
  * <p>
- * This class uses the {@value #CIPHER_ALGORITHM} algorithm in
- * {@value #CIPHER_MODE} mode. This hides the complexity involved in selecting
- * types and values for these and allows the caller to simply request encryption
- * and decryption operations.
+ * This class uses the AES algorithm in CTR mode. This avoids the need
+ * to select a good algorithm and mode for encryption and allows the caller to
+ * just request encryption and decryption operations.
  * <p>
  * Some effort has been invested in choosing these values so that they are
  * suitable for the needs of a web application:
@@ -173,7 +172,7 @@ public class Crypto {
         SecretKey key = Keys.generateSecretKey(password, salt);
 
         // Convert the input Sting to a byte array:
-        byte[] iv = generateInitialisationVector();
+        byte[] iv = Generate.byteArray(getIvSize());
         byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
@@ -213,7 +212,7 @@ public class Crypto {
         }
 
         // Convert the input Sting to a byte array:
-        byte[] iv = generateInitialisationVector();
+        byte[] iv = Generate.byteArray(getIvSize());
         byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
@@ -484,7 +483,7 @@ public class Crypto {
         }
 
         // Generate an initialisation vector:
-        byte[] iv = generateInitialisationVector();
+        byte[] iv = Generate.byteArray(getIvSize());
 
         // Get a cipher instance and instantiate the CipherOutputStream:
         initCipher(Cipher.ENCRYPT_MODE, key, iv);
@@ -584,19 +583,6 @@ public class Crypto {
 
         // Return the initialised stream:
         return cipherInputStream;
-    }
-
-    /**
-     * This method generates a random initialisation vector. The length of the
-     * IV is determined by calling {@link #getIvSize()} on
-     * {@link #cipher}.
-     *
-     * @return A byte array, of a size corresponding to the block size of the
-     * given {@link Cipher}, containing random bytes.
-     */
-    byte[] generateInitialisationVector() {
-        byte[] bytes = Generate.byteArray(getIvSize());
-        return bytes;
     }
 
     /**
