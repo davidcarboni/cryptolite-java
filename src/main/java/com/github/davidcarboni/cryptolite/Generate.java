@@ -69,10 +69,10 @@ public class Generate {
     public static byte[] byteArray(int length) {
         try {
             byte[] bytes = new byte[length];
-            SecureRandom.getInstance(RANDOM_ALGORITHM).nextBytes(bytes);
+            SecureRandom.getInstance(ALGORITHM).nextBytes(bytes);
             return bytes;
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Algorithm unavailable: " + RANDOM_ALGORITHM, e);
+            throw new IllegalStateException("Algorithm unavailable: " + ALGORITHM, e);
         }
     }
 
