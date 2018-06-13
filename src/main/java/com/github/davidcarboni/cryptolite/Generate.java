@@ -67,13 +67,9 @@ public class Generate {
      * @return {@link SecureRandom#nextBytes(byte[])}
      */
     public static byte[] byteArray(int length) {
-        try {
-            byte[] bytes = new byte[length];
-            SecureRandom.getInstance(ALGORITHM).nextBytes(bytes);
-            return bytes;
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Algorithm unavailable: " + ALGORITHM, e);
-        }
+        byte[] bytes = new byte[length];
+        secureRandom.nextBytes(bytes);
+        return bytes;
     }
 
     /**
