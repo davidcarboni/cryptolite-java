@@ -128,42 +128,16 @@ public class Crypto {
      * for {@value #CIPHER_NAME}.
      */
     public Crypto() {
-        this(CIPHER_NAME);
-    }
-
-    /**
-     * This constructor is protected so that, should you need a different
-     * algorithm (e.g. if you're integrating with a system that uses different
-     * crypto settings) it is possible to create a subclass with different
-     * settings.
-     *
-     * @param cipherName This should normally be {@value #CIPHER_NAME}.
-     */
-    protected Crypto(String cipherName) {
-        // Get a Cipher instance:
-        cipher = getCipher(cipherName);
-    }
-
-    private Cipher getCipher(String cipherName) {
         try {
 
             // Get a Cipher instance:
-            cipher = Cipher.getInstance(cipherName);
+            cipher = Cipher.getInstance(CIPHER_NAME);
 
         } catch (NoSuchAlgorithmException e) {
-            if (SecurityProvider.addProvider()) {
-                cipher = getCipher(cipherName);
-            } else {
-                throw new IllegalStateException("Algorithm unavailable: " + cipherName, e);
-            }
+            throw new IllegalStateException("Algorithm unavailable: " + CIPHER_NAME, e);
         } catch (NoSuchPaddingException e) {
-            throw new IllegalStateException("Padding method unavailable: " + cipherName, e);
+            throw new IllegalStateException("Padding method unavailable: " + CIPHER_NAME, e);
         }
-        return cipher;
-    }
-
-    protected Cipher getCipher() {
-        return cipher;
     }
 
     /**
@@ -437,7 +411,7 @@ public class Crypto {
      * Note that this method writes a salt value and an initialisation vector to
      * the destination OutputStream, so the destination parameter will have some
      * bytes written to it before this method returns. These bytes are necessary
-     * for decryption and a corresponding call to
+     * for initialising encryption and a corresponding call to
      * {@link #decrypt(InputStream, String)} will read and filter them out from
      * the underlying InputStream before returning it.
      *
@@ -464,7 +438,7 @@ public class Crypto {
         String salt = Generate.salt();
         SecretKey key = Keys.generateSecretKey(password, salt);
 
-        // Correct use is to store the IV unencrypted at the start of the
+        // The key generation salt can be stored unencrypted at the start of the
         // stream:
         destination.write(ByteArray.fromBase64(salt));
 
@@ -484,8 +458,8 @@ public class Crypto {
      * <p>
      * Note that this method writes an initialisation vector to the destination
      * OutputStream, so the destination parameter will have some bytes written
-     * to it before this method returns. These bytes are necessary for
-     * decryption and a corresponding call to
+     * to it before this method returns. These bytes are necessary for initialising
+     * encryption and a corresponding call to
      * {@link #decrypt(InputStream, SecretKey)} will read and filter them out
      * from the underlying InputStream before returning it.
      *
@@ -516,7 +490,7 @@ public class Crypto {
         initCipher(Cipher.ENCRYPT_MODE, key, iv);
         CipherOutputStream cipherOutputStream = new CipherOutputStream(destination, cipher);
 
-        // Correct use is to store the IV unencrypted at the start of the
+        // The IV can be stored unencrypted at the start of the
         // stream:
         destination.write(iv);
 
@@ -534,54 +508,10 @@ public class Crypto {
      * {@link CipherInputStream} to read the data from instead so that it is
      * decrypted as it is read and can be written to the response unencrypted.
      * <p>
-     * Note that this method reads and discards the random initialisation vector
-     * from the source InputStream, so the source parameter will have some bytes
-     * read from it before this method returns. These bytes are necessary for
-     * decryption and the call to {@link #encrypt(OutputStream, SecretKey)} will
-     * have added these to the start of the underlying data automatically.
-     *
-     * @param source The source {@link InputStream}, containing encrypted data.
-     * @param key    The key to be used for decryption.
-     * @return A {@link CipherInputStream}, which wraps the given source stream
-     * and will decrypt the data as they are read.
-     * @throws IOException              If an error occurs in reading the initialisation vector from
-     *                                  the source stream.
-     * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
-     *                                  key.
-     * @see #encrypt(OutputStream, SecretKey)
-     */
-    public InputStream encrypt(InputStream source, SecretKey key) throws IOException {
-
-        // Remove the initialisation vector from the start of the stream.
-        // NB if the stream is empty, the read will return -1 and no harm will
-        // be done.
-        byte[] iv = new byte[getIvSize()];
-
-        // The IV is stored unencrypted at the start of the stream:
-        source.read(iv);
-
-        // Get a cipher instance and create the cipherInputStream:
-        initCipher(Cipher.DECRYPT_MODE, key, iv);
-        CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
-
-        // Return the initialised stream:
-        return cipherInputStream;
-    }
-
-    /**
-     * This method wraps the source {@link InputStream} with a
-     * {@link CipherInputStream}.
-     * <p>
-     * Typical usage is when you have an InputStream for a source of encrypted
-     * data on disk, and an OutputStream to send the file to an HTTP response.
-     * You would call this method to wrap the InputStream and use the returned
-     * {@link CipherInputStream} to read the data from instead so that it is
-     * decrypted as it is read and can be written to the response unencrypted.
-     * <p>
      * Note that this method reads and discards a salt value and the random
      * initialisation vector from the source InputStream, so the source
      * parameter will have some bytes read from it before this method returns.
-     * These bytes are necessary for decryption and the call to
+     * These bytes are necessary for initialising decryption and the call to
      * {@link #encrypt(OutputStream, String)} will have added these to the start
      * of the underlying data automatically.
      *
@@ -602,7 +532,7 @@ public class Crypto {
         // be done.
         byte[] salt = new byte[Generate.SALT_BYTES];
 
-        // The IV is stored unencrypted at the start of the stream:
+        // THe key generation salt can be stored unencrypted at the start of the stream:
         source.read(salt);
 
         // Generate the key:
@@ -624,7 +554,7 @@ public class Crypto {
      * <p>
      * Note that this method reads and discards the random initialisation vector
      * from the source InputStream, so the source parameter will have some bytes
-     * read from it before this method returns. These bytes are necessary for
+     * read from it before this method returns. These bytes are necessary for initialising
      * decryption and the call to {@link #encrypt(OutputStream, SecretKey)} will
      * have added these to the start of the underlying data automatically.
      *
@@ -645,7 +575,7 @@ public class Crypto {
         // be done.
         byte[] iv = new byte[getIvSize()];
 
-        // The IV is stored unencrypted at the start of the stream:
+        // The IV can be stored unencrypted at the start of the stream:
         source.read(iv);
 
         // Get a cipher instance and create the cipherInputStream:
