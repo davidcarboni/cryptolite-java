@@ -118,28 +118,6 @@ public class Crypto {
     public static final String CIPHER_NAME = CIPHER_ALGORITHM + "/" + CIPHER_MODE + "/" + CIPHER_PADDING;
 
     /**
-     * The {@link Cipher} for this instance.
-     */
-    private Cipher cipher;
-
-    /**
-     * Initialises the instance by getting and caching a {@link Cipher} instance
-     * for {@value #CIPHER_NAME}.
-     */
-    public Crypto() {
-        try {
-
-            // Get a Cipher instance:
-            cipher = Cipher.getInstance(CIPHER_NAME);
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Algorithm unavailable: " + CIPHER_NAME, e);
-        } catch (NoSuchPaddingException e) {
-            throw new IllegalStateException("Padding method unavailable: " + CIPHER_NAME, e);
-        }
-    }
-
-    /**
      * This method encrypts the given String, returning a base-64 encoded
      * String. Note that the base-64 String will be longer than the input String
      * due base-64 encoding, the inclusion of an initialisation vector and a
@@ -167,16 +145,18 @@ public class Crypto {
             return null;
         }
 
+        Cipher cipher = getCipher();
+
         // Generate the encryption key:
         String salt = Generate.salt();
         SecretKey key = Keys.generateSecretKey(password, salt);
 
         // Convert the input Sting to a byte array:
-        byte[] iv = Generate.byteArray(getIvSize());
+        byte[] iv = Generate.byteArray(getIvSize(cipher));
         byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
-        byte[] result = encrypt(iv, data, key);
+        byte[] result = encrypt(iv, data, key, cipher);
 
         // Prepend the salt and IV
         byte[] saltBytes = ByteArray.fromBase64(salt);
@@ -211,12 +191,14 @@ public class Crypto {
             return null;
         }
 
+        Cipher cipher = getCipher();
+
         // Convert the input Sting to a byte array:
-        byte[] iv = Generate.byteArray(getIvSize());
+        byte[] iv = Generate.byteArray(getIvSize(cipher));
         byte[] data = ByteArray.fromString(string);
 
         // Encrypt the data:
-        byte[] result = encrypt(iv, data, key);
+        byte[] result = encrypt(iv, data, key, cipher);
 
         // Prepend the IV
         result = ArrayUtils.addAll(iv, result);
@@ -241,13 +223,14 @@ public class Crypto {
      * @param iv   The initialisation vector.
      * @param data The cleartext data.
      * @param key  The key to be used to encrypt the data.
+     * @param cipher The {@link Cipher} instance to use.
      * @return The encrypted data, or null if the given byte array is null. An
      * empty array can be encrypted, but a null one cannot.
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
-     * @see #decrypt(byte[], byte[], SecretKey)
+     * @see #decrypt(byte[], byte[], SecretKey, Cipher)
      */
-    protected byte[] encrypt(byte[] iv, byte[] data, SecretKey key) {
+    protected byte[] encrypt(byte[] iv, byte[] data, SecretKey key, Cipher cipher) {
 
         // Basic null check.
         // An empty array can be encrypted:
@@ -256,12 +239,12 @@ public class Crypto {
         }
 
         // Validate the initialisation vector:
-        if (iv.length != getIvSize()) {
-            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize() + " bytes but got " + iv.length + " bytes.");
+        if (iv.length != getIvSize(cipher)) {
+            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize(cipher) + " bytes but got " + iv.length + " bytes.");
         }
 
         // Prepare a cipher instance:
-        initCipher(Cipher.ENCRYPT_MODE, key, iv);
+        initCipher(cipher, Cipher.ENCRYPT_MODE, key, iv);
 
         // Encrypt the data:
         try {
@@ -294,25 +277,27 @@ public class Crypto {
             return encrypted;
         }
 
+        Cipher cipher = getCipher();
+
         // Convert to a byte array:
         byte[] bytes = ByteArray.fromBase64(encrypted);
 
         // Validate the size of the encrypted data:
-        if (bytes.length < Generate.SALT_BYTES + getIvSize()) {
+        if (bytes.length < Generate.SALT_BYTES + getIvSize(cipher)) {
             throw new IllegalArgumentException("Are you sure this is encrypted data? Byte length (" + bytes.length
                     + ") is shorter than a salt plus initialisation vector value.");
         }
 
         // Separate the salt and initialisation vector from the data:
         byte[] salt = ArrayUtils.subarray(bytes, 0, Generate.SALT_BYTES);
-        byte[] iv = ArrayUtils.subarray(bytes, Generate.SALT_BYTES, Generate.SALT_BYTES + getIvSize());
-        byte[] data = ArrayUtils.subarray(bytes, Generate.SALT_BYTES + getIvSize(), bytes.length);
+        byte[] iv = ArrayUtils.subarray(bytes, Generate.SALT_BYTES, Generate.SALT_BYTES + getIvSize(cipher));
+        byte[] data = ArrayUtils.subarray(bytes, Generate.SALT_BYTES + getIvSize(cipher), bytes.length);
 
         // Generate the encryption key:
         SecretKey key = Keys.generateSecretKey(password, ByteArray.toBase64(salt));
 
         // Decrypt the data:
-        byte[] result = decrypt(iv, data, key);
+        byte[] result = decrypt(iv, data, key, cipher);
 
         // Return as a String:
         return ByteArray.toString(result);
@@ -337,13 +322,15 @@ public class Crypto {
             return encrypted;
         }
 
+        Cipher cipher = getCipher();
+
         // Separate the initialisation vector from the data:
         byte[] bytes = ByteArray.fromBase64(encrypted);
-        byte[] iv = ArrayUtils.subarray(bytes, 0, getIvSize());
-        byte[] data = ArrayUtils.subarray(bytes, getIvSize(), bytes.length);
+        byte[] iv = ArrayUtils.subarray(bytes, 0, getIvSize(cipher));
+        byte[] data = ArrayUtils.subarray(bytes, getIvSize(cipher), bytes.length);
 
         // Decrypt the data:
-        byte[] result = decrypt(iv, data, key);
+        byte[] result = decrypt(iv, data, key, cipher);
 
         // Return as a String:
         return ByteArray.toString(result);
@@ -368,9 +355,9 @@ public class Crypto {
      * @return The decrypted String, or null if the encrypted String is null.
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
-     * @see #encrypt(byte[], byte[], SecretKey)
+     * @see #encrypt(byte[], byte[], SecretKey, Cipher)
      */
-    protected byte[] decrypt(byte[] iv, byte[] data, SecretKey key) {
+    protected byte[] decrypt(byte[] iv, byte[] data, SecretKey key, Cipher cipher) {
 
         // Basic null/empty check.
         // An empty array can be encrypted, but not decrypted
@@ -380,12 +367,12 @@ public class Crypto {
         }
 
         // Validate the initialisation vector:
-        if (iv.length != getIvSize()) {
-            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize() + " bytes but got " + iv.length + " bytes.");
+        if (iv.length != getIvSize(cipher)) {
+            throw new IllegalArgumentException("The supplied initialisation vector is the wrong size. Expected " + getIvSize(cipher) + " bytes but got " + iv.length + " bytes.");
         }
 
         // Prepare a cipher instance with the IV:
-        initCipher(Cipher.DECRYPT_MODE, key, iv);
+        initCipher(cipher, Cipher.DECRYPT_MODE, key, iv);
 
         // Decrypt the data:
         try {
@@ -482,11 +469,13 @@ public class Crypto {
             return null;
         }
 
+        Cipher cipher = getCipher();
+
         // Generate an initialisation vector:
-        byte[] iv = Generate.byteArray(getIvSize());
+        byte[] iv = Generate.byteArray(getIvSize(cipher));
 
         // Get a cipher instance and instantiate the CipherOutputStream:
-        initCipher(Cipher.ENCRYPT_MODE, key, iv);
+        initCipher(cipher, Cipher.ENCRYPT_MODE, key, iv);
         CipherOutputStream cipherOutputStream = new CipherOutputStream(destination, cipher);
 
         // The IV can be stored unencrypted at the start of the
@@ -569,16 +558,18 @@ public class Crypto {
      */
     public InputStream decrypt(InputStream source, SecretKey key) throws IOException {
 
+        Cipher cipher = getCipher();
+
         // Remove the initialisation vector from the start of the stream.
         // NB if the stream is empty, the read will return -1 and no harm will
         // be done.
-        byte[] iv = new byte[getIvSize()];
+        byte[] iv = new byte[getIvSize(cipher)];
 
         // The IV can be stored unencrypted at the start of the stream:
         source.read(iv);
 
         // Get a cipher instance and create the cipherInputStream:
-        initCipher(Cipher.DECRYPT_MODE, key, iv);
+        initCipher(cipher, Cipher.DECRYPT_MODE, key, iv);
         CipherInputStream cipherInputStream = new CipherInputStream(source, cipher);
 
         // Return the initialised stream:
@@ -593,9 +584,27 @@ public class Crypto {
      * <p>
      * Encrypted strings and streams will always start with and IV and
      * can only be decrypted if the input is at least this long.
+     *
+     * @param cipher The cipher instance to get the IV size for.
      */
-    public int getIvSize() {
+    private int getIvSize(Cipher cipher) {
         return cipher.getBlockSize();
+    }
+
+    /**
+     * @return A new {@link Cipher} instance.
+     */
+    private Cipher getCipher() {
+        try {
+
+            // Get a Cipher instance:
+            return Cipher.getInstance(CIPHER_NAME);
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Algorithm unavailable: " + CIPHER_NAME, e);
+        } catch (NoSuchPaddingException e) {
+            throw new IllegalStateException("Padding method unavailable: " + CIPHER_NAME, e);
+        }
     }
 
     /**
@@ -614,7 +623,7 @@ public class Crypto {
      * @throws IllegalArgumentException If the given key is not a valid {@value #CIPHER_ALGORITHM}
      *                                  key.
      */
-    protected void initCipher(int mode, SecretKey key, byte[] iv) {
+    private void initCipher(Cipher cipher, int mode, SecretKey key, byte[] iv) {
 
         // Initialise the cipher:
         IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
