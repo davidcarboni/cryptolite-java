@@ -49,6 +49,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- mvn versions:display-dependency-updates -->
     <dependencies>
 
         <!-- BouncyCastle is currently required for digital signatures, key exchange and wrapping Private keys. It's not needed for AES encryption and AES key wrapping. -->
